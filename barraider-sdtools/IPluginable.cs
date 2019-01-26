@@ -8,5 +8,6 @@ namespace BarRaider.SdTools
         void KeyReleased();
         void UpdateSettings(JObject payload);
         void OnTick();
+        void Dispose();
     }
 }
