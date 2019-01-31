@@ -56,6 +56,8 @@
   <ItemGroup>
     <Compile Include="IPluginable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Samples\PluginContainer.cs" />
+    <None Include="Samples\Program.cs" />
     <Compile Include="SettingsBase.cs" />
     <Compile Include="StreamDeckInfo\StreamDeckApplicationInfo.cs" />
     <Compile Include="StreamDeckInfo\StreamDeckDeviceInfo.cs" />
