@@ -44,8 +44,6 @@ namespace BarRaider.SdTools
             await StreamDeckConnection.ShowOkAsync(this.ContextId);
         }
 
-
-
         #endregion
 
         [JsonIgnore]
