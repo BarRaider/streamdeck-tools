@@ -2,6 +2,8 @@
 
 [![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
 
+**Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)
+
 ## How do I use this?
 This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
 After creating a C# Console application, using this library requires two steps:
