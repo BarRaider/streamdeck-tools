@@ -1,6 +1,6 @@
 # BarRaider's Stream Deck Tools
 
-[![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools.svg)
+[![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
 
 ## How do I use this?
 This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
