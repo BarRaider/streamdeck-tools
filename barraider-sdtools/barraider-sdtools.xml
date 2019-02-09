@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>barraider-sdtools</name>
+    </assembly>
+    <members>
+        <member name="T:BarRaider.SdTools.TracingLevel">
+            <summary>
+            Tracing levels used for Logger
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.TracingLevel.ALL">
+            <summary>
+            All level
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.TracingLevel.DEBUG">
+            <summary>
+            Debug level
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.TracingLevel.INFO">
+            <summary>
+            Informational level
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.TracingLevel.WARN">
+            <summary>
+            Warning level
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.TracingLevel.ERROR">
+            <summary>
+            Error level
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.TracingLevel.FATAL">
+            <summary>
+            Fatal (highest) level
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.TracingLevel.OFF">
+            <summary>
+            Off
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Logger">
+            <summary>
+            Log4Net logger helper class
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Logger.Instance">
+            <summary>
+            Returns singelton entry of Log4Net logger
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Logger.LogMessage(BarRaider.SdTools.TracingLevel,System.String)">
+            <summary>
+            Add message to log with a specific severity level. 
+            </summary>
+            <param name="Level"></param>
+            <param name="Message"></param>
+        </member>
+        <member name="T:BarRaider.SdTools.PluginActionId">
+            <summary>
+            This class associates a plugin UUID (which is indicated in the Manifest file), with the type of the implementation class.
+            The implementation class must be derived from the PluginBase class for this to work properly.
+            If the type passed does not derrive from PluginBase, a NotSupportedException will be thrown
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.PluginActionId.ActionId">
+            <summary>
+            Action UUID as indicated in the manifest file
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.PluginActionId.PluginBaseType">
+            <summary>
+            Type of class that implemented this action. Must inherit PluginBase
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginActionId.#ctor(System.String,System.Type)">
+            <summary>
+            PluginActionId constructor
+            </summary>
+            <param name="actionId">actionId is the UUID from the manifest file</param>
+            <param name="pluginBaseType">Type of class that implemented this action. Must inherit PluginBase</param>
+        </member>
+        <member name="T:BarRaider.SdTools.PluginBase">
+            <summary>
+            Main abstract class your plugin should derive from
+            Holds implementation for all the basic functions
+            If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.KeyPressed">
+            <summary>
+            Called when a Stream Deck key is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.KeyReleased">
+            <summary>
+            Called when a Stream Deck key is released
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.UpdateSettings(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Called when the PropertyInspector has new settings
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.OnTick">
+            <summary>
+            Called every second
+            Logic for displaying title/image can go here
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.Dispose">
+            <summary>
+            Called when the plugin is disposed
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.PluginBase.Connection">
+            <summary>
+            Connection object which handles your communication with the Stream Deck app
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.#ctor(BarRaider.SdTools.SDConnection,Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Constructor for PluginBase. Receives the communication and plugin settings 
+            Note that the settings object is not used by the base and should be consumed by the deriving class.
+            Usually, a private class inside the deriving class is created which stores the settings
+            Example for settings usage:
+            * if (settings == null || settings.Count == 0)
+            * {
+            *         // Create default settings
+            * }
+            * else
+            * {
+                this.settings = settings.ToObject();
+            * }
+            
+            </summary>
+            <param name="connection">Communication module with Stream Deck</param>
+            <param name="settings">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
+        </member>
+        <member name="T:BarRaider.SdTools.SDConnection">
+            <summary>
+            Connection object which handles your communication with the Stream Deck app
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SendToPropertyInspectorAsync(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Send settings to the PropertyInspector
+            </summary>
+            <param name="settings"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SetSettingsAsync(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Persists your plugin settings
+            </summary>
+            <param name="settings"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.String)">
+            <summary>
+            Sets an image on the StreamDeck key
+            </summary>
+            <param name="base64Image"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SetTitleAsync(System.String)">
+            <summary>
+            Sets a title on the StreamDeck key
+            </summary>
+            <param name="title"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.ShowAlert">
+            <summary>
+            Shows the Alert (Yellow Triangle) on the StreamDeck key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.ShowOk">
+            <summary>
+            Shows the Success (Green checkmark) on the StreamDeck key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BarRaider.SdTools.SDConnection.StreamDeckConnection">
+            <summary>
+            StreamDeckConnection object, initialized based on the args received when launching the program
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.#ctor(streamdeck_client_csharp.StreamDeckConnection,System.String,System.String)">
+            <summary>
+            Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
+            These will be used to correctly communicate with the StreamDeck App
+            </summary>
+            <param name="connection"></param>
+            <param name="actionId"></param>
+            <param name="contextId"></param>
+        </member>
+        <member name="T:BarRaider.SdTools.SDWrapper">
+             <summary>
+             * Easy Configuration Instructions:
+            * 1. Use NuGet to get the following packages: 
+            *          CommandLineParser by gsscoder
+            *          streamdeck-client-csharp by Shane DeSeranno
+            *          Newtonsoft.Json by James Newton-King
+            * 2. Create a class that implements the IPluginable interface (which is located in BarRaider.SDTools), this will be your main plugin
+            * 3. Pass the type of the class to the main function
+             </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SDWrapper.Run(System.String[],BarRaider.SdTools.PluginActionId[])">
+            /************************************************************************
+            * Initial configuration from TyrenDe's streamdeck-client-csharp example:
+            * https://github.com/TyrenDe/streamdeck-client-csharp
+            * and SaviorXTanren's MixItUp.StreamDeckPlugin:
+            * https://github.com/SaviorXTanren/mixer-mixitup/
+            *************************************************************************/
+            <summary>
+            Library's main initialization point. 
+            Pass the args from your Main function and a list of supported PluginActionIds, the framework will handle the rest.
+            </summary>
+            <param name="args"></param>
+            <param name="supportedActionIds"></param>
+        </member>
+        <member name="T:BarRaider.SdTools.StreamDeckApplicationInfo">
+            <summary>
+            Holds general information on the StreamDeck App we're communicating with
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckApplicationInfo.Language">
+            <summary>
+            Current language of the StreamDeck app
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckApplicationInfo.Platform">
+            <summary>
+            OS Platform
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckApplicationInfo.Version">
+            <summary>
+            Current version of the StreamDeck app
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.StreamDeckDeviceType">
+            <summary>
+            Type of StreamDeck hardware device, currently two are supported (classic and mini)
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.StreamDeckDeviceType.StreamDeckClassic">
+            <summary>
+            StreamDeck classic with 15 keys
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.StreamDeckDeviceType.StreamDeckMini">
+            <summary>
+            StreamDeck mini with 6 keys
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.StreamDeckDeviceInfo">
+            <summary>
+            Class which holds information on the StreamDeck hardware device
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckDeviceInfo.Size">
+            <summary>
+            Details on number of keys of the StreamDeck hardware device
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckDeviceInfo.Type">
+            <summary>
+            Type of StreamDeck hardware device
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckDeviceInfo.Id">
+            <summary>
+            Id of the StreamDeck hardware device
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.StreamDeckDeviceSize">
+            <summary>
+            Layout of the keys on the StreamDeck hardware device
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckDeviceSize.Rows">
+            <summary>
+            Number of key rows on the StreamDeck hardware device
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckDeviceSize.Cols">
+            <summary>
+            Number of key columns on the StreamDeck hardware device
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.StreamDeckInfo">
+            <summary>
+            Class which holds information on the StreamDeck app and StreamDeck hardware device that the plugin is communicating with
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.Application">
+            <summary>
+            Information on the StreamDeck App which we're communicating with
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckInfo.Devices">
+            <summary>
+            Information on the StreamDeck hardware device that the plugin is running on
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.StreamDeckOptions">
+            <summary>
+            Class holding all the information passed to the plugin when the program was launched
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckOptions.Port">
+            <summary>
+            Port to communicate with the StreamDeck app
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckOptions.PluginUUID">
+            <summary>
+            UUID of the plugin
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckOptions.RegisterEvent">
+            <summary>
+            Name of the event we should pass to the StreamDeck app to register
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckOptions.RawInfo">
+            <summary>
+            Raw information in JSON format which we will parse into the DeviceInfo property
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.StreamDeckOptions.DeviceInfo">
+            <summary>
+            Information regarding the StreamDeck app and StreamDeck hardware which was parsed from the RawInfo JSON field.
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Tools">
+            <summary>
+            Set of common utilities used by various plugins
+            Currently the class mostly focuses on image-related functions that will be passed to the StreamDeck key
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Tools.KEY_DEFAULT_HEIGHT">
+            <summary>
+            Default height, in pixels, on a key
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.Tools.KEY_DEFAULT_WIDTH">
+            <summary>
+            Default width, in pixels, on a key
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.FileToBase64(System.String,System.Boolean)">
+            <summary>
+            Convert an image file to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+            </summary>
+            <param name="fileName"></param>
+            <param name="addHeaderPrefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.ImageToBase64(System.Drawing.Image,System.Boolean)">
+            <summary>
+            Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+            </summary>
+            <param name="image"></param>
+            <param name="addHeaderPrefix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.GenerateKeyImage(System.Drawing.Graphics@)">
+            <summary>
+            Generates an empty key bitmap with the default height and width
+            </summary>
+            <param name="graphics"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

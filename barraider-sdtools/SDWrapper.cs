@@ -18,22 +18,23 @@ namespace BarRaider.SdTools
         // Handles all the communication with the plugin
         private static PluginContainer container;
 
-        /************************************************************************
-       * Initial configuration from TyrenDe's streamdeck-client-csharp example:
-       * https://github.com/TyrenDe/streamdeck-client-csharp
-       * and SaviorXTanren's MixItUp.StreamDeckPlugin:
-       * https://github.com/SaviorXTanren/mixer-mixitup/
-       *************************************************************************/
+        /// /************************************************************************
+        /// * Initial configuration from TyrenDe's streamdeck-client-csharp example:
+        /// * https://github.com/TyrenDe/streamdeck-client-csharp
+        /// * and SaviorXTanren's MixItUp.StreamDeckPlugin:
+        /// * https://github.com/SaviorXTanren/mixer-mixitup/
+        /// *************************************************************************/
 
-        // StreamDeck launches the plugin with these details
-        // -port [number] -pluginUUID [GUID] -registerEvent [string?] -info [json]
+        /// <summary>
+        /// Library's main initialization point. 
+        /// Pass the args from your Main function and a list of supported PluginActionIds, the framework will handle the rest.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="supportedActionIds"></param>
         public static void Run(string[] args, PluginActionId[] supportedActionIds)
         {
             Logger.Instance.LogMessage(TracingLevel.INFO, "Plugin Loading");
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
-
-            // Uncomment this line of code to allow for debugging
-            //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
 
             // The command line args parser expects all args to use `--`, so, let's append
             for (int count = 0; count < args.Length; count++)

@@ -11,15 +11,32 @@ using System.Threading.Tasks;
 
 namespace BarRaider.SdTools
 {
+    /// <summary>
+    /// Set of common utilities used by various plugins
+    /// Currently the class mostly focuses on image-related functions that will be passed to the StreamDeck key
+    /// </summary>
     public class Tools
     {
         private Tools() {}
 
         private const string HEADER_PREFIX = "data:image/png;base64,";
 
+        /// <summary>
+        /// Default height, in pixels, on a key
+        /// </summary>
         public const int KEY_DEFAULT_HEIGHT = 72;
+
+        /// <summary>
+        /// Default width, in pixels, on a key
+        /// </summary>
         public const int KEY_DEFAULT_WIDTH = 72;
 
+        /// <summary>
+        /// Convert an image file to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="addHeaderPrefix"></param>
+        /// <returns></returns>
         public static string FileToBase64(string fileName, bool addHeaderPrefix)
         {
             if (!File.Exists(fileName))
@@ -33,6 +50,12 @@ namespace BarRaider.SdTools
             }
         }
 
+        /// <summary>
+        /// Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="addHeaderPrefix"></param>
+        /// <returns></returns>
         public static string ImageToBase64(Image image, bool addHeaderPrefix)
         {
             using (MemoryStream m = new MemoryStream())
@@ -46,6 +69,11 @@ namespace BarRaider.SdTools
             }
         }
 
+        /// <summary>
+        /// Generates an empty key bitmap with the default height and width
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <returns></returns>
         public static Bitmap GenerateKeyImage(out Graphics graphics)
         {
             Bitmap bitmap = new Bitmap(KEY_DEFAULT_WIDTH, KEY_DEFAULT_HEIGHT);
