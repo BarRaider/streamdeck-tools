@@ -6,7 +6,7 @@
     <Product>StreamDeck Tools by BarRaider</Product>
     <Description>Start developing your Elgato StreamDeck plugin faster!
 This library holds all the basic logic of setting up the framework, so that you can focus on writing the logic of the plugin itself. 
-Using this library, you only need to dervice from the abstract plugin base class and  three lines in your program.cs to have a working plugin.</Description>
+Using this library, you only need to derive from the abstract plugin base class and addd three lines in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
     <Copyright>Copyright © BarRaider 2019</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/barraider-sdtools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/barraider-sdtools</PackageProjectUrl>
@@ -14,9 +14,9 @@ Using this library, you only need to dervice from the abstract plugin base class
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
+    <Version>1.1.1</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>

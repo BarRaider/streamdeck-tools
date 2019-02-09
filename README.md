@@ -25,13 +25,13 @@ Pass the args you received along with the supported ActionIds to the SDWrapper.R
 Example:
 ~~~~
 class Program
-    {
-        static void Main(string[] args)
-        {
-            List<PluginActionId> supportedActionIds = new List<PluginActionId>();
-            supportedActionIds.Add(new PluginActionId("com.barraider.myUUID", typeof(MyPlugin)));
+{
+	static void Main(string[] args)
+	{
+		List<PluginActionId> supportedActionIds = new List<PluginActionId>();
+		supportedActionIds.Add(new PluginActionId("com.barraider.myUUID", typeof(MyPlugin)));
 
-            SDWrapper.Run(args, supportedActionIds.ToArray());
-        }
+		SDWrapper.Run(args, supportedActionIds.ToArray());
 	}
+}
 ~~~~
