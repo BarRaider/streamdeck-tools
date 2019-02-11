@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Drawing;
 using System.Threading.Tasks;
 
 namespace BarRaider.SdTools
@@ -19,9 +20,9 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task SendToPropertyInspectorAsync(JObject settings)
         {
-            if (StreamDeckConnection != null && !String.IsNullOrEmpty(contextId) && !String.IsNullOrEmpty(actionId))
+            if (StreamDeckConnection != null && !String.IsNullOrEmpty(ContextId) && !String.IsNullOrEmpty(actionId))
             {
-                await StreamDeckConnection.SendToPropertyInspectorAsync(actionId, settings, contextId);
+                await StreamDeckConnection.SendToPropertyInspectorAsync(actionId, settings, ContextId);
             }
         }
 
@@ -32,20 +33,30 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task SetSettingsAsync(JObject settings)
         {
-            if (StreamDeckConnection != null && !String.IsNullOrEmpty(contextId) && !String.IsNullOrEmpty(actionId))
+            if (StreamDeckConnection != null && !String.IsNullOrEmpty(ContextId) && !String.IsNullOrEmpty(actionId))
             {
-                await StreamDeckConnection.SetSettingsAsync(settings, contextId);
+                await StreamDeckConnection.SetSettingsAsync(settings, ContextId);
             }
+        }
+
+        /// <summary>
+        /// Sets an image on the StreamDeck key.
+        /// </summary>
+        /// <param name="base64Image">Base64 encoded image</param>
+        /// <returns></returns>
+        public async Task SetImageAsync(string base64Image)
+        {
+            await StreamDeckConnection.SetImageAsync(base64Image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
         }
 
         /// <summary>
         /// Sets an image on the StreamDeck key
         /// </summary>
-        /// <param name="base64Image"></param>
+        /// <param name="image">Image object</param>
         /// <returns></returns>
-        public async Task SetImageAsync(string base64Image)
+        public async Task SetImageAsync(Image image)
         {
-            await StreamDeckConnection.SetImageAsync(base64Image, contextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+            await StreamDeckConnection.SetImageAsync(image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
         }
 
         /// <summary>
@@ -55,7 +66,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task SetTitleAsync(string title)
         {
-            await StreamDeckConnection.SetTitleAsync(title, contextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+            await StreamDeckConnection.SetTitleAsync(title, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
         }
 
         /// <summary>
@@ -64,7 +75,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task ShowAlert()
         {
-            await StreamDeckConnection.ShowAlertAsync(contextId);
+            await StreamDeckConnection.ShowAlertAsync(ContextId);
         }
 
         /// <summary>
@@ -73,7 +84,7 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task ShowOk()
         {
-            await StreamDeckConnection.ShowOkAsync(contextId);
+            await StreamDeckConnection.ShowOkAsync(ContextId);
         }
 
         #endregion
@@ -81,8 +92,11 @@ namespace BarRaider.SdTools
         [JsonIgnore]
         private readonly string actionId;
 
+        /// <summary>
+        /// An opaque value identifying the plugin. This value is received during the Registration procedure
+        /// </summary>
         [JsonIgnore]
-        private readonly string contextId;
+        public String ContextId { get; private set; }
 
         /// <summary>
         /// StreamDeckConnection object, initialized based on the args received when launching the program
@@ -96,12 +110,12 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="actionId"></param>
-        /// <param name="contextId"></param>
+        /// <param name="ContextId"></param>
         public SDConnection(streamdeck_client_csharp.StreamDeckConnection connection, string actionId, string contextId)
         {
             StreamDeckConnection = connection;
             this.actionId = actionId;
-            this.contextId = contextId;
+            this.ContextId = contextId;
         }
     }
 }

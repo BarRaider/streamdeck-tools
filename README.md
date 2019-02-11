@@ -4,6 +4,11 @@
 
 **Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)
 
+## Features
+- Just call the `SDWrapper.Run()` and the library will take care of all the overhead
+- Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
+- Just have your plugin inherit PluginBase and implement the basic functionality
+
 ## How do I use this?
 This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
 After creating a C# Console application, using this library requires two steps:
@@ -15,6 +20,11 @@ Follow the sample here for more details: https://github.com/BarRaider/barraider-
 ~~~~
 public class MyPlugin : PluginBase
 {
+	// Create this constructor in your plugin and pass the objects to the PluginBase class
+	public MyPlugin(SDConnection connection, JObject settings) : base(connection, settings)
+	{
+		...
+	}
 			....
 }
 ~~~~

@@ -13,11 +13,6 @@ namespace BarRaider.SdTools
     public enum TracingLevel
     {
         /// <summary>
-        /// All level
-        /// </summary>
-        ALL,
-
-        /// <summary>
         /// Debug level
         /// </summary>
         DEBUG,
@@ -40,12 +35,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Fatal (highest) level
         /// </summary>
-        FATAL,
-
-        /// <summary>
-        /// Off
-        /// </summary>
-        OFF
+        FATAL
     }
 
     /// <summary>
