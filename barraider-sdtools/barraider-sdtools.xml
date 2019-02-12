@@ -1,17 +1,12 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>sdktest-barraider-sdtools</name>
+        <name>barraider-sdtools</name>
     </assembly>
     <members>
         <member name="T:BarRaider.SdTools.TracingLevel">
             <summary>
             Tracing levels used for Logger
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.TracingLevel.ALL">
-            <summary>
-            All level
             </summary>
         </member>
         <member name="F:BarRaider.SdTools.TracingLevel.DEBUG">
@@ -37,11 +32,6 @@
         <member name="F:BarRaider.SdTools.TracingLevel.FATAL">
             <summary>
             Fatal (highest) level
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.TracingLevel.OFF">
-            <summary>
-            Off
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.Logger">
@@ -164,9 +154,16 @@
         </member>
         <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.String)">
             <summary>
+            Sets an image on the StreamDeck key.
+            </summary>
+            <param name="base64Image">Base64 encoded image</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.Drawing.Image)">
+            <summary>
             Sets an image on the StreamDeck key
             </summary>
-            <param name="base64Image"></param>
+            <param name="image">Image object</param>
             <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.SDConnection.SetTitleAsync(System.String)">
@@ -188,6 +185,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="P:BarRaider.SdTools.SDConnection.ContextId">
+            <summary>
+            An opaque value identifying the plugin. This value is received during the Registration procedure
+            </summary>
+        </member>
         <member name="P:BarRaider.SdTools.SDConnection.StreamDeckConnection">
             <summary>
             StreamDeckConnection object, initialized based on the args received when launching the program
@@ -200,7 +202,7 @@
             </summary>
             <param name="connection"></param>
             <param name="actionId"></param>
-            <param name="contextId"></param>
+            <param name="ContextId"></param>
         </member>
         <member name="T:BarRaider.SdTools.SDWrapper">
              <summary>

@@ -8,16 +8,17 @@
 This library holds all the basic logic of setting up the framework, so that you can focus on writing the logic of the plugin itself. 
 Using this library, you only need to derive from the abstract plugin base class and addd three lines in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
     <Copyright>Copyright © BarRaider 2019</Copyright>
-    <PackageLicenseUrl>https://github.com/BarRaider/barraider-sdtools/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/BarRaider/barraider-sdtools</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/BarRaider/barraider-sdtools</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BarRaider/streamdeck-tools</RepositoryUrl>
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
     <AssemblyVersion>1.1.5.0</AssemblyVersion>
     <FileVersion>1.1.5.0</FileVersion>
     <Version>1.1.5</Version>
-    <PackageReleaseNotes>* ContextId can now be obtained from the SDConnection object</PackageReleaseNotes>
+    <PackageReleaseNotes>* ContextId can now be obtained from the SDConnection object
+* Fixed small typo in log</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>

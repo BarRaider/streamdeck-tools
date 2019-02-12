@@ -73,11 +73,11 @@ namespace BarRaider.SdTools
         private Logger()
         {
             var config = new NLog.Config.LoggingConfiguration();
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "pluginlog.log" };
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "pluginlog.log", ArchiveEvery=NLog.Targets.FileArchivePeriod.Day, MaxArchiveFiles=10, ArchiveFileName="logs/log.{###}.log", ArchiveNumbering=NLog.Targets.ArchiveNumberingMode.Rolling };
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
             NLog.LogManager.Configuration = config;
             log = LogManager.GetCurrentClassLogger();
-            LogMessage(TracingLevel.DEBUG, "Logger Initalized");
+            LogMessage(TracingLevel.DEBUG, "Logger Initialized");
         }
 
         /// <summary>
