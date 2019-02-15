@@ -18,7 +18,8 @@ Using this library, you only need to derive from the abstract plugin base class 
     <FileVersion>1.1.5.0</FileVersion>
     <Version>1.1.5</Version>
     <PackageReleaseNotes>* ContextId can now be obtained from the SDConnection object
-* Fixed small typo in log</PackageReleaseNotes>
+* Logging now automaticaly archives old logs to a "logs" folder
+* Updated dependencies to release versions</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>
@@ -27,7 +28,7 @@ Using this library, you only need to derive from the abstract plugin base class 
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NLog" Version="4.5.11" />
-    <PackageReference Include="streamdeck-client-csharp" Version="0.1.2-preview" />
+    <PackageReference Include="streamdeck-client-csharp" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

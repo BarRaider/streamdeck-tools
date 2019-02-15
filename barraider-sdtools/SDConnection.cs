@@ -110,7 +110,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="actionId"></param>
-        /// <param name="ContextId"></param>
+        /// <param name="contextId"></param>
         public SDConnection(streamdeck_client_csharp.StreamDeckConnection connection, string actionId, string contextId)
         {
             StreamDeckConnection = connection;
