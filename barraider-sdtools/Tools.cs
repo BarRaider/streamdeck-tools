@@ -70,6 +70,34 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Convert a base64 image string to an Image object
+        /// </summary>
+        /// <param name="base64String"></param>
+        /// <returns></returns>
+        public static Image Base64StringToImage(string base64String)
+        {
+            try
+            {
+                // Remove header
+                if (base64String.Substring(0, HEADER_PREFIX.Length) == HEADER_PREFIX)
+                {
+                    base64String = base64String.Substring(HEADER_PREFIX.Length);
+                }
+
+                byte[] imageBytes = Convert.FromBase64String(base64String);
+                using (MemoryStream m = new MemoryStream(imageBytes))
+                {
+                    return Image.FromStream(m);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"Base64StringToImage Exception: {ex}");
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Generates an empty key bitmap with the default height and width
         /// </summary>
         /// <param name="graphics"></param>
@@ -88,6 +116,16 @@ namespace BarRaider.SdTools
             //Fill background black
             graphics.FillRectangle(brush, 0, 0, KEY_DEFAULT_WIDTH, KEY_DEFAULT_HEIGHT);
             return bitmap;
+        }
+
+        /// <summary>
+        /// Extracts the actual filename from a file payload received from the Property Inspector
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        public static string FilenameFromPayload(Newtonsoft.Json.Linq.JToken payload)
+        {
+            return Uri.UnescapeDataString(((string)payload).Replace("C:\\fakepath\\", ""));
         }
     }
 }

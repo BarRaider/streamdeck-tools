@@ -142,7 +142,6 @@ namespace BarRaider.SdTools
             }
         }
 
-        // Stopwatch instance no longer shown
         private async void Connection_OnWillDisappear(object sender, StreamDeckEventReceivedEventArgs<WillDisappearEvent> e)
         {
             await instancesLock.WaitAsync();
@@ -150,7 +149,8 @@ namespace BarRaider.SdTools
             {
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    instances.Remove(e.Event.Context);
+                   instances[e.Event.Context].Dispose();
+                   instances.Remove(e.Event.Context);
                 }
             }
             finally

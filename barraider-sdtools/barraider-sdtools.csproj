@@ -6,7 +6,7 @@
     <Product>StreamDeck Tools by BarRaider</Product>
     <Description>Start developing your Elgato StreamDeck plugin faster!
 This library holds all the basic logic of setting up the framework, so that you can focus on writing the logic of the plugin itself. 
-Using this library, you only need to derive from the abstract plugin base class and addd three lines in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
+Using this library, you only need to derive from the abstract PluginBase class and add three lines in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
     <Copyright>Copyright © BarRaider 2019</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
@@ -14,12 +14,10 @@ Using this library, you only need to derive from the abstract plugin base class 
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>1.1.5.0</AssemblyVersion>
-    <FileVersion>1.1.5.0</FileVersion>
-    <Version>1.1.5</Version>
-    <PackageReleaseNotes>* ContextId can now be obtained from the SDConnection object
-* Logging now automaticaly archives old logs to a "logs" folder
-* Updated dependencies to release versions</PackageReleaseNotes>
+    <AssemblyVersion>1.1.7.0</AssemblyVersion>
+    <FileVersion>1.1.7.0</FileVersion>
+    <Version>1.1.7</Version>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>

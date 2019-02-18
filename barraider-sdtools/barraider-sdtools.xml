@@ -202,7 +202,7 @@
             </summary>
             <param name="connection"></param>
             <param name="actionId"></param>
-            <param name="ContextId"></param>
+            <param name="contextId"></param>
         </member>
         <member name="T:BarRaider.SdTools.SDWrapper">
              <summary>
@@ -376,11 +376,25 @@
             <param name="addHeaderPrefix"></param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.Tools.Base64StringToImage(System.String)">
+            <summary>
+            Convert a base64 image string to an Image object
+            </summary>
+            <param name="base64String"></param>
+            <returns></returns>
+        </member>
         <member name="M:BarRaider.SdTools.Tools.GenerateKeyImage(System.Drawing.Graphics@)">
             <summary>
             Generates an empty key bitmap with the default height and width
             </summary>
             <param name="graphics"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.FilenameFromPayload(Newtonsoft.Json.Linq.JToken)">
+            <summary>
+            Extracts the actual filename from a file payload received from the Property Inspector
+            </summary>
+            <param name="payload"></param>
             <returns></returns>
         </member>
     </members>
