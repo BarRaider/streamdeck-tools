@@ -18,18 +18,24 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Called when a Stream Deck key is pressed
         /// </summary>
-        public abstract void KeyPressed();
+        public abstract void KeyPressed(KeyPayload payload);
 
         /// <summary>
         /// Called when a Stream Deck key is released
         /// </summary>
-        public abstract void KeyReleased();
+        public abstract void KeyReleased(KeyPayload payload);
 
         /// <summary>
         /// Called when the PropertyInspector has new settings
         /// </summary>
         /// <param name="payload"></param>
-        public abstract void UpdateSettings(JObject payload);
+        public abstract void ReceivedSettings(ReceivedSettingsPayload payload);
+
+        /// <summary>
+        /// Called when GetGlobalSettings is called.
+        /// </summary>
+        /// <param name="payload"></param>
+        public abstract void ReceivedGlobalSettings(ReceivedGlobalSettingsPayload payload);
 
         /// <summary>
         /// Called every second
@@ -52,31 +58,21 @@ namespace BarRaider.SdTools
         /// Note that the settings object is not used by the base and should be consumed by the deriving class.
         /// Usually, a private class inside the deriving class is created which stores the settings
         /// Example for settings usage:
-        /// * if (settings == null || settings.Count == 0)
+        /// * if (payload.Settings == null || payload.Settings.Count == 0)
         /// * {
         /// *         // Create default settings
         /// * }
         /// * else
         /// * {
-        ///     this.settings = settings.ToObject();
+        ///     this.settings = payload.Settings.ToObject();
         /// * }
         /// 
         /// </summary>
         /// <param name="connection">Communication module with Stream Deck</param>
-        /// <param name="settings">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
-        public PluginBase(SDConnection connection, JObject settings)
+        /// <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
+        public PluginBase(SDConnection connection, InitialPayload payload)
         {
             Connection = connection;
-            /*
-            if (settings == null || settings.Count == 0)
-            {
-                this.settings = PluginableSettings.CreateDefaultSettings();
-            }
-            else
-            {
-                this.settings = settings.ToObject<PluginableSettings>();
-            }*/
-
         }
     }
 }

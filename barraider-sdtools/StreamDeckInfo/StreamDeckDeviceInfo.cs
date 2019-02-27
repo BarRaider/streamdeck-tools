@@ -32,18 +32,18 @@ namespace BarRaider.SdTools
         /// Details on number of keys of the StreamDeck hardware device
         /// </summary>
         [JsonProperty(PropertyName = "size")]
-        public StreamDeckDeviceSize Size { get; set; }
+        public StreamDeckDeviceSize Size { get; private set; }
 
         /// <summary>
         /// Type of StreamDeck hardware device
         /// </summary>
         [JsonProperty(PropertyName = "type")]
-        public StreamDeckDeviceType Type { get; set; }
+        public StreamDeckDeviceType Type { get; private set; }
 
         /// <summary>
         /// Id of the StreamDeck hardware device
         /// </summary>
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
+        public string Id { get; private set; }
     }
 }

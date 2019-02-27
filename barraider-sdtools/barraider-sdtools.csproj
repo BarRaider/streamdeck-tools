@@ -6,7 +6,7 @@
     <Product>StreamDeck Tools by BarRaider</Product>
     <Description>Start developing your Elgato StreamDeck plugin faster!
 This library holds all the basic logic of setting up the framework, so that you can focus on writing the logic of the plugin itself. 
-Using this library, you only need to derive from the abstract PluginBase class and add three lines in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
+Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
     <Copyright>Copyright © BarRaider 2019</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
@@ -14,10 +14,14 @@ Using this library, you only need to derive from the abstract PluginBase class a
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>1.1.7.0</AssemblyVersion>
-    <FileVersion>1.1.7.0</FileVersion>
-    <Version>1.1.7</Version>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
+    <PackageReleaseNotes>Note: Library has been optimized for the new 4.1 SDK!
+Some of the changes are breaking existing interfaces. Upgrade instruction are available on the Github page: 
+https://github.com/BarRaider/streamdeck-tools
+Added new functionality + more data to existing methods. Plugin creation is now much easier</PackageReleaseNotes>
+    <RootNamespace>BarRaider.SdTools</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>
@@ -26,7 +30,8 @@ Using this library, you only need to derive from the abstract PluginBase class a
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NLog" Version="4.5.11" />
-    <PackageReference Include="streamdeck-client-csharp" Version="4.0.1" />
+    <PackageReference Include="streamdeck-client-csharp" Version="4.1.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview.19073.11" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

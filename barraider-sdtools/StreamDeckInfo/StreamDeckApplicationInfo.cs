@@ -16,18 +16,18 @@ namespace BarRaider.SdTools
         /// Current language of the StreamDeck app
         /// </summary>
         [JsonProperty(PropertyName = "language")]
-        public string Language { get; set; }
+        public string Language { get; private set; }
 
         /// <summary>
         /// OS Platform
         /// </summary>
         [JsonProperty(PropertyName = "platform")]
-        public string Platform { get; set; }
+        public string Platform { get; private set; }
 
         /// <summary>
         /// Current version of the StreamDeck app
         /// </summary>
         [JsonProperty(PropertyName = "version")]
-        public string Version { get; set; }
+        public string Version { get; private set; }
     }
 }

@@ -26,6 +26,7 @@ namespace BarRaider.SdTools
         /// *************************************************************************/
 
         /// <summary>
+        /// Obsolete! Use the new Run(string[]) overload
         /// Library's main initialization point. 
         /// Pass the args from your Main function and a list of supported PluginActionIds, the framework will handle the rest.
         /// </summary>
@@ -33,7 +34,7 @@ namespace BarRaider.SdTools
         /// <param name="supportedActionIds"></param>
         public static void Run(string[] args, PluginActionId[] supportedActionIds)
         {
-            Logger.Instance.LogMessage(TracingLevel.INFO, "Plugin Loading");
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin Loading - {supportedActionIds.Length} Actions Found");
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
             // The command line args parser expects all args to use `--`, so, let's append
@@ -56,6 +57,16 @@ namespace BarRaider.SdTools
 
             ParserResult<StreamDeckOptions> options = parser.ParseArguments<StreamDeckOptions>(args);
             options.WithParsed<StreamDeckOptions>(o => RunPlugin(o, supportedActionIds));
+        }
+
+        /// <summary>
+        /// Library's main initialization point. 
+        /// Pass the args from your Main function. We'll handle the rest
+        /// </summary>
+        /// <param name="args"></param>
+        public static void Run(string[] args)
+        {
+            Run(args, Tools.AutoLoadPluginActions());
         }
 
         private static void RunPlugin(StreamDeckOptions options, PluginActionId[] supportedActionIds)
