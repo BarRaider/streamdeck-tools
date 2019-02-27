@@ -30,7 +30,7 @@ After creating a C# Console application, using this library requires two steps:
 
 1. Create a class that inherits the PluginBase abstract class.  
 Implement your logic, focusing on the methods provided in the base class.  
-Follow the samples [here](https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md) for more details 
+Follow the samples [here](https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md) for more details  
 **New:** In version 2.x - use the `PluginActionId` attribute to indicate the action UUID associated with this class (must match the UUID set in the manifest file)
 
 ~~~~
@@ -52,15 +52,15 @@ public class MyPlugin : PluginBase
 	// TODO: Implement all the remaining abstract functions from PluginBase (or just leave them empty if you don't need them)
 	
 	// An example of how easy it is to populate settings in StreamDeck-Tools v2
-	 public override void ReceivedSettings(ReceivedSettingsPayload payload)
-     {
-         Tools.AutoPopulateSettings(settings, payload.Settings); // "settings" is a private class that holds the settings for your plugin's instance.
-	 }
+	public override void ReceivedSettings(ReceivedSettingsPayload payload)
+	{
+		Tools.AutoPopulateSettings(settings, payload.Settings); // "settings" is a private class that holds the settings for your plugin's instance.
+	}
 }
 ~~~~
 
 2. In your program.cs, just pass the args you received to the SDWrapper.Run() function, and you're done!  
-**Note:** This process is much easier than the one used in 1.x and is based on using the `PluginActionId` attribute, as shown in Step 1 above. 
+**Note:** This process is much easier than the one used in 1.x and is based on using the `PluginActionId` attribute, as shown in Step 1 above.  
 Example:
 ~~~~
 class Program
@@ -84,5 +84,5 @@ The `KeyPayload` class includes information relevant to when the key is pressed 
 
 3. The `UpdateSettings` method has been deprecated. Instead, implement (or just leave empty) the `ReceivedSettings` and the `ReceivedGlobalSettings` methods.  
 Explanation:  
-`UpdateSettings` is no longer needed in StreamDeck SDK 4.1 - the `ReceivedSettings` function will be called every time the settings change in the Property Inspector.
+`UpdateSettings` is no longer needed in StreamDeck SDK 4.1 - the `ReceivedSettings` function will be called every time the settings change in the Property Inspector.  
 If you used the same concepts as in the samples linked above: You created a private class in your plugin, where each setting is a Property that has a JsonProperty attribute. As such, you can use the `Tools.AutoPopulateSettings()` method (as shown above) instead of manually updating your settings.
