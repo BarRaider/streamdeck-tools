@@ -4,12 +4,12 @@
 
 [![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
 
-**Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)
+**Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)  
 ** Samples of plugins using this framework: [Samples](https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md)
 
 ## Version 2.0 is out
-**WARNING:** This version breaks interfaces used in versions 1.x
-This is done to simplify the work on creating plugins even more. In addition, it adds access to additional functionality and data.
+**WARNING:** This version breaks interfaces used in versions 1.x  
+This is done to simplify the work on creating plugins even more. In addition, it adds access to additional functionality and data.  
 Please follow the "Upgrading from versions 1.x" section below to quickly move to version 2.x
 
 ## Features
@@ -28,10 +28,10 @@ A list of plugins already using this library can be found [here](https://github.
 This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
 After creating a C# Console application, using this library requires two steps:
 
-1. Create a class that inherits the PluginBase abstract class.
-Implement your logic, focusing on the methods provided in the base class.
+1. Create a class that inherits the PluginBase abstract class.  
+Implement your logic, focusing on the methods provided in the base class.  
 Follow the samples [here](https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md) for more details 
-New: In version 2.x - use the `PluginActionId` attribute to indicate the action UUID associated with this class (must match the UUID set in the manifest file)
+**New:** In version 2.x - use the `PluginActionId` attribute to indicate the action UUID associated with this class (must match the UUID set in the manifest file)
 
 ~~~~
 [PluginActionId("plugin.uuid.from.manifest.file")]
@@ -59,8 +59,8 @@ public class MyPlugin : PluginBase
 }
 ~~~~
 
-2. In your program.cs, just pass the args you received to the SDWrapper.Run() function, and you're done!
-Note: This process is much easier than the one used in 1.x and is based on using the `PluginActionId` attribute, as shown in Step 1 above. 
+2. In your program.cs, just pass the args you received to the SDWrapper.Run() function, and you're done!  
+**Note:** This process is much easier than the one used in 1.x and is based on using the `PluginActionId` attribute, as shown in Step 1 above. 
 Example:
 ~~~~
 class Program
@@ -75,14 +75,14 @@ class Program
 3. There is no step 3 - that's it! The abstract functions from PluginBase that are implemented in MyPlugin hold all the basics needed for a plugin to work. You can always listen to additional events using the `Connection` property.
 
 ## Upgrading from version 1.x
-1. Change your Plugin's constructor second parameter to receive a `InitialPayload` instead of a `JObject`. Explanation:
+1. Change your Plugin's constructor second parameter to receive a `InitialPayload` instead of a `JObject`. Explanation:  
 The PluginBase constructor no longer receives a `JObject` called "settings". It now receives an actual `InitialPayload` class named "payload". (see example above)
 The InitialPayload class hold additional information, not just the Settings such as information about the Stream Deck device and the actual row and column in the Stream Deck where the plugin is located.
 
-2. Modify your `KeyPressed` and `KeyReleased` function to receive a parameter of type `KeyPayload`. Explanation:
+2. Modify your `KeyPressed` and `KeyReleased` function to receive a parameter of type `KeyPayload`. Explanation:  
 The `KeyPayload` class includes information relevant to when the key is pressed or released. One example is whether this is part of a MultiAction or not.
 
-3. The `UpdateSettings` method has been deprecated. Instead, implement (or just leave empty) the `ReceivedSettings` and the `ReceivedGlobalSettings` methods.
-Explanation:
+3. The `UpdateSettings` method has been deprecated. Instead, implement (or just leave empty) the `ReceivedSettings` and the `ReceivedGlobalSettings` methods.  
+Explanation:  
 `UpdateSettings` is no longer needed in StreamDeck SDK 4.1 - the `ReceivedSettings` function will be called every time the settings change in the Property Inspector.
 If you used the same concepts as in the samples linked above: You created a private class in your plugin, where each setting is a Property that has a JsonProperty attribute. As such, you can use the `Tools.AutoPopulateSettings()` method (as shown above) instead of manually updating your settings.
