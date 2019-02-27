@@ -5,7 +5,7 @@
     <Authors>BarRaider</Authors>
     <Product>StreamDeck Tools by BarRaider</Product>
     <Description>Start developing your Elgato StreamDeck plugin faster!
-This library holds all the basic logic of setting up the framework, so that you can focus on writing the logic of the plugin itself. 
+This library holds all the basic logic of setting up the framework, so that you can focus on writing the logic of the plugin itself.  [Samples for using the library are provided here: https://github.com/BarRaider/barraider-sdtools]
 Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
     <Copyright>Copyright © BarRaider 2019</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
