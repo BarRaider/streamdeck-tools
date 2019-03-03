@@ -119,7 +119,7 @@ The Stream Deck SDK automatically appends a "C:\fakepath\" to each file choosen 
 private class PluginSettings
 {
     [FilenameProperty]
-	[JsonProperty(PropertyName = "title")]
+    [JsonProperty(PropertyName = "title")]
     public String Title { get; set; }
 }
 ```
