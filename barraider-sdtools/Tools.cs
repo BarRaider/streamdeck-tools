@@ -126,11 +126,16 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string FilenameFromPayload(Newtonsoft.Json.Linq.JToken payload)
         {
-            return Uri.UnescapeDataString(((string)payload).Replace("C:\\fakepath\\", ""));
+            return FilenameFromString((string)payload);
+        }
+
+        private static string FilenameFromString(string filenameWithFakepath)
+        {
+            return Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
         }
 
         #endregion
-        
+
         #region JObject Related
 
         /// <summary>
@@ -152,7 +157,17 @@ namespace BarRaider.SdTools
                     if (dicProperties.ContainsKey(prop.Key))
                     {
                         PropertyInfo info = dicProperties[prop.Key];
-                        info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+
+                        // Special handling for FilenameProperty
+                        if (info.GetCustomAttributes(typeof(FilenamePropertyAttribute), true).Length > 0)
+                        {
+                            string value = FilenameFromString((string)prop.Value);
+                            info.SetValue(toSettings, value);
+                        }
+                        else
+                        {
+                            info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+                        }
                         totalPopulated++;
                     }
                 }

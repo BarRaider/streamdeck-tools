@@ -22,6 +22,7 @@ Some of the changes are breaking existing interfaces. Upgrade instruction are av
 https://github.com/BarRaider/streamdeck-tools
 Added new functionality + more data to existing methods. Plugin creation is now much easier</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
+    <AssemblyName>StreamDeckTools</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>
@@ -31,7 +32,7 @@ Added new functionality + more data to existing methods. Plugin creation is now 
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NLog" Version="4.5.11" />
     <PackageReference Include="streamdeck-client-csharp" Version="4.1.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview.19073.11" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

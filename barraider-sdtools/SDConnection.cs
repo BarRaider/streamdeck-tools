@@ -48,9 +48,9 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task SetGlobalSettingsAsync(JObject settings, bool triggerDidReceiveGlobalSettings = true)
         {
-            if (StreamDeckConnection != null && !String.IsNullOrEmpty(pluginUUID))
+            if (StreamDeckConnection != null)
             {
-                await StreamDeckConnection.SetGlobalSettingsAsync(settings, pluginUUID);
+                await StreamDeckConnection.SetGlobalSettingsAsync(settings);
 
                 if (triggerDidReceiveGlobalSettings)
                 {
@@ -65,9 +65,9 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task GetGlobalSettingsAsync()
         {
-            if (StreamDeckConnection != null && !String.IsNullOrEmpty(pluginUUID))
+            if (StreamDeckConnection != null)
             {
-                await StreamDeckConnection.GetGlobalSettingsAsync(pluginUUID);
+                await StreamDeckConnection.GetGlobalSettingsAsync();
             }
         }
 

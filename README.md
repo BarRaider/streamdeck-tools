@@ -10,14 +10,15 @@
 ## Version 2.0 is out
 **WARNING:** This version breaks interfaces used in versions 1.x  
 This is done to simplify the work on creating plugins even more. In addition, it adds access to additional functionality and data.  
-Please follow the "Upgrading from versions 1.x" section below to quickly move to version 2.x
+Please follow the ***"Upgrading from versions 1.x"*** section below to quickly move to version 2.x
 
 ## Features
 - Optimized for the Stream Deck 4.1 SDK
 - Added support for GlobalSettings (introduced in the 4.1 SDK)
 - Simplified receiving Global Settings updates through the new `ReceivedGlobalSettings` method
-- Simplified receiving updates from the Property Inspector through the new `ReceivedSettings` method
+- Simplified receiving updates from the Property Inspector through the new `ReceivedSettings` method along with the new `Tools.AutoPopulateSettings()` method. See the ***"Auto-populating plugin settings"*** section below. 
 - Introduced a new attribute called PluginActionId to indicate the Action's UUID (See below)
+- Simplified working with filenames from the Stram Deck SDK. See ***"Working with files"*** section below
 - Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
 - Just call the `SDWrapper.Run()` and the library will take care of all the overhead
 - Just have your plugin inherit PluginBase and implement the basic functionality. Use the PluginActionId to specify the UUID from the manifest file.
@@ -86,3 +87,49 @@ The `KeyPayload` class includes information relevant to when the key is pressed 
 Explanation:  
 `UpdateSettings` is no longer needed in StreamDeck SDK 4.1 - the `ReceivedSettings` function will be called every time the settings change in the Property Inspector.  
 If you used the same concepts as in the samples linked above: You created a private class in your plugin, where each setting is a Property that has a JsonProperty attribute. As such, you can use the `Tools.AutoPopulateSettings()` method (as shown above) instead of manually updating your settings.
+
+## Auto-populating plugin settings
+By following a very basic convention, the StreamDeck-Tools can handle populating all the settings between the PropertyInspector and your plugin. All the Stream-Deck Tools samples use this convention so you can see it in the samples too:
+1. In your Plugin create a private class that will hold your plugin's settings. In the samples and in this example, we will call the private class `PluginSettings`
+2. For each setting in your class, create a public property
+3. For each one of the public properties add a JsonPropery attribute. The `PropertyName` field should be **identical** to the name of the setting's field in the PropertyInspector's payload.
+
+```
+private class PluginSettings
+{
+    [JsonProperty(PropertyName = "title")]
+    public String Title { get; set; }
+}
+```
+In the example above, we created a property named Title, and added a JsonProperty attribute with the `PropertyName` of `title`. This means in our Payload we should have a field with the name `title`
+
+4. If you followed this for all your other properties, use the `Tools.AutoPopulateSettings()` method to Auto-populate all the properties inside your `ReceivedSettings` function:
+
+```
+public override void ReceivedSettings(ReceivedSettingsPayload payload) 
+{
+    Tools.AutoPopulateSettings(settings, payload.Settings);
+}
+```
+Note: If you're using the filepicker, it's a little bit trickier:
+
+## Working with files
+The Stream Deck SDK automatically appends a "C:\fakepath\" to each file choosen through the SDK's filepicker. StreamDeck-Tools automatically can also auto-populate that field by adding an additional attribute named `FilenameProperty` to your property:
+private class PluginSettings
+{
+    [FilenameProperty]
+	[JsonProperty(PropertyName = "title")]
+    public String Title { get; set; }
+}
+```
+This will tell the `AutoPopulateSettings` method to strip the "C:\fakepath\" from the input.
+But how do you make sure it shows correctly in the PropertyInspector too? Make sure you SAVE the settings back after StreamDeck-Tools fixes the filename:
+```
+public async override void ReceivedSettings(ReceivedSettingsPayload payload) 
+{
+    Tools.AutoPopulateSettings(settings, payload.Settings);
+	// Return fixed filename back to the Property Inspector
+	await Connection.SetSettingsAsync(JObject.FromObject(settings));
+}
+```
+
