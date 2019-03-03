@@ -1,4 +1,5 @@
 ﻿using BarRaider.SdTools;
+using Newtonsoft.Json.Linq;
 using streamdeck_client_csharp;
 using streamdeck_client_csharp.Events;
 using System;
@@ -14,6 +15,8 @@ namespace BarRaider.SdTools
         private ManualResetEvent connectEvent = new ManualResetEvent(false);
         private ManualResetEvent disconnectEvent = new ManualResetEvent(false);
         private SemaphoreSlim instancesLock = new SemaphoreSlim(1);
+        private string pluginUUID = null;
+        private StreamDeckInfo deviceInfo;
 
         private static Dictionary<string, Type> supportedActions = new Dictionary<string, Type>();
 
@@ -30,6 +33,8 @@ namespace BarRaider.SdTools
 
         public void Run(StreamDeckOptions options)
         {
+            pluginUUID = options.PluginUUID;
+            deviceInfo = options.DeviceInfo;
             connection = new StreamDeckConnection(options.Port, options.PluginUUID, options.RegisterEvent);
 
             // Register for events
@@ -39,9 +44,10 @@ namespace BarRaider.SdTools
             connection.OnKeyUp += Connection_OnKeyUp;
             connection.OnWillAppear += Connection_OnWillAppear;
             connection.OnWillDisappear += Connection_OnWillDisappear;
-
+            
             // Settings changed
-            connection.OnSendToPlugin += Connection_OnSendToPlugin;
+            connection.OnDidReceiveSettings += Connection_OnDidReceiveSettings;
+            connection.OnDidReceiveGlobalSettings += Connection_OnDidReceiveGlobalSettings;
 
             // Start the connection
             connection.Run();
@@ -69,7 +75,9 @@ namespace BarRaider.SdTools
             {
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    instances[e.Event.Context].KeyPressed();
+                    KeyPayload payload = new KeyPayload(new KeyCoordinates() { Column = e.Event.Payload.Coordinates.Columns, Row = e.Event.Payload.Coordinates.Rows },
+                                                        e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
+                    instances[e.Event.Context].KeyPressed(payload);
                 }
             }
             finally
@@ -86,7 +94,9 @@ namespace BarRaider.SdTools
             {
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    instances[e.Event.Context].KeyReleased();
+                    KeyPayload payload = new KeyPayload(new KeyCoordinates() { Column = e.Event.Payload.Coordinates.Columns, Row = e.Event.Payload.Coordinates.Rows },
+                                                        e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
+                    instances[e.Event.Context].KeyReleased(payload);
                 }
             }
             finally
@@ -116,7 +126,7 @@ namespace BarRaider.SdTools
         // Stopwatch instance created
         private async void Connection_OnWillAppear(object sender, StreamDeckEventReceivedEventArgs<WillAppearEvent> e)
         {
-            SDConnection conn = new SDConnection(connection, e.Event.Action, e.Event.Context);
+            SDConnection conn = new SDConnection(connection, pluginUUID, e.Event.Action, e.Event.Context);
             await instancesLock.WaitAsync();
             try
             {
@@ -124,7 +134,9 @@ namespace BarRaider.SdTools
                 {
                     try
                     {
-                        instances[e.Event.Context] = (PluginBase)Activator.CreateInstance(supportedActions[e.Event.Action], conn, e.Event.Payload.Settings);
+                        InitialPayload payload = new InitialPayload(new KeyCoordinates() { Column = e.Event.Payload.Coordinates.Columns, Row = e.Event.Payload.Coordinates.Rows },
+                                                                    e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
+                        instances[e.Event.Context] = (PluginBase)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
                     }
                     catch (Exception ex)
                     {
@@ -160,15 +172,14 @@ namespace BarRaider.SdTools
         }
 
         // Settings updated
-        private async void Connection_OnSendToPlugin(object sender, StreamDeckEventReceivedEventArgs<SendToPluginEvent> e)
+        private async void Connection_OnDidReceiveSettings(object sender, StreamDeckEventReceivedEventArgs<DidReceiveSettingsEvent> e)
         {
-
             await instancesLock.WaitAsync();
             try
             {
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    instances[e.Event.Context].UpdateSettings(e.Event.Payload);
+                    instances[e.Event.Context].ReceivedSettings(JObject.FromObject(e.Event.Payload).ToObject<ReceivedSettingsPayload>());
                 }
             }
             finally
@@ -176,6 +187,25 @@ namespace BarRaider.SdTools
                 instancesLock.Release();
             }
         }
+
+        // Global settings updated
+        private async void Connection_OnDidReceiveGlobalSettings(object sender, StreamDeckEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
+        {
+            await instancesLock.WaitAsync();
+            try
+            {
+                var globalSettings = JObject.FromObject(e.Event.Payload).ToObject<ReceivedGlobalSettingsPayload>();
+                foreach (string key in instances.Keys)
+                {
+                    instances[key].ReceivedGlobalSettings(globalSettings);
+                }
+            }
+            finally
+            {
+                instancesLock.Release();
+            }
+        }
+
 
         private void Connection_OnConnected(object sender, EventArgs e)
         {

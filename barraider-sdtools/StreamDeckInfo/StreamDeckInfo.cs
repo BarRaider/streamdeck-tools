@@ -16,12 +16,12 @@ namespace BarRaider.SdTools
         /// Information on the StreamDeck App which we're communicating with
         /// </summary>
         [JsonProperty(PropertyName = "application")]
-        public StreamDeckApplicationInfo Application { get; set; }
+        public StreamDeckApplicationInfo Application { get; private set; }
 
         /// <summary>
         /// Information on the StreamDeck hardware device that the plugin is running on
         /// </summary>
         [JsonProperty(PropertyName = "devices")]
-        public StreamDeckDeviceInfo[] Devices { get; set; }
+        public StreamDeckDeviceInfo[] Devices { get; private set; }
     }
 }

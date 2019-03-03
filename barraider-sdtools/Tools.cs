@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -6,8 +8,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace BarRaider.SdTools
 {
@@ -15,10 +16,8 @@ namespace BarRaider.SdTools
     /// Set of common utilities used by various plugins
     /// Currently the class mostly focuses on image-related functions that will be passed to the StreamDeck key
     /// </summary>
-    public class Tools
+    public static class Tools
     {
-        private Tools() {}
-
         private const string HEADER_PREFIX = "data:image/png;base64,";
 
         /// <summary>
@@ -30,6 +29,8 @@ namespace BarRaider.SdTools
         /// Default width, in pixels, on a key
         /// </summary>
         public const int KEY_DEFAULT_WIDTH = 72;
+
+        #region Image Related
 
         /// <summary>
         /// Convert an image file to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
@@ -125,7 +126,104 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string FilenameFromPayload(Newtonsoft.Json.Linq.JToken payload)
         {
-            return Uri.UnescapeDataString(((string)payload).Replace("C:\\fakepath\\", ""));
+            return FilenameFromString((string)payload);
         }
+
+        private static string FilenameFromString(string filenameWithFakepath)
+        {
+            return Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
+        }
+
+        #endregion
+
+        #region JObject Related
+
+        /// <summary>
+        /// Itterates through the fromJObject, finds the propery that matches in the toSettings object, and sets the value from the fromJObject object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="toSettings"></param>
+        /// <param name="fromJObject"></param>
+        /// <returns>Number of properties updated</returns>
+        public static int AutoPopulateSettings<T>(T toSettings, JObject fromJObject)
+        {
+            Dictionary<string, PropertyInfo> dicProperties = MatchPropertiesWithJsonProperty(toSettings);
+            int totalPopulated = 0;
+
+            if (fromJObject != null)
+            {
+                foreach (var prop in fromJObject)
+                {
+                    if (dicProperties.ContainsKey(prop.Key))
+                    {
+                        PropertyInfo info = dicProperties[prop.Key];
+
+                        // Special handling for FilenameProperty
+                        if (info.GetCustomAttributes(typeof(FilenamePropertyAttribute), true).Length > 0)
+                        {
+                            string value = FilenameFromString((string)prop.Value);
+                            info.SetValue(toSettings, value);
+                        }
+                        else
+                        {
+                            info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+                        }
+                        totalPopulated++;
+                    }
+                }
+            }
+            return totalPopulated;
+        }
+
+        private static Dictionary<string, PropertyInfo> MatchPropertiesWithJsonProperty<T>(T obj)
+        {
+            Dictionary<string, PropertyInfo> dicProperties = new Dictionary<string, PropertyInfo>();
+            if (obj != null)
+            {
+                PropertyInfo[] props = typeof(T).GetProperties();
+                foreach (PropertyInfo prop in props)
+                {
+                    object[] attributes = prop.GetCustomAttributes(true);
+                    foreach (object attr in attributes)
+                    {
+                        JsonPropertyAttribute jprop = attr as JsonPropertyAttribute;
+                        if (jprop != null)
+                        {
+                            dicProperties.Add(jprop.PropertyName, prop);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return dicProperties;
+        }
+
+        #endregion
+
+        #region Plugin Helper Classes
+
+        /// <summary>
+        /// Uses the PluginActionId attribute on the various classes derived from PluginBase to find all the actions supported in this assembly
+        /// </summary>
+        /// <returns></returns>
+        public static PluginActionId[] AutoLoadPluginActions()
+        {
+            List<PluginActionId> actions = new List<PluginActionId>();
+
+            var pluginTypes = Assembly.GetEntryAssembly().GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
+            pluginTypes.ForEach(typ =>
+            {
+                var attr = typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() as PluginActionIdAttribute;
+                if (attr != null)
+                {
+                    actions.Add(new PluginActionId(attr.ActionId, typ));
+                }
+            });
+
+            return actions.ToArray();
+        }
+
+        #endregion
     }
 }
