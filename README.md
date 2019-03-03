@@ -115,6 +115,7 @@ Note: If you're using the filepicker, it's a little bit trickier:
 
 ## Working with files
 The Stream Deck SDK automatically appends a "C:\fakepath\" to each file choosen through the SDK's filepicker. StreamDeck-Tools automatically can also auto-populate that field by adding an additional attribute named `FilenameProperty` to your property:
+```
 private class PluginSettings
 {
     [FilenameProperty]
