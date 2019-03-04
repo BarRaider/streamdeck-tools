@@ -7,7 +7,7 @@
 **Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)  
 ** Samples of plugins using this framework: [Samples](https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md)
 
-### Version 2.0 is coming soon...
+### Version 2.0 is out!
 **WARNING:** This version breaks interfaces used in versions 1.x  
 This is done to simplify the work on creating plugins even more. In addition, it adds access to additional functionality and data.  
 Please follow the ***"Upgrading from versions 1.x"*** section below to quickly move to version 2.x
