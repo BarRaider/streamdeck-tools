@@ -76,7 +76,7 @@ class Program
 3. There is no step 3 - that's it! The abstract functions from PluginBase that are implemented in MyPlugin hold all the basics needed for a plugin to work. You can always listen to additional events using the `Connection` property.
 
 -------
-Additional step-by-step instructions, including how to upgrade from version 1.0 are [here](https://github.com/BarRaider/streamdeck-tools/blob/master/README.md)
+### Additional step-by-step instructions, including how to upgrade from v1.0 are [here](https://github.com/BarRaider/streamdeck-tools/blob/master/README.md)
 -------
 
 [1]: https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md
