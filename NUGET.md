@@ -75,63 +75,8 @@ class Program
 
 3. There is no step 3 - that's it! The abstract functions from PluginBase that are implemented in MyPlugin hold all the basics needed for a plugin to work. You can always listen to additional events using the `Connection` property.
 
-## Upgrading from version 1.x
-1. Change your Plugin's constructor second parameter to receive a `InitialPayload` instead of a `JObject`. Explanation:  
-The PluginBase constructor no longer receives a `JObject` called "settings". It now receives an actual `InitialPayload` class named "payload". (see example above)
-The InitialPayload class hold additional information, not just the Settings such as information about the Stream Deck device and the actual row and column in the Stream Deck where the plugin is located.
-
-2. Modify your `KeyPressed` and `KeyReleased` function to receive a parameter of type `KeyPayload`. Explanation:  
-The `KeyPayload` class includes information relevant to when the key is pressed or released. One example is whether this is part of a MultiAction or not.
-
-3. The `UpdateSettings` method has been deprecated. Instead, implement (or just leave empty) the `ReceivedSettings` and the `ReceivedGlobalSettings` methods.  
-Explanation:  
-`UpdateSettings` is no longer needed in StreamDeck SDK 4.1 - the `ReceivedSettings` function will be called every time the settings change in the Property Inspector.  
-If you used the same concepts as in the samples linked above: You created a private class in your plugin, where each setting is a Property that has a JsonProperty attribute. As such, you can use the `Tools.AutoPopulateSettings()` method (as shown above) instead of manually updating your settings.
-
-## Auto-populating plugin settings
-By following a very basic convention, the StreamDeck-Tools can handle populating all the settings between the PropertyInspector and your plugin. All the Stream-Deck Tools samples use this convention so you can see it in the samples too:
-1. In your Plugin create a private class that will hold your plugin's settings. In the samples and in this example, we will call the private class `PluginSettings`
-2. For each setting in your class, create a public property
-3. For each one of the public properties add a JsonPropery attribute. The `PropertyName` field should be **identical** to the name of the setting's field in the PropertyInspector's payload.
-
-```
-private class PluginSettings
-{
-    [JsonProperty(PropertyName = "title")]
-    public String Title { get; set; }
-}
-```
-In the example above, we created a property named Title, and added a JsonProperty attribute with the `PropertyName` of `title`. This means in our Payload we should have a field with the name `title`
-
-4. If you followed this for all your other properties, use the `Tools.AutoPopulateSettings()` method to Auto-populate all the properties inside your `ReceivedSettings` function:
-
-```
-public override void ReceivedSettings(ReceivedSettingsPayload payload) 
-{
-    Tools.AutoPopulateSettings(settings, payload.Settings);
-}
-```
-Note: If you're using the filepicker, it's a little bit trickier:
-
-## Working with files
-The Stream Deck SDK automatically appends a "C:\fakepath\" to each file choosen through the SDK's filepicker. StreamDeck-Tools automatically can also auto-populate that field by adding an additional attribute named `FilenameProperty` to your property:
-```
-private class PluginSettings
-{
-    [FilenameProperty]
-    [JsonProperty(PropertyName = "title")]
-    public String Title { get; set; }
-}
-```
-This will tell the `AutoPopulateSettings` method to strip the "C:\fakepath\" from the input.
-But how do you make sure it shows correctly in the PropertyInspector too? Make sure you SAVE the settings back after StreamDeck-Tools fixes the filename:
-```
-public async override void ReceivedSettings(ReceivedSettingsPayload payload) 
-{
-    Tools.AutoPopulateSettings(settings, payload.Settings);
-	// Return fixed filename back to the Property Inspector
-	await Connection.SetSettingsAsync(JObject.FromObject(settings));
-}
-```
+-------
+Additional step-by-step instructions, including how to upgrade from version 1.0 are [here](https://github.com/BarRaider/streamdeck-tools/blob/master/README.md)
+-------
 
 [1]: https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md
