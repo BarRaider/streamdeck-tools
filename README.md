@@ -6,8 +6,7 @@
 
 **Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)  
 
-## Samples of plugins using this framework
-Usage [Samples][1]
+### Samples of plugins using this framework: [Samples][1]
 
 ### Version 2.0 is out!
 **WARNING:** This version breaks interfaces used in versions 1.x  
