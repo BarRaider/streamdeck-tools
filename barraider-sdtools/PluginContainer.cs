@@ -75,7 +75,7 @@ namespace BarRaider.SdTools
             {
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    KeyPayload payload = new KeyPayload(new KeyCoordinates() { Column = e.Event.Payload.Coordinates.Columns, Row = e.Event.Payload.Coordinates.Rows },
+                    KeyPayload payload = new KeyPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
                                                         e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
                     instances[e.Event.Context].KeyPressed(payload);
                 }
@@ -94,7 +94,7 @@ namespace BarRaider.SdTools
             {
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    KeyPayload payload = new KeyPayload(new KeyCoordinates() { Column = e.Event.Payload.Coordinates.Columns, Row = e.Event.Payload.Coordinates.Rows },
+                    KeyPayload payload = new KeyPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
                                                         e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
                     instances[e.Event.Context].KeyReleased(payload);
                 }
@@ -134,7 +134,7 @@ namespace BarRaider.SdTools
                 {
                     try
                     {
-                        InitialPayload payload = new InitialPayload(new KeyCoordinates() { Column = e.Event.Payload.Coordinates.Columns, Row = e.Event.Payload.Coordinates.Rows },
+                        InitialPayload payload = new InitialPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
                                                                     e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
                         instances[e.Event.Context] = (PluginBase)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
                     }
@@ -216,6 +216,16 @@ namespace BarRaider.SdTools
         {
             Logger.Instance.LogMessage(TracingLevel.INFO, "Disconnect event received");
             disconnectEvent.Set();
+        }
+
+        private KeyCoordinates GenerateKeyCoordinates(Coordinates coordinates)
+        {
+            if (coordinates == null)
+            {
+                return null;
+            }
+
+            return new KeyCoordinates() { Column = coordinates.Columns, Row = coordinates.Rows };
         }
     }
 }

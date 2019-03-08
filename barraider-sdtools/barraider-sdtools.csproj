@@ -4,9 +4,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>BarRaider</Authors>
     <Product>StreamDeck Tools by BarRaider</Product>
-    <Description>Start developing your Elgato StreamDeck plugin faster!
-This library holds all the basic logic of setting up the framework, so that you can focus on writing the logic of the plugin itself.  [Samples for using the library are provided here: https://github.com/BarRaider/barraider-sdtools]
-Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More information here: https://github.com/BarRaider/barraider-sdtools</Description>
+    <Description>Start developing your Elgato StreamDeck plugin faster!  
+This library encapsulates all the overhead of setting up the framework, so that you can focus on writing the logic of the plugin itself.  
+[Samples for using the library are provided here: https://github.com/BarRaider/streamdeck-tools]  
+Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More info and working samples here: https://github.com/BarRaider/streamdeck-tools .  
+Feel free to contact me for more information: https://barraider.github.io</Description>
     <Copyright>Copyright © BarRaider 2019</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
@@ -14,10 +16,13 @@ Using this library, you only need to derive from the abstract PluginBase class a
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
-    <Version>2.0.0</Version>
-    <PackageReleaseNotes>Note: Library has been optimized for the new 4.1 SDK!
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <FileVersion>2.0.1.0</FileVersion>
+    <Version>2.0.1</Version>
+    <PackageReleaseNotes>2.0.1 - Fixed bug which caused issues when adding plugins to MultiActions  
+
+Note: Library has been optimized for the new 4.1 SDK!  
+
 Some of the changes are breaking existing interfaces. Upgrade instruction are available on the Github page: 
 https://github.com/BarRaider/streamdeck-tools
 Added new functionality + more data to existing methods. Plugin creation is now much easier</PackageReleaseNotes>
