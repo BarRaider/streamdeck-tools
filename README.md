@@ -8,12 +8,16 @@
 
 ### Samples of plugins using this framework: [Samples][1]
 
-### Version 2.0 is out!
+### Version 2.0.1 is out!
 **WARNING:** This version breaks interfaces used in versions 1.x  
 This is done to simplify the work on creating plugins even more. In addition, it adds access to additional functionality and data.  
 Please follow the ***"Upgrading from versions 1.x"*** section below to quickly move to version 2.x
 
 ## Features
+v2.0.1:
+- Fixed bug which prevented plugins from working in MultiAction
+
+v2.0.0:
 - Optimized for the Stream Deck 4.1 SDK
 - Added support for GlobalSettings (introduced in the 4.1 SDK)
 - Simplified receiving Global Settings updates through the new `ReceivedGlobalSettings` method
