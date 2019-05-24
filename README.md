@@ -1,6 +1,6 @@
 # BarRaider's Stream Deck Tools
 
-#### This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
+#### C# library that wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
 
 [![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
 
