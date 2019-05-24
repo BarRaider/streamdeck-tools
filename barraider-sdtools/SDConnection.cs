@@ -102,6 +102,27 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Switches to one of the plugin's built-in profiles
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <returns></returns>
+        public async Task SwitchProfileAsync(string profileName)
+        {
+            await StreamDeckConnection.SwitchToProfileAsync(this.DeviceId, profileName, this.pluginUUID);
+        }
+
+        /// <summary>
+        /// Switches to one of the plugin's built-in profiles. Allows to choose which device to switch it on.
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <param name="deviceId"></param>
+        /// <returns></returns>
+        public async Task SwitchProfileAsync(string profileName, string deviceId)
+        {
+            await StreamDeckConnection.SwitchToProfileAsync(deviceId, profileName, this.pluginUUID);
+        }
+
+        /// <summary>
         /// Shows the Alert (Yellow Triangle) on the StreamDeck key
         /// </summary>
         /// <returns></returns>
@@ -147,6 +168,12 @@ namespace BarRaider.SdTools
         public String ContextId { get; private set; }
 
         /// <summary>
+        /// An opaque value identifying the device the plugin is launched on.
+        /// </summary>
+        [JsonIgnore]
+        public String DeviceId { get; private set; }
+
+        /// <summary>
         /// StreamDeckConnection object, initialized based on the args received when launching the program
         /// </summary>
         [JsonIgnore]
@@ -160,12 +187,14 @@ namespace BarRaider.SdTools
         /// <param name="pluginUUID"></param>
         /// <param name="actionId"></param>
         /// <param name="contextId"></param>
-        public SDConnection(streamdeck_client_csharp.StreamDeckConnection connection, string pluginUUID, string actionId, string contextId)
+        /// /// <param name="deviceId"></param>
+        public SDConnection(streamdeck_client_csharp.StreamDeckConnection connection, string pluginUUID, string actionId, string contextId, string deviceId)
         {
             StreamDeckConnection = connection;
             this.actionId = actionId;
             this.ContextId = contextId;
             this.pluginUUID = pluginUUID;
+            this.DeviceId = deviceId;
         }
     }
 }

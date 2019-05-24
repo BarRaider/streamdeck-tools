@@ -3,7 +3,7 @@
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>BarRaider</Authors>
-    <Product>StreamDeck Tools by BarRaider</Product>
+    <Product>Stream Deck Tools by BarRaider</Product>
     <Description>Start developing your Elgato StreamDeck plugin faster!  
 This library encapsulates all the overhead of setting up the framework, so that you can focus on writing the logic of the plugin itself.  
 [Samples for using the library are provided here: https://github.com/BarRaider/streamdeck-tools]  
@@ -16,16 +16,10 @@ Feel free to contact me for more information: https://barraider.github.io</Descr
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>2.0.1.0</FileVersion>
-    <Version>2.0.1</Version>
-    <PackageReleaseNotes>2.0.1 - Fixed bug which caused issues when adding plugins to MultiActions  
-
-Note: Library has been optimized for the new 4.1 SDK!  
-
-Some of the changes are breaking existing interfaces. Upgrade instruction are available on the Github page: 
-https://github.com/BarRaider/streamdeck-tools
-Added new functionality + more data to existing methods. Plugin creation is now much easier</PackageReleaseNotes>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
+    <Version>2.2</Version>
+    <PackageReleaseNotes>2.2 - Added support to switching plugin profiles. 2. The DeviceId that the plugin is on is now accessible</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
   </PropertyGroup>
@@ -36,7 +30,7 @@ Added new functionality + more data to existing methods. Plugin creation is now 
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NLog" Version="4.5.11" />
-    <PackageReference Include="streamdeck-client-csharp" Version="4.1.0" />
+    <PackageReference Include="streamdeck-client-csharp" Version="4.1.1" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>

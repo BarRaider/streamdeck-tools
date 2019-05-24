@@ -1,5 +1,4 @@
-﻿using BarRaider.SdTools;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using streamdeck_client_csharp;
 using streamdeck_client_csharp.Events;
 using System;
@@ -126,7 +125,7 @@ namespace BarRaider.SdTools
         // Stopwatch instance created
         private async void Connection_OnWillAppear(object sender, StreamDeckEventReceivedEventArgs<WillAppearEvent> e)
         {
-            SDConnection conn = new SDConnection(connection, pluginUUID, e.Event.Action, e.Event.Context);
+            SDConnection conn = new SDConnection(connection, pluginUUID, e.Event.Action, e.Event.Context, e.Event.Device);
             await instancesLock.WaitAsync();
             try
             {
