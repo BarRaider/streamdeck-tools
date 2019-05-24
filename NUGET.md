@@ -9,7 +9,7 @@
 
 ### Version 2.2 is out!
 - Added support to switching plugin profiles.
-- The DeviceId that the plugin is runnin on is now accessible from the `Connection` object
+- The DeviceId that the plugin is running on is now accessible from the `Connection` object
 
 ## Features
 - Optimized for the Stream Deck 4.1 SDK

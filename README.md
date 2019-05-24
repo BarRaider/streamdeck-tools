@@ -13,7 +13,7 @@
 ## Features
 v2.2:
 - Added support to switching plugin profiles.
-- The DeviceId that the plugin is runnin on is now accessible from the `Connection` object
+- The DeviceId that the plugin is running on is now accessible from the `Connection` object
 
 v2.0.1:
 - Fixed bug which prevented plugins from working in MultiAction
