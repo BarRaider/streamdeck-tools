@@ -1,7 +1,7 @@
 ## Samples of Github repositories using the StreamDeck-Tools framework
 
 List is sorted from basic to more complex plugins:
-1. Stopwatch plugin: https://github.com/BarRaider/streamdeck-stopwatch
+1. Stopwatch plugin: https://github.com/BarRaider/streamdeck-stopwatchdemo
 2. Delayed Text Input plugin: https://github.com/BarRaider/streamdeck-delayedtext
 3. Stock Ticker plugin: https://github.com/BarRaider/streamdeck-stockticker
 4. VoiceMeeter Integration plugin: https://github.com/BarRaider/streamdeck-voicemeeter
