@@ -69,7 +69,7 @@ namespace BarRaider.SdTools
             }
         }
 
-        private NLog.Logger log = null;
+        private readonly NLog.Logger log = null;
         private Logger()
         {
             var config = new NLog.Config.LoggingConfiguration();

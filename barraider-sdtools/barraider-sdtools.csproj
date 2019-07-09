@@ -16,10 +16,14 @@ Feel free to contact me for more information: https://barraider.github.io</Descr
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
-    <Version>2.2</Version>
-    <PackageReleaseNotes>2.2 - Added support to switching plugin profiles. 2. The DeviceId that the plugin is on is now accessible</PackageReleaseNotes>
+    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <FileVersion>2.3.0.0</FileVersion>
+    <Version>2.3</Version>
+    <PackageReleaseNotes>2.3 - Added support for StreamDeck XL + new GlobalSettingsManager:
+1. Connection.DeviceInfo now gives you information on the device the plugin is on (including the StreamDeckDeviceType)
+2. StreamDeckDeviceType enum now recognizes the StreamDeck XL
+3. KEY_DEFAULT_WIDTH and KEY_DEFAULT_HEIGHT from the Tools module now replaced with dedicated GetKeyDefaultWidth()/GetKeyDefaultHeight() methods based on the StreamDeckDeviceType. This is due to different resoultion on the XL
+4. GlobalSettingsManager gives you direct access to the Plugin's global settings from anywhere in your code</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
   </PropertyGroup>
@@ -29,7 +33,7 @@ Feel free to contact me for more information: https://barraider.github.io</Descr
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NLog" Version="4.6.4" />
+    <PackageReference Include="NLog" Version="4.6.5" />
     <PackageReference Include="streamdeck-client-csharp" Version="4.1.1" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>

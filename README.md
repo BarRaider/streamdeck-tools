@@ -8,9 +8,16 @@
 
 ### Samples of plugins using this framework: [Samples][1]
 
-### Version 2.2 is out!
+### Version 2.3 is out!
 
 ## Features
+v2.3:
+- Added support for StreamDeck XL
+1. `Connection.DeviceInfo()` now gives you information on the device the plugin is on (including the `StreamDeckDeviceType`)
+2. `StreamDeckDeviceType` enum now recognizes the StreamDeck XL
+3. KEY_DEFAULT_WIDTH and KEY_DEFAULT_HEIGHT from the `Tools` module now replaced with dedicated `GetKeyDefaultWidth()`/`GetKeyDefaultHeight()` methods based on the StreamDeckDeviceType. This is due to different resoultion on the XL
+- New GlobalSettingsManager class gives you direct access to the Plugin's global settings from anywhere in your code
+
 v2.2:
 - Added support to switching plugin profiles.
 - The DeviceId that the plugin is running on is now accessible from the `Connection` object

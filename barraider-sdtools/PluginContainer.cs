@@ -11,16 +11,16 @@ namespace BarRaider.SdTools
     class PluginContainer
     {
         private StreamDeckConnection connection;
-        private ManualResetEvent connectEvent = new ManualResetEvent(false);
-        private ManualResetEvent disconnectEvent = new ManualResetEvent(false);
-        private SemaphoreSlim instancesLock = new SemaphoreSlim(1);
+        private readonly ManualResetEvent connectEvent = new ManualResetEvent(false);
+        private readonly ManualResetEvent disconnectEvent = new ManualResetEvent(false);
+        private readonly SemaphoreSlim instancesLock = new SemaphoreSlim(1);
         private string pluginUUID = null;
         private StreamDeckInfo deviceInfo;
 
-        private static Dictionary<string, Type> supportedActions = new Dictionary<string, Type>();
+        private static readonly Dictionary<string, Type> supportedActions = new Dictionary<string, Type>();
 
         // Holds all instances of plugin
-        private static Dictionary<string, PluginBase> instances = new Dictionary<string, PluginBase>();
+        private static readonly Dictionary<string, PluginBase> instances = new Dictionary<string, PluginBase>();
 
         public PluginContainer(PluginActionId[] supportedActionIds)
         {
@@ -56,6 +56,9 @@ namespace BarRaider.SdTools
             if (connectEvent.WaitOne(TimeSpan.FromSeconds(10)))
             {
                 Logger.Instance.LogMessage(TracingLevel.INFO, "Connected to Stream Deck");
+
+                // Initialize GlobalSettings manager
+                GlobalSettingsManager.Instance.Initialize(connection);
 
                 // We connected, loop every second until we disconnect
                 while (!disconnectEvent.WaitOne(TimeSpan.FromMilliseconds(1000)))
@@ -125,7 +128,7 @@ namespace BarRaider.SdTools
         // Stopwatch instance created
         private async void Connection_OnWillAppear(object sender, StreamDeckEventReceivedEventArgs<WillAppearEvent> e)
         {
-            SDConnection conn = new SDConnection(connection, pluginUUID, e.Event.Action, e.Event.Context, e.Event.Device);
+            SDConnection conn = new SDConnection(connection, pluginUUID, deviceInfo, e.Event.Action, e.Event.Context, e.Event.Device);
             await instancesLock.WaitAsync();
             try
             {

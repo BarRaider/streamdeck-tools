@@ -19,16 +19,10 @@ namespace BarRaider.SdTools
     public static class Tools
     {
         private const string HEADER_PREFIX = "data:image/png;base64,";
-
-        /// <summary>
-        /// Default height, in pixels, on a key
-        /// </summary>
-        public const int KEY_DEFAULT_HEIGHT = 72;
-
-        /// <summary>
-        /// Default width, in pixels, on a key
-        /// </summary>
-        public const int KEY_DEFAULT_WIDTH = 72;
+        private const int CLASSIC_KEY_DEFAULT_HEIGHT = 72;
+        private const int CLASSIC_KEY_DEFAULT_WIDTH = 72;
+        private const int XL_KEY_DEFAULT_HEIGHT = 96;
+        private const int XL_KEY_DEFAULT_WIDTH = 96;
 
         #region Image Related
 
@@ -99,13 +93,54 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
-        /// Generates an empty key bitmap with the default height and width
+        /// Gets the key default height in pixels.
+        /// To get the StreamDeckType use Connection.DeviceInfo()
+        /// </summary>
+        /// <param name="streamDeckType"></param>
+        /// <returns></returns>
+        public static int GetKeyDefaultHeight(StreamDeckDeviceType streamDeckType)
+        {
+            switch (streamDeckType)
+            {
+                case StreamDeckDeviceType.StreamDeckClassic:
+                case StreamDeckDeviceType.StreamDeckMini:
+                    return CLASSIC_KEY_DEFAULT_HEIGHT;
+                case StreamDeckDeviceType.StreamDeckXL:
+                    return XL_KEY_DEFAULT_HEIGHT;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Gets the key default width in pixels.
+        /// To get the StreamDeckType use Connection.DeviceInfo()
+        /// </summary>
+        /// <param name="streamDeckType"></param>
+        /// <returns></returns>
+        public static int GetKeyDefaultWidth(StreamDeckDeviceType streamDeckType)
+        {
+            switch (streamDeckType)
+            {
+                case StreamDeckDeviceType.StreamDeckClassic:
+                case StreamDeckDeviceType.StreamDeckMini:
+                    return CLASSIC_KEY_DEFAULT_WIDTH;
+                case StreamDeckDeviceType.StreamDeckXL:
+                    return XL_KEY_DEFAULT_WIDTH;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Generates an empty key bitmap with the default height and width.
+        /// New: To get the StreamDeckType use Connection.DeviceInfo()
         /// </summary>
         /// <param name="graphics"></param>
         /// <returns></returns>
-        public static Bitmap GenerateKeyImage(out Graphics graphics)
+        public static Bitmap GenerateKeyImage(StreamDeckDeviceType streamDeckType, out Graphics graphics)
         {
-            Bitmap bitmap = new Bitmap(KEY_DEFAULT_WIDTH, KEY_DEFAULT_HEIGHT);
+            int height = GetKeyDefaultHeight(streamDeckType);
+            int width = GetKeyDefaultWidth(streamDeckType);
+            Bitmap bitmap = new Bitmap(width, height);
             var brush = new SolidBrush(Color.Black);
 
             graphics = Graphics.FromImage(bitmap);
@@ -115,7 +150,7 @@ namespace BarRaider.SdTools
             graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
             //Fill background black
-            graphics.FillRectangle(brush, 0, 0, KEY_DEFAULT_WIDTH, KEY_DEFAULT_HEIGHT);
+            graphics.FillRectangle(brush, 0, 0, width, height);
             return bitmap;
         }
 

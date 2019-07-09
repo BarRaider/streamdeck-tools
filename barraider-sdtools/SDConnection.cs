@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BarRaider.SdTools
 {
@@ -150,6 +151,17 @@ namespace BarRaider.SdTools
             await StreamDeckConnection.LogMessageAsync(message);
         }
 
+        public StreamDeckDeviceInfo DeviceInfo()
+        {
+            if (deviceInfo == null || string.IsNullOrEmpty(DeviceId))
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"Could not get DeviceInfo for DeviceId: {DeviceId} Devices: {deviceInfo?.Devices?.Length}");
+                return null;
+            }
+
+            return deviceInfo.Devices.Where(d => d.Id == DeviceId).FirstOrDefault();
+        }
+
         #endregion
 
         [JsonIgnore]
@@ -180,6 +192,12 @@ namespace BarRaider.SdTools
         public streamdeck_client_csharp.StreamDeckConnection StreamDeckConnection { get; private set; }
 
         /// <summary>
+        /// Holds information about the devices connected to the computer
+        /// </summary>
+        [JsonIgnore]
+        private readonly StreamDeckInfo deviceInfo;
+
+        /// <summary>
         /// Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
         /// These will be used to correctly communicate with the StreamDeck App
         /// </summary>
@@ -188,12 +206,13 @@ namespace BarRaider.SdTools
         /// <param name="actionId"></param>
         /// <param name="contextId"></param>
         /// /// <param name="deviceId"></param>
-        public SDConnection(streamdeck_client_csharp.StreamDeckConnection connection, string pluginUUID, string actionId, string contextId, string deviceId)
+        public SDConnection(streamdeck_client_csharp.StreamDeckConnection connection, string pluginUUID, StreamDeckInfo deviceInfo, string actionId, string contextId, string deviceId)
         {
             StreamDeckConnection = connection;
+            this.pluginUUID = pluginUUID;
+            this.deviceInfo = deviceInfo;
             this.actionId = actionId;
             this.ContextId = contextId;
-            this.pluginUUID = pluginUUID;
             this.DeviceId = deviceId;
         }
     }
