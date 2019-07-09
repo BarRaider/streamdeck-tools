@@ -9,32 +9,26 @@
 ### Samples of plugins using this framework: [Samples][1]
 
 ### Version 2.3 is out!
-
-## Features
 v2.3:
 - Added support for StreamDeck XL
 1. `Connection.DeviceInfo()` now gives you information on the device the plugin is on (including the `StreamDeckDeviceType`)
 2. `StreamDeckDeviceType` enum now recognizes the StreamDeck XL
 3. KEY_DEFAULT_WIDTH and KEY_DEFAULT_HEIGHT from the `Tools` module now replaced with dedicated `GetKeyDefaultWidth()`/`GetKeyDefaultHeight()` methods based on the StreamDeckDeviceType. This is due to different resoultion on the XL
-- New GlobalSettingsManager class gives you direct access to the Plugin's global settings from anywhere in your code
+- New `GlobalSettingsManager` class gives you direct access to the Plugin's global settings from anywhere in your code
 
-v2.2:
-- Added support to switching plugin profiles.
-- The DeviceId that the plugin is running on is now accessible from the `Connection` object
+## Features
+- Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
+- Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
+- Just call the `SDWrapper.Run()` and the library will take care of all the overhead
+- Just have your plugin inherit PluginBase and implement the basic functionality. Use the PluginActionId to specify the UUID from the manifest file. (see samples on github page)
 
-v2.0.1:
-- Fixed bug which prevented plugins from working in MultiAction
-
-v2.0.0:
 - Optimized for the Stream Deck 4.1 SDK
 - Added support for GlobalSettings (introduced in the 4.1 SDK)
 - Simplified receiving Global Settings updates through the new `ReceivedGlobalSettings` method
 - Simplified receiving updates from the Property Inspector through the new `ReceivedSettings` method along with the new `Tools.AutoPopulateSettings()` method. See the ***"Auto-populating plugin settings"*** section below. 
 - Introduced a new attribute called PluginActionId to indicate the Action's UUID (See below)
-- Simplified working with filenames from the Stram Deck SDK. See ***"Working with files"*** section below
-- Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
-- Just call the `SDWrapper.Run()` and the library will take care of all the overhead
-- Just have your plugin inherit PluginBase and implement the basic functionality. Use the PluginActionId to specify the UUID from the manifest file.
+- Added support to switching plugin profiles.
+- The DeviceId that the plugin is running on is now accessible from the `Connection` object
 
 ## How do I use this?
 A list of plugins already using this library can be found [here][1]
