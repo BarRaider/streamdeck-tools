@@ -75,16 +75,21 @@ namespace BarRaider.SdTools
             return connection.GetGlobalSettingsAsync();
         }
 
-        public Task SetGlobalSettings(JObject settings)
+        public async Task SetGlobalSettings(JObject settings, bool triggerDidReceiveGlobalSettings = true)
         {
             if (connection == null)
             {
                 Logger.Instance.LogMessage(TracingLevel.ERROR, "GlobalSettingsManager::SetGlobalSettings called while connection is null");
-                return null;
+                return;
             }
 
             Logger.Instance.LogMessage(TracingLevel.INFO, "GlobalSettingsManager::SetGlobalSettings called");
-            return connection.SetGlobalSettingsAsync(settings);
+            await connection.SetGlobalSettingsAsync(settings);
+
+            if (triggerDidReceiveGlobalSettings)
+            {
+                await connection.GetGlobalSettingsAsync();
+            }
         }
 
 

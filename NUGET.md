@@ -7,6 +7,11 @@
 **Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)  
 ** Samples of plugins using this framework: [Samples][1]
 
+### Version 2.4.2 is out!
+- Added support for Plugin version inside the StreamDeckInfo class. 
+- Current plugin version is now shown in the `pluginlog.log` log file
+- Publishing through `GlobalSettingsManager` now raises the GlobalSettingsReceived event by default
+
 ### Version 2.3 is out!
 - Added support for StreamDeck XL
 1. `Connection.DeviceInfo()` now gives you information on the device the plugin is on (including the `StreamDeckDeviceType`)

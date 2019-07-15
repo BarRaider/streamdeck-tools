@@ -23,5 +23,17 @@ namespace BarRaider.SdTools
         /// </summary>
         [JsonProperty(PropertyName = "devices")]
         public StreamDeckDeviceInfo[] Devices { get; private set; }
+
+        /// <summary>
+        /// Information on the Plugin we're currently running
+        /// </summary>
+        [JsonProperty(PropertyName = "plugin")]
+        public StreamDeckPluginInfo Plugin { get; private set; }
+
+        /// <summary>
+        /// Device pixel ratio
+        /// </summary>
+        [JsonProperty(PropertyName = "devicePixelRatio")]
+        public int DevicePixelRatio { get; private set; }
     }
 }

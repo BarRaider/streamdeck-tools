@@ -50,6 +50,7 @@ namespace BarRaider.SdTools
 
             // Start the connection
             connection.Run();
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin version: {deviceInfo.Plugin.Version}");
             Logger.Instance.LogMessage(TracingLevel.INFO, "Connecting to Stream Deck");
 
             // Wait for up to 10 seconds to connect

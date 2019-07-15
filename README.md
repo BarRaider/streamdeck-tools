@@ -8,6 +8,12 @@
 
 ### Samples of plugins using this framework: [Samples][1]
 
+
+### Version 2.4.2 is out!
+- Added support for Plugin version inside the StreamDeckInfo class. 
+- Current plugin version is now shown in the `pluginlog.log` log file
+- Publishing through `GlobalSettingsManager` now raises the GlobalSettingsReceived event by default
+
 ### Version 2.3 is out!
 v2.3:
 - Added support for StreamDeck XL
