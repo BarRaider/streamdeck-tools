@@ -10,8 +10,8 @@
 
 ### New tools included:
 * [EasyPI](https://github.com/BarRaider/streamdeck-easypi) - Easily pass information from the PI (Property Inspector) to your plugin.  
-* [Install.bat](utils\install.bat) - Script that quickly uninstalls and reinstalls your plugin on the streamdeck (view batch file for more details)  
-* [StreamDeck-Tools Template](utils\StreamDeck-Tools Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin
+* [Install.bat](https://github.com/BarRaider/streamdeck-tools/blob/master/utils/install.bat) - Script that quickly uninstalls and reinstalls your plugin on the streamdeck (view batch file for more details)  
+* [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin
 
 
 
