@@ -16,11 +16,11 @@ Feel free to contact me for more information: https://barraider.github.io</Descr
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>2.4.2.0</AssemblyVersion>
-    <FileVersion>2.4.2.0</FileVersion>
-    <Version>2.4.2</Version>
-    <PackageReleaseNotes>2.4.2 - 1. Added support for Plugin version inside the StreamDeckInfo class. Current plugin version is now shown in logs
-2. Publishing through GlobalSettingsManager now raises the GlobalSettingsReceived event by default</PackageReleaseNotes>
+    <AssemblyVersion>2.5.0.0</AssemblyVersion>
+    <FileVersion>2.5.0.0</FileVersion>
+    <Version>2.5.0</Version>
+    <PackageReleaseNotes>2.5.0 - 1. Support for StreamDeckMobile device type
+2. Added new `Tools.GenerateGenericKeyImage()` function that generates an image that fits all Stream Decks</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
   </PropertyGroup>
@@ -28,7 +28,7 @@ Feel free to contact me for more information: https://barraider.github.io</Descr
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.5.0" />
+    <PackageReference Include="CommandLineParser" Version="2.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NLog" Version="4.6.6" />
     <PackageReference Include="streamdeck-client-csharp" Version="4.1.1" />

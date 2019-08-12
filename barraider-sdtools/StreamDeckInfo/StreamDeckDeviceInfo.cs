@@ -25,7 +25,12 @@ namespace BarRaider.SdTools
         /// <summary>
         /// StreamDeck XL with 32 keys
         /// </summary>
-        StreamDeckXL = 2
+        StreamDeckXL = 2,
+
+        /// <summary>
+        /// StreamDeck Mobile version
+        /// </summary>
+        StreamDeckMobile = 3
     }
 
     /// <summary>

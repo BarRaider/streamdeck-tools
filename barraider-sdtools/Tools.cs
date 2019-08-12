@@ -23,6 +23,7 @@ namespace BarRaider.SdTools
         private const int CLASSIC_KEY_DEFAULT_WIDTH = 72;
         private const int XL_KEY_DEFAULT_HEIGHT = 96;
         private const int XL_KEY_DEFAULT_WIDTH = 96;
+        private const int GENERIC_KEY_IMAGE_SIZE = 144;
 
         #region Image Related
 
@@ -104,11 +105,15 @@ namespace BarRaider.SdTools
             {
                 case StreamDeckDeviceType.StreamDeckClassic:
                 case StreamDeckDeviceType.StreamDeckMini:
+                case StreamDeckDeviceType.StreamDeckMobile:
                     return CLASSIC_KEY_DEFAULT_HEIGHT;
                 case StreamDeckDeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_HEIGHT;
+                default:
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
+                    break;
             }
-            return -1;
+            return 1;
         }
 
         /// <summary>
@@ -123,11 +128,15 @@ namespace BarRaider.SdTools
             {
                 case StreamDeckDeviceType.StreamDeckClassic:
                 case StreamDeckDeviceType.StreamDeckMini:
+                case StreamDeckDeviceType.StreamDeckMobile:
                     return CLASSIC_KEY_DEFAULT_WIDTH;
                 case StreamDeckDeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_WIDTH;
+                default:
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
+                    break;
             }
-            return -1;
+            return 1;
         }
 
         /// <summary>
@@ -140,19 +149,40 @@ namespace BarRaider.SdTools
         {
             int height = GetKeyDefaultHeight(streamDeckType);
             int width = GetKeyDefaultWidth(streamDeckType);
-            Bitmap bitmap = new Bitmap(width, height);
-            var brush = new SolidBrush(Color.Black);
 
-            graphics = Graphics.FromImage(bitmap);
-            graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-
-            //Fill background black
-            graphics.FillRectangle(brush, 0, 0, width, height);
-            return bitmap;
+            return GenerateKeyImage(height, width, out graphics);
         }
+
+        public static Bitmap GenerateGenericKeyImage(out Graphics graphics)
+        {
+            return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, out graphics);
+        }
+
+        private static Bitmap GenerateKeyImage(int height, int width, out Graphics graphics)
+        {
+            try
+            {
+                Bitmap bitmap = new Bitmap(width, height);
+                var brush = new SolidBrush(Color.Black);
+
+                graphics = Graphics.FromImage(bitmap);
+                graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
+                //Fill background black
+                graphics.FillRectangle(brush, 0, 0, width, height);
+                return bitmap;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GenerateKeyImage exception: {ex} Height: {height} Width: {width}");
+            }
+            graphics = null;
+            return null;
+        }
+        
 
         /// <summary>
         /// Extracts the actual filename from a file payload received from the Property Inspector
@@ -221,8 +251,7 @@ namespace BarRaider.SdTools
                     object[] attributes = prop.GetCustomAttributes(true);
                     foreach (object attr in attributes)
                     {
-                        JsonPropertyAttribute jprop = attr as JsonPropertyAttribute;
-                        if (jprop != null)
+                        if (attr is JsonPropertyAttribute jprop)
                         {
                             dicProperties.Add(jprop.PropertyName, prop);
                             break;
@@ -249,8 +278,7 @@ namespace BarRaider.SdTools
             var pluginTypes = Assembly.GetEntryAssembly().GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
             pluginTypes.ForEach(typ =>
             {
-                var attr = typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() as PluginActionIdAttribute;
-                if (attr != null)
+                if (typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() is PluginActionIdAttribute attr)
                 {
                     actions.Add(new PluginActionId(attr.ActionId, typ));
                 }

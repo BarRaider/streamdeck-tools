@@ -7,6 +7,10 @@
 **Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)  
 ** Samples of plugins using this framework: [Samples][1]
 
+### Version 2.5 is out!
+- Added support for StreamDeckMobile device type
+- Added new `Tools.GenerateGenericKeyImage()` function that generates an image that fits all Stream Decks
+
 ### Version 2.4.2 is out!
 - Added support for Plugin version inside the StreamDeckInfo class. 
 - Current plugin version is now shown in the `pluginlog.log` log file
