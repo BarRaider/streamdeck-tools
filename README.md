@@ -13,31 +13,16 @@
 * [Install.bat](https://github.com/BarRaider/streamdeck-tools/blob/master/utils/install.bat) - Script that quickly uninstalls and reinstalls your plugin on the streamdeck (view batch file for more details)  
 * [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin
 
-### Version 2.5 is out!
-- Added support for StreamDeckMobile device type
-- Added new `Tools.GenerateGenericKeyImage()` function that generates an image that fits all Stream Decks
-- 
-
-### Version 2.4.2 is out!
-- Added support for Plugin version inside the StreamDeckInfo class. 
-- Current plugin version is now shown in the `pluginlog.log` log file
-- Publishing through `GlobalSettingsManager` now raises the GlobalSettingsReceived event by default
-
-### Version 2.3 is out!
-- Added support for StreamDeck XL
-1. `Connection.DeviceInfo()` now gives you information on the device the plugin is on (including the `StreamDeckDeviceType`)
-2. `StreamDeckDeviceType` enum now recognizes the StreamDeck XL
-3. KEY_DEFAULT_WIDTH and KEY_DEFAULT_HEIGHT from the `Tools` module now replaced with dedicated `GetKeyDefaultWidth()`/`GetKeyDefaultHeight()` methods based on the StreamDeckDeviceType. This is due to different resoultion on the XL
-- New `GlobalSettingsManager` class gives you direct access to the Plugin's global settings from anywhere in your code
+### Version 2.6 is out!
+- Added new MD5 functions in the `Tools` helper class
+- Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
+- Updated dependency packages to latest versions
 
 ## Features
 - Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
 - Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
 - Just call the `SDWrapper.Run()` and the library will take care of all the overhead
 - Just have your plugin inherit PluginBase and implement the basic functionality. Use the PluginActionId to specify the UUID from the manifest file. (see samples on github page)
-
-- Optimized for the Stream Deck 4.1 SDK
-- Added support for GlobalSettings (introduced in the 4.1 SDK)
 - Simplified receiving Global Settings updates through the new `ReceivedGlobalSettings` method
 - Simplified receiving updates from the Property Inspector through the new `ReceivedSettings` method along with the new `Tools.AutoPopulateSettings()` method. See the ***"Auto-populating plugin settings"*** section below. 
 - Introduced a new attribute called PluginActionId to indicate the Action's UUID (See below)
@@ -141,19 +126,5 @@ public async override void ReceivedSettings(ReceivedSettingsPayload payload)
 	await Connection.SetSettingsAsync(JObject.FromObject(settings));
 }
 ```
-
-#### Upgrading from version 1.x
-1. Change your Plugin's constructor second parameter to receive a `InitialPayload` instead of a `JObject`. Explanation:  
-The PluginBase constructor no longer receives a `JObject` called "settings". It now receives an actual `InitialPayload` class named "payload". (see example above)
-The InitialPayload class hold additional information, not just the Settings such as information about the Stream Deck device and the actual row and column in the Stream Deck where the plugin is located.
-
-2. Modify your `KeyPressed` and `KeyReleased` function to receive a parameter of type `KeyPayload`. Explanation:  
-The `KeyPayload` class includes information relevant to when the key is pressed or released. One example is whether this is part of a MultiAction or not.
-
-3. The `UpdateSettings` method has been deprecated. Instead, implement (or just leave empty) the `ReceivedSettings` and the `ReceivedGlobalSettings` methods.  
-Explanation:  
-`UpdateSettings` is no longer needed in StreamDeck SDK 4.1 - the `ReceivedSettings` function will be called every time the settings change in the Property Inspector.  
-If you used the same concepts as in the samples linked above: You created a private class in your plugin, where each setting is a Property that has a JsonProperty attribute. As such, you can use the `Tools.AutoPopulateSettings()` method (as shown above) instead of manually updating your settings.
-
 
 [1]: https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md

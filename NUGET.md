@@ -7,30 +7,16 @@
 **Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)  
 ** Samples of plugins using this framework: [Samples][1]
 
-### Version 2.5 is out!
-- Added support for StreamDeckMobile device type
-- Added new `Tools.GenerateGenericKeyImage()` function that generates an image that fits all Stream Decks
-
-### Version 2.4.2 is out!
-- Added support for Plugin version inside the StreamDeckInfo class. 
-- Current plugin version is now shown in the `pluginlog.log` log file
-- Publishing through `GlobalSettingsManager` now raises the GlobalSettingsReceived event by default
-
-### Version 2.3 is out!
-- Added support for StreamDeck XL
-1. `Connection.DeviceInfo()` now gives you information on the device the plugin is on (including the `StreamDeckDeviceType`)
-2. `StreamDeckDeviceType` enum now recognizes the StreamDeck XL
-3. KEY_DEFAULT_WIDTH and KEY_DEFAULT_HEIGHT from the `Tools` module now replaced with dedicated `GetKeyDefaultWidth()`/`GetKeyDefaultHeight()` methods based on the StreamDeckDeviceType. This is due to different resoultion on the XL
-- New GlobalSettingsManager class gives you direct access to the Plugin's global settings from anywhere in your code
+### Version 2.6 is out!
+- Added new MD5 functions in the `Tools` helper class
+- Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
+- Updated dependency packages to latest versions
 
 ## Features
 - Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
 - Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
 - Just call the `SDWrapper.Run()` and the library will take care of all the overhead
 - Just have your plugin inherit PluginBase and implement the basic functionality. Use the PluginActionId to specify the UUID from the manifest file. (see samples on github page)
-
-- Optimized for the Stream Deck 4.1 SDK
-- Added support for GlobalSettings (introduced in the 4.1 SDK)
 - Simplified receiving Global Settings updates through the new `ReceivedGlobalSettings` method
 - Simplified receiving updates from the Property Inspector through the new `ReceivedSettings` method along with the new `Tools.AutoPopulateSettings()` method. See the ***"Auto-populating plugin settings"*** section below. 
 - Introduced a new attribute called PluginActionId to indicate the Action's UUID (See below)

@@ -20,7 +20,7 @@ Feel free to contact me for more information: https://barraider.github.io</Descr
     <FileVersion>2.6.0.0</FileVersion>
     <Version>2.6.0</Version>
     <PackageReleaseNotes>2.6.0 - 1. Added new MD5 functions in the `Tools` helper class
-2. Optimized SetImage to not resubmit an image that was just posted to the device. Can be overidden with new property in Connection.SetImage() function.
+2. Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
 3. Updated dependency packages to latest versions</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
