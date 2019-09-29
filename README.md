@@ -4,7 +4,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
 
-**Author's website and contact information:** [https://barraider.github.io](https://barraider.github.io)  
+**Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 
 ### Samples of plugins using this framework: [Samples][1]
 
