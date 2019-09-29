@@ -8,7 +8,7 @@
 This library encapsulates all the overhead of setting up the framework, so that you can focus on writing the logic of the plugin itself.  
 [Samples for using the library are provided here: https://github.com/BarRaider/streamdeck-tools]  
 Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More info and working samples here: https://github.com/BarRaider/streamdeck-tools .  
-Feel free to contact me for more information: https://barraider.github.io</Description>
+Feel free to contact me for more information: https://barraider.com</Description>
     <Copyright>Copyright © BarRaider 2019</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
