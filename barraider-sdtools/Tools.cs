@@ -9,6 +9,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace BarRaider.SdTools
 {
@@ -54,6 +55,11 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string ImageToBase64(Image image, bool addHeaderPrefix)
         {
+            if (image == null)
+            {
+                return null;
+            }
+
             using (MemoryStream m = new MemoryStream())
             {
                 image.Save(m, ImageFormat.Png);
@@ -74,6 +80,11 @@ namespace BarRaider.SdTools
         {
             try
             {
+                if (string.IsNullOrEmpty(base64String))
+                {
+                    return null;
+                }
+
                 // Remove header
                 if (base64String.Substring(0, HEADER_PREFIX.Length) == HEADER_PREFIX)
                 {
@@ -182,7 +193,7 @@ namespace BarRaider.SdTools
             graphics = null;
             return null;
         }
-        
+
 
         /// <summary>
         /// Extracts the actual filename from a file payload received from the Property Inspector
@@ -196,7 +207,57 @@ namespace BarRaider.SdTools
 
         private static string FilenameFromString(string filenameWithFakepath)
         {
+            if (string.IsNullOrEmpty(filenameWithFakepath))
+            {
+                return null;
+            }
+
             return Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
+        }
+
+        /// <summary>
+        /// Returns MD5 Hash from an image object
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static string ImageToMD5(Image image)
+        {
+            if (image == null)
+            {
+                return null;
+            }
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms, ImageFormat.Png);
+                return BytesToMD5(ms.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Returns MD5 Hash from a string
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static string StringToMD5(string str)
+        {
+            if (str == null)
+            {
+                return null;
+            }
+            return BytesToMD5(System.Text.Encoding.UTF8.GetBytes(str));
+        }
+
+        /// <summary>
+        /// Returns MD5 Hash from a byte stream
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static string BytesToMD5(byte[] byteStream)
+        {
+            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+            byte[] hash = md5.ComputeHash(byteStream);
+            return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
 
         #endregion

@@ -12,6 +12,12 @@ namespace BarRaider.SdTools
     /// </summary>
     public class SDConnection
     {
+        #region Private Methods
+
+        private string previousImageHash = null;
+
+        #endregion
+
         #region Public Implementations
 
         /// <summary>
@@ -77,9 +83,14 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="base64Image">Base64 encoded image</param>
         /// <returns></returns>
-        public async Task SetImageAsync(string base64Image)
+        public async Task SetImageAsync(string base64Image, bool forceSendToStreamdeck = false)
         {
-            await StreamDeckConnection.SetImageAsync(base64Image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+            string hash = Tools.StringToMD5(base64Image);
+            if (forceSendToStreamdeck || hash != previousImageHash)
+            {
+                previousImageHash = hash;
+                await StreamDeckConnection.SetImageAsync(base64Image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+            }
         }
 
         /// <summary>
@@ -87,9 +98,14 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="image">Image object</param>
         /// <returns></returns>
-        public async Task SetImageAsync(Image image)
+        public async Task SetImageAsync(Image image, bool forceSendToStreamdeck = false)
         {
-            await StreamDeckConnection.SetImageAsync(image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+            string hash = Tools.ImageToMD5(image);
+            if (forceSendToStreamdeck || hash != previousImageHash)
+            {
+                previousImageHash = hash;
+                await StreamDeckConnection.SetImageAsync(image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+            }
         }
 
         /// <summary>
