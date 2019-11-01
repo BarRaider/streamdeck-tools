@@ -5,7 +5,7 @@ cd /d %~dp0
 cd %1
 
 REM MAKE SURE THE FOLLOWING ARE CORRECT
-REM ALSO, UPDATE YOUR_USERNAME ON LINE 16
+REM ALSO, UPDATE YOUR_USERNAME ON LINE 18
 SET OUTPUT_DIR="C:\TEMP"
 SET DISTRIBUTION_TOOL="e:\Projects\DotNet\Stream Deck Distribution\DistributionTool.exe"
 SET STREAM_DECK_FILE="D:\Program Files\Elgato\StreamDeck\StreamDeck.exe"
