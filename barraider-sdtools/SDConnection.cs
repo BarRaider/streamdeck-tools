@@ -119,6 +119,16 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Sets a state on the StreamDeck key
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public async Task SetStateAsync(uint state)
+        {
+            await StreamDeckConnection.SetStateAsync(state, ContextId);
+        }
+
+        /// <summary>
         /// Switches to one of the plugin's built-in profiles
         /// </summary>
         /// <param name="profileName"></param>
