@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BarRaider.SdTools.Wrappers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -164,11 +165,23 @@ namespace BarRaider.SdTools
             return GenerateKeyImage(height, width, out graphics);
         }
 
+        /// <summary>
+        /// Creates a key image that fits all Stream Decks
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <returns></returns>
         public static Bitmap GenerateGenericKeyImage(out Graphics graphics)
         {
             return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, out graphics);
         }
 
+        /// <summary>
+        /// Creates a key image based on given height and width
+        /// </summary>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
+        /// <param name="graphics"></param>
+        /// <returns></returns>
         private static Bitmap GenerateKeyImage(int height, int width, out Graphics graphics)
         {
             try
@@ -194,6 +207,52 @@ namespace BarRaider.SdTools
             return null;
         }
 
+        /// <summary>
+        /// Adds a text path to an existing Graphics object. Uses TitleParser to emulate the Text settings in the Property Inspector
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="titleParameters"></param>
+        /// <param name="imageHeight"></param>
+        /// <param name="imageWidth"></param>
+        /// <param name="text"></param>
+        /// <param name="pixelsAlignment"></param>
+        public static void AddTextPathToGraphics(Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
+        {
+            Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle);
+            Color color = titleParameters.TitleColor;
+            graphics.PageUnit = GraphicsUnit.Pixel;
+            float ratio = graphics.DpiY / imageWidth;
+            SizeF stringSize = graphics.MeasureString(text, font);
+            float textWidth = stringSize.Width * (1 - ratio);
+            float textHeight = stringSize.Height * (1 - ratio);
+            int stringWidth = 0;
+            if (textWidth < imageWidth)
+            {
+                stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
+            }
+
+            int stringHeight = pixelsAlignment; // Top
+            if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
+            {
+                stringHeight = (imageHeight / 2) - pixelsAlignment;
+            }
+            else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
+            {
+                stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
+            }
+
+            GraphicsPath gpath = new GraphicsPath();
+            gpath.AddString(text,
+                                font.FontFamily,
+                                (int)font.Style,
+                                graphics.DpiY * font.SizeInPoints / imageWidth,
+                                new Point(stringWidth, stringHeight),
+                                new StringFormat());
+            graphics.DrawPath(Pens.Black, gpath);
+            graphics.FillPath(new SolidBrush(color), gpath);
+        }
+
+        #endregion
 
         /// <summary>
         /// Extracts the actual filename from a file payload received from the Property Inspector
@@ -215,6 +274,8 @@ namespace BarRaider.SdTools
             return Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
         }
 
+        #region MD5
+
         /// <summary>
         /// Returns MD5 Hash from an image object
         /// </summary>
@@ -227,11 +288,19 @@ namespace BarRaider.SdTools
                 return null;
             }
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                image.Save(ms, ImageFormat.Png);
-                return BytesToMD5(ms.ToArray());
+            try
+            { 
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    image.Save(ms, ImageFormat.Png);
+                    return BytesToMD5(ms.ToArray());
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"ImageToMD5 Exception: {ex}");
+            }
+            return null;
         }
 
         /// <summary>
@@ -255,9 +324,17 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string BytesToMD5(byte[] byteStream)
         {
-            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
-            byte[] hash = md5.ComputeHash(byteStream);
-            return BitConverter.ToString(hash).Replace("-", "").ToLower();
+            try
+            {
+                MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+                byte[] hash = md5.ComputeHash(byteStream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"BytesToMD5 Exception: {ex}");
+            }
+            return null;
         }
 
         #endregion

@@ -13,13 +13,20 @@
 * [Install.bat](https://github.com/BarRaider/streamdeck-tools/blob/master/utils/install.bat) - Script that quickly uninstalls and reinstalls your plugin on the streamdeck (view batch file for more details)  
 * [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin
 
+### Version 2.7 is out!
+- Fully wrapped all Stream Deck events (All part of the SDConneciton class). See ***"Subscribing to events"*** section below
+- Added extension methods for multiple classes related to brushes/colors
+- Added additional methods under the Tools class, including AddTextPathToGraphics which can be used to correctly position text on a key image based on the Text Settings in the Property Inspector see ***"Showing Title based on settings from Property Inspector"*** section below.
+- Additional error checking
+- Updated dependency packages to latest versions
+- Sample plugin now included in this project on Github
+
 ### 2019-11-17
 - Updated Install.bat (above) to newer version
 
 ### Version 2.6 is out!
 - Added new MD5 functions in the `Tools` helper class
 - Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
-- Updated dependency packages to latest versions
 
 ## Features
 - Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
@@ -31,6 +38,8 @@
 - Introduced a new attribute called PluginActionId to indicate the Action's UUID (See below)
 - Added support to switching plugin profiles.
 - The DeviceId that the plugin is running on is now accessible from the `Connection` object
+- Added new MD5 functions in the `Tools` helper class
+- Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
 
 ## How do I use this?
 A list of plugins already using this library can be found [here][1]
@@ -127,6 +136,89 @@ public async override void ReceivedSettings(ReceivedSettingsPayload payload)
     Tools.AutoPopulateSettings(settings, payload.Settings);
 	// Return fixed filename back to the Property Inspector
 	await Connection.SetSettingsAsync(JObject.FromObject(settings));
+}
+```
+
+## Subscribing to events  
+A full list of Stream Deck events are available [here](https://developer.elgato.com/documentation/stream-deck/sdk/events-received/). You can subscribe to them using the Connection object in the plugin. **IMPORTANT**: Remember to unsubscribe in the Dispose() function as shown below:
+
+```
+// Subscribe in Constructor
+
+public MyPlugin(SDConnection connection, InitialPayload payload) : base(connection, payload)
+{
+	...
+	...
+
+	Connection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
+	Connection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
+	Connection.OnDeviceDidConnect += Connection_OnDeviceDidConnect;
+	Connection.OnDeviceDidDisconnect += Connection_OnDeviceDidDisconnect;
+	Connection.OnPropertyInspectorDidAppear += Connection_OnPropertyInspectorDidAppear;
+	Connection.OnPropertyInspectorDidDisappear += Connection_OnPropertyInspectorDidDisappear;
+	Connection.OnSendToPlugin += Connection_OnSendToPlugin;
+	Connection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
+}
+
+...
+	
+// Unsubscribe in Dispose
+public override void Dispose()
+{
+	Connection.OnApplicationDidLaunch -= Connection_OnApplicationDidLaunch;
+	Connection.OnApplicationDidTerminate -= Connection_OnApplicationDidTerminate;
+	Connection.OnDeviceDidConnect -= Connection_OnDeviceDidConnect;
+	Connection.OnDeviceDidDisconnect -= Connection_OnDeviceDidDisconnect;
+	Connection.OnPropertyInspectorDidAppear -= Connection_OnPropertyInspectorDidAppear;
+	Connection.OnPropertyInspectorDidDisappear -= Connection_OnPropertyInspectorDidDisappear;
+	Connection.OnSendToPlugin -= Connection_OnSendToPlugin;
+	Connection.OnTitleParametersDidChange -= Connection_OnTitleParametersDidChange;
+	Logger.Instance.LogMessage(TracingLevel.INFO, "Destructor called");
+}
+
+```
+
+## Showing Title based on settings from Property Inspector  
+The following is an example of how you can use the title settings built-in the property inspector to show it as an image on the key:
+
+```
+// Note this exists in SdTools.Wrappers namespace
+private SdTools.Wrappers.TitleParameters titleParameters = null;
+private string userTitle;
+
+// Constructor
+public MyPlugin(SDConnection connection, InitialPayload payload) : base(connection, payload)
+{
+	if (payload.Settings == null || payload.Settings.Count == 0)
+	{
+		this.settings = PluginSettings.CreateDefaultSettings();
+	}
+	else
+	{
+		this.settings = payload.Settings.ToObject<PluginSettings>();
+	}
+	// Get title information
+	Connection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
+}
+
+private void Connection_OnTitleParametersDidChange(object sender, SdTools.Wrappers.SDEventReceivedEventArgs<SdTools.Events.TitleParametersDidChange> e)
+{
+	titleParameters = e.Event?.Payload?.TitleParameters;
+	userTitle = e.Event?.Payload?.Title;
+}
+
+// Display on key with OnTick
+public async override void OnTick()
+{
+	using (Bitmap img = Tools.GenerateGenericKeyImage(out Graphics graphics))
+	{
+		int height = img.Height;
+        int width = img.Width;
+		
+		Tools.AddTextPathToGraphics(graphics, titleParameters, img.Height, img.Width, userTitle);
+		await Connection.SetImageAsync(img);
+        graphics.Dispose();
+	}
 }
 ```
 

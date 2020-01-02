@@ -7,10 +7,13 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 ** Samples of plugins using this framework: [Samples][1]
 
-### Version 2.6 is out!
-- Added new MD5 functions in the `Tools` helper class
-- Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
+### Version 2.7 is out!
+- Fully wrapped all Stream Deck events (All part of the SDConneciton class). See ***"Subscribing to events"*** section in readme.
+- Added extension methods for multiple classes related to brushes/colors
+- Added additional methods under the Tools class, including AddTextPathToGraphics which can be used to correctly position text on a key image based on the Text Settings in the Property Inspector see ***"Showing Title based on settings from Property Inspector"*** section in readme.
+- Additional error checking
 - Updated dependency packages to latest versions
+- Sample plugin now included in this project on Github
 
 ## Features
 - Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
@@ -22,6 +25,8 @@
 - Introduced a new attribute called PluginActionId to indicate the Action's UUID (See below)
 - Added support to switching plugin profiles.
 - The DeviceId that the plugin is running on is now accessible from the `Connection` object
+- Added new MD5 functions in the `Tools` helper class
+- Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
 
 ## How do I use this?
 A list of plugins already using this library can be found [here][1]
@@ -74,9 +79,5 @@ class Program
 ~~~~
 
 3. There is no step 3 - that's it! The abstract functions from PluginBase that are implemented in MyPlugin hold all the basics needed for a plugin to work. You can always listen to additional events using the `Connection` property.
-
--------
-### Additional step-by-step instructions, including how to upgrade from v1.0 are [here](https://github.com/BarRaider/streamdeck-tools/blob/master/README.md)
--------
 
 [1]: https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md

@@ -9,19 +9,21 @@ This library encapsulates all the overhead of setting up the framework, so that 
 [Samples for using the library are provided here: https://github.com/BarRaider/streamdeck-tools]  
 Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More info and working samples here: https://github.com/BarRaider/streamdeck-tools .  
 Feel free to contact me for more information: https://barraider.com</Description>
-    <Copyright>Copyright © BarRaider 2019</Copyright>
+    <Copyright>Copyright © BarRaider 2020</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/BarRaider/streamdeck-tools</RepositoryUrl>
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>2.6.0.0</AssemblyVersion>
-    <FileVersion>2.6.0.0</FileVersion>
-    <Version>2.6.0</Version>
-    <PackageReleaseNotes>2.6.0 - 1. Added new MD5 functions in the `Tools` helper class
-2. Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
-3. Updated dependency packages to latest versions</PackageReleaseNotes>
+    <AssemblyVersion>2.7.0.0</AssemblyVersion>
+    <FileVersion>2.7.0.0</FileVersion>
+    <Version>2.7.0</Version>
+    <PackageReleaseNotes>2.7.0 - 1. Added wrappers to all existing Stream Deck events (All part of the SDConneciton class)
+2. Added extension methods for multiple classes related to brushes/colors
+3. Added additional methods under the Tools class, including AddTextPathToGraphics which can be used to correctly position text on a key image based on the Text Settings in the Property Inspectors (see TitleParametersDidChange) in SDConnection.
+4. Additional error checking
+5. Updated dependency packages to latest versions</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
   </PropertyGroup>
@@ -29,11 +31,11 @@ Feel free to contact me for more information: https://barraider.com</Description
     <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.6.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NLog" Version="4.6.7" />
+    <PackageReference Include="CommandLineParser" Version="2.7.82" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NLog" Version="4.6.8" />
     <PackageReference Include="streamdeck-client-csharp" Version="4.1.1" />
-    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

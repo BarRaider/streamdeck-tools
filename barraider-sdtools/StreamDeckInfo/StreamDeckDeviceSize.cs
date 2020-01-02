@@ -23,5 +23,11 @@ namespace BarRaider.SdTools
         /// </summary>
         [JsonProperty(PropertyName = "columns")]
         public int Cols { get; private set; }
+
+        public StreamDeckDeviceSize(int rows, int cols)
+        {
+            Rows = rows;
+            Cols = cols;
+        }
     }
 }

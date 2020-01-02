@@ -4,6 +4,9 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Linq;
+using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Events;
+using BarRaider.SdTools.Payloads;
 
 namespace BarRaider.SdTools
 {
@@ -15,6 +18,19 @@ namespace BarRaider.SdTools
         #region Private Methods
 
         private string previousImageHash = null;
+
+        #endregion
+
+        #region Public Events
+
+        public event EventHandler<SDEventReceivedEventArgs<SendToPlugin>> OnSendToPlugin;
+        public event EventHandler<SDEventReceivedEventArgs<TitleParametersDidChange>> OnTitleParametersDidChange;
+        public event EventHandler<SDEventReceivedEventArgs<ApplicationDidTerminate>> OnApplicationDidTerminate;
+        public event EventHandler<SDEventReceivedEventArgs<ApplicationDidLaunch>> OnApplicationDidLaunch;
+        public event EventHandler<SDEventReceivedEventArgs<DeviceDidDisconnect>> OnDeviceDidDisconnect;
+        public event EventHandler<SDEventReceivedEventArgs<DeviceDidConnect>> OnDeviceDidConnect;
+        public event EventHandler<SDEventReceivedEventArgs<PropertyInspectorDidAppear>> OnPropertyInspectorDidAppear;
+        public event EventHandler<SDEventReceivedEventArgs<PropertyInspectorDidDisappear>> OnPropertyInspectorDidDisappear;
 
         #endregion
 
@@ -45,7 +61,6 @@ namespace BarRaider.SdTools
                 await StreamDeckConnection.SetSettingsAsync(settings, ContextId);
             }
         }
-
 
         /// <summary>
         /// Persists your global plugin settings
@@ -106,6 +121,15 @@ namespace BarRaider.SdTools
                 previousImageHash = hash;
                 await StreamDeckConnection.SetImageAsync(image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
             }
+        }
+
+        /// <summary>
+        /// Sets the default image for this state, as configured in the manifest
+        /// </summary>
+        /// <returns></returns>
+        public async Task SetDefaultImageAsync()
+        {
+            await SetImageAsync((String)null);
         }
 
         /// <summary>
@@ -178,16 +202,46 @@ namespace BarRaider.SdTools
             return deviceInfo.Devices.Where(d => d.Id == DeviceId).FirstOrDefault();
         }
 
-        #endregion
-
-        [JsonIgnore]
-        private readonly string actionId;
+        /// <summary>
+        /// Tells Stream Deck to return the current plugin settings via the ReceivedSettings function
+        /// </summary>
+        /// <returns></returns>
+        public async Task GetSettingsAsync()
+        {
+            await StreamDeckConnection.GetSettingsAsync(ContextId);
+        }
 
         /// <summary>
-        /// An opaque value identifying the plugin. Received as an argument when the executable was launched.
+        /// Opens a URI in the user's browser
         /// </summary>
-        [JsonIgnore]
-        private readonly string pluginUUID;
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public async Task OpenUrlAsync(string uri)
+        {
+            await StreamDeckConnection.OpenUrlAsync(uri);
+        }
+
+        /// <summary>
+        /// Opens a URI in the user's browser
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public async Task OpenUrlAsync(Uri uri)
+        {
+            await StreamDeckConnection.OpenUrlAsync(uri);
+        }
+
+        /// <summary>
+        /// Sets the plugin to a specific state which is pre-configured in the manifest file
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public async Task SetStateAsync(uint state)
+        {
+            await StreamDeckConnection.SetStateAsync(state, ContextId);
+        }
+
+        #endregion
 
         /// <summary>
         /// An opaque value identifying the plugin. This value is received during the Registration procedure
@@ -208,12 +262,6 @@ namespace BarRaider.SdTools
         public streamdeck_client_csharp.StreamDeckConnection StreamDeckConnection { get; private set; }
 
         /// <summary>
-        /// Holds information about the devices connected to the computer
-        /// </summary>
-        [JsonIgnore]
-        private readonly StreamDeckInfo deviceInfo;
-
-        /// <summary>
         /// Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
         /// These will be used to correctly communicate with the StreamDeck App
         /// </summary>
@@ -230,6 +278,93 @@ namespace BarRaider.SdTools
             this.actionId = actionId;
             this.ContextId = contextId;
             this.DeviceId = deviceId;
+
+            connection.OnSendToPlugin += Connection_OnSendToPlugin;
+            connection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
+            connection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
+            connection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
+            connection.OnDeviceDidDisconnect += Connection_OnDeviceDidDisconnect;
+            connection.OnDeviceDidConnect += Connection_OnDeviceDidConnect;
+            connection.OnPropertyInspectorDidAppear += Connection_OnPropertyInspectorDidAppear;
+            connection.OnPropertyInspectorDidDisappear += Connection_OnPropertyInspectorDidDisappear;
         }
+
+
+        #region Event Wrappers
+
+        private void Connection_OnPropertyInspectorDidDisappear(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.PropertyInspectorDidDisappearEvent> e)
+        {
+            if (e.Event.Context == ContextId)
+            {
+                OnPropertyInspectorDidDisappear?.Invoke(this, new SDEventReceivedEventArgs<PropertyInspectorDidDisappear>(new PropertyInspectorDidDisappear(e.Event.Action, e.Event.Context, e.Event.Device)));
+            }
+        }
+
+        private void Connection_OnPropertyInspectorDidAppear(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.PropertyInspectorDidAppearEvent> e)
+        {
+            if (e.Event.Context == ContextId)
+            {
+                OnPropertyInspectorDidAppear?.Invoke(this, new SDEventReceivedEventArgs<PropertyInspectorDidAppear>(new PropertyInspectorDidAppear(e.Event.Action, e.Event.Context, e.Event.Device)));
+            }
+        }
+
+        private void Connection_OnDeviceDidConnect(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.DeviceDidConnectEvent> e)
+        {
+            OnDeviceDidConnect?.Invoke(this, new SDEventReceivedEventArgs<DeviceDidConnect>(new DeviceDidConnect(e.Event.DeviceInfo.ToStreamDeckDeviceInfo(e.Event.Device))));
+        }
+
+        private void Connection_OnDeviceDidDisconnect(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.DeviceDidDisconnectEvent> e)
+        {
+            OnDeviceDidDisconnect?.Invoke(this, new SDEventReceivedEventArgs<DeviceDidDisconnect>(new DeviceDidDisconnect(e.Event.Device)));
+        }
+
+        private void Connection_OnApplicationDidTerminate(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.ApplicationDidTerminateEvent> e)
+        {
+            OnApplicationDidTerminate?.Invoke(this, new SDEventReceivedEventArgs<ApplicationDidTerminate>(new ApplicationDidTerminate(new Payloads.ApplicationPayload(e.Event.Payload.Application))));
+        }
+
+        private void Connection_OnApplicationDidLaunch(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.ApplicationDidLaunchEvent> e)
+        {
+            OnApplicationDidLaunch?.Invoke(this, new SDEventReceivedEventArgs<ApplicationDidLaunch>(new ApplicationDidLaunch(new Payloads.ApplicationPayload(e.Event.Payload.Application))));
+        }
+
+        private void Connection_OnTitleParametersDidChange(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.TitleParametersDidChangeEvent> e)
+        {
+            if (e.Event.Context == ContextId)
+            {
+                var payload = e.Event.Payload;
+                var newPayload = new TitleParametersPayload(payload.Settings, payload.Coordinates.ToKeyCoordinates(), payload.State, payload.Title, payload.TitleParameters.ToSDTitleParameters());
+                OnTitleParametersDidChange?.Invoke(this, new SDEventReceivedEventArgs<TitleParametersDidChange>(new TitleParametersDidChange(e.Event.Action, e.Event.Context, e.Event.Device, newPayload)));
+            }
+        }
+
+        private void Connection_OnSendToPlugin(object sender, streamdeck_client_csharp.StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.SendToPluginEvent> e)
+        {
+            if (e.Event.Context == ContextId)
+            {
+                OnSendToPlugin?.Invoke(this, new SDEventReceivedEventArgs<SendToPlugin>(new SendToPlugin(e.Event.Action, e.Event.Context, e.Event.Payload)));
+            }
+        }
+
+        #endregion
+
+        #region Private Members
+
+        [JsonIgnore]
+        private readonly string actionId;
+
+        /// <summary>
+        /// An opaque value identifying the plugin. Received as an argument when the executable was launched.
+        /// </summary>
+        [JsonIgnore]
+        private readonly string pluginUUID;
+
+        /// <summary>
+        /// Holds information about the devices connected to the computer
+        /// </summary>
+        [JsonIgnore]
+        private readonly StreamDeckInfo deviceInfo;
+
+        #endregion
     }
 }
