@@ -1,4 +1,7 @@
 ﻿using NLog;
+using NLog.Config;
+using NLog.LayoutRenderers;
+using NLog.Targets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,12 +72,32 @@ namespace BarRaider.SdTools
             }
         }
 
+		/// <summary>
+		/// Set logging format. In addition to the standard layouts defined for NLog, ${real-time} ${elapsed-time} are available.
+		/// </summary>
+		/// <example>"https://nlog-project.org/config/?tab=layout-renderers"</example>
+		public string Layout
+		{
+			get
+			{
+				LoggingConfiguration lc = NLog.LogManager.Configuration;
+				return ((FileTarget)lc.LoggingRules[0].Targets[0]).Layout.ToString();
+			}
+			set
+			{
+				LoggingConfiguration lc = NLog.LogManager.Configuration;
+				((FileTarget)lc.LoggingRules[0].Targets[0]).Layout = value;
+			}
+		}
+
         private readonly NLog.Logger log = null;
         private Logger()
         {
-            var config = new NLog.Config.LoggingConfiguration();
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "pluginlog.log", ArchiveEvery=NLog.Targets.FileArchivePeriod.Day, MaxArchiveFiles=10, ArchiveFileName="logs/log.{###}.log", ArchiveNumbering=NLog.Targets.ArchiveNumberingMode.Rolling };
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+			LayoutRenderer.Register<LayoutRenderers.ElapsedTimeLayoutRenderer>("elapsed-time");
+			LayoutRenderer.Register<LayoutRenderers.RealTimeLayoutRenderer>("real-time");
+			var config = new NLog.Config.LoggingConfiguration();
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "pluginlog.log", ArchiveEvery=NLog.Targets.FileArchivePeriod.Day, MaxArchiveFiles=10, ArchiveFileName="logs/log.{###}.log", ArchiveNumbering=NLog.Targets.ArchiveNumberingMode.Rolling};
+			config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
             NLog.LogManager.Configuration = config;
             log = LogManager.GetCurrentClassLogger();
             LogMessage(TracingLevel.DEBUG, "Logger Initialized");
