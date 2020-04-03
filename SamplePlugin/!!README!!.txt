@@ -10,4 +10,4 @@ Resources:
 * StreamDeck-Tools samples and tutorial: https://github.com/BarRaider/streamdeck-tools
 * EasyPI library (for working with Property Inspector): https://github.com/BarRaider/streamdeck-easypi
 
-Discord Server: https://discord.gg/sHsKXhM
+Discord Server: http://discord.barraider.com
