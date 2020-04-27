@@ -13,7 +13,7 @@ namespace BarRaider.SdTools
     /// Holds implementation for all the basic functions
     /// If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
     /// </summary>
-    public abstract class PluginBase
+    public abstract class PluginBase : IDisposable
     {
         /// <summary>
         /// Called when a Stream Deck key is pressed
@@ -44,9 +44,21 @@ namespace BarRaider.SdTools
         public abstract void OnTick();
 
         /// <summary>
-        /// Called when the plugin is disposed
+        /// Abstract method Called when the plugin is disposed
         /// </summary>
         public abstract void Dispose();
+
+        /// <summary>
+        /// Main iDisposable Dispose function
+        /// </summary>
+        public void Destroy()
+        {
+            Dispose();
+            if (Connection != null)
+            {
+                Connection.Dispose();
+            }
+        }
 
         /// <summary>
         /// Connection object which handles your communication with the Stream Deck app

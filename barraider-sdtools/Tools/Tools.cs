@@ -155,6 +155,7 @@ namespace BarRaider.SdTools
         /// Generates an empty key bitmap with the default height and width.
         /// New: To get the StreamDeckType use Connection.DeviceInfo()
         /// </summary>
+        /// <param name="streamDeckType"></param>
         /// <param name="graphics"></param>
         /// <returns></returns>
         public static Bitmap GenerateKeyImage(StreamDeckDeviceType streamDeckType, out Graphics graphics)
@@ -218,41 +219,50 @@ namespace BarRaider.SdTools
         /// <param name="pixelsAlignment"></param>
         public static void AddTextPathToGraphics(Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
         {
-            Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle);
-            Color color = titleParameters.TitleColor;
-            graphics.PageUnit = GraphicsUnit.Pixel;
-            float ratio = graphics.DpiY / imageWidth;
-            SizeF stringSize = graphics.MeasureString(text, font);
-            float textWidth = stringSize.Width * (1 - ratio);
-            float textHeight = stringSize.Height * (1 - ratio);
-            int stringWidth = 0;
-            if (textWidth < imageWidth)
+            try
             {
-                stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
-            }
+                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle);
+                Color color = titleParameters.TitleColor;
+                graphics.PageUnit = GraphicsUnit.Pixel;
+                float ratio = graphics.DpiY / imageWidth;
+                SizeF stringSize = graphics.MeasureString(text, font);
+                float textWidth = stringSize.Width * (1 - ratio);
+                float textHeight = stringSize.Height * (1 - ratio);
+                int stringWidth = 0;
+                if (textWidth < imageWidth)
+                {
+                    stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
+                }
 
-            int stringHeight = pixelsAlignment; // Top
-            if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
-            {
-                stringHeight = (imageHeight / 2) - pixelsAlignment;
-            }
-            else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
-            {
-                stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
-            }
+                int stringHeight = pixelsAlignment; // Top
+                if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
+                {
+                    stringHeight = (imageHeight / 2) - pixelsAlignment;
+                }
+                else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
+                {
+                    stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
+                }
 
-            GraphicsPath gpath = new GraphicsPath();
-            gpath.AddString(text,
-                                font.FontFamily,
-                                (int)font.Style,
-                                graphics.DpiY * font.SizeInPoints / imageWidth,
-                                new Point(stringWidth, stringHeight),
-                                new StringFormat());
-            graphics.DrawPath(Pens.Black, gpath);
-            graphics.FillPath(new SolidBrush(color), gpath);
+                GraphicsPath gpath = new GraphicsPath();
+                gpath.AddString(text,
+                                    font.FontFamily,
+                                    (int)font.Style,
+                                    graphics.DpiY * font.SizeInPoints / imageWidth,
+                                    new Point(stringWidth, stringHeight),
+                                    new StringFormat());
+                graphics.DrawPath(Pens.Black, gpath);
+                graphics.FillPath(new SolidBrush(color), gpath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPathToGraphics Exception {ex}");
+            }
         }
 
         #endregion
+
+        #region Filename Related
 
         /// <summary>
         /// Extracts the actual filename from a file payload received from the Property Inspector
@@ -273,6 +283,39 @@ namespace BarRaider.SdTools
 
             return Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
         }
+
+        #endregion
+
+        #region String Related
+
+        /// <summary>
+        /// Converts a long to a human-readable string. Example: 54,265 => 54.27k
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public static string FormatNumber(long num)
+        {
+            if (num >= 100000000)
+            {
+                return (num / 1000000D).ToString("0.#M");
+            }
+            if (num >= 1000000)
+            {
+                return (num / 1000000D).ToString("0.##M");
+            }
+            if (num >= 100000)
+            {
+                return (num / 1000D).ToString("0.#k");
+            }
+            if (num >= 10000)
+            {
+                return (num / 1000D).ToString("0.##k");
+            }
+
+            return num.ToString("#,0");
+        }
+
+        #endregion
 
         #region MD5
 
@@ -306,7 +349,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Returns MD5 Hash from a string
         /// </summary>
-        /// <param name="image"></param>
+        /// <param name="str"></param>
         /// <returns></returns>
         public static string StringToMD5(string str)
         {
@@ -320,7 +363,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Returns MD5 Hash from a byte stream
         /// </summary>
-        /// <param name="image"></param>
+        /// <param name="byteStream"></param>
         /// <returns></returns>
         public static string BytesToMD5(byte[] byteStream)
         {

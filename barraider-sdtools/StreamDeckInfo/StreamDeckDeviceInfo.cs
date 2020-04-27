@@ -56,6 +56,12 @@ namespace BarRaider.SdTools
         [JsonProperty(PropertyName = "id")]
         public string Id { get; private set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="type"></param>
+        /// <param name="deviceId"></param>
         public StreamDeckDeviceInfo(StreamDeckDeviceSize size, StreamDeckDeviceType type, string deviceId)
         {
             Size = size;

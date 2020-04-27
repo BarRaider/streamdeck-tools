@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BarRaider.SdTools
 {
+    /// <summary>
+    /// Helper class which allows fetching the GlobalSettings of a plugin
+    /// </summary>
     public class GlobalSettingsManager
     {
         #region Private Static Members
@@ -53,16 +56,23 @@ namespace BarRaider.SdTools
 
         #region Public Methods
 
+        /// <summary>
+        /// Event triggered when Global Settings are received
+        /// </summary>
         public event EventHandler<ReceivedGlobalSettingsPayload> OnReceivedGlobalSettings;
 
 
-        public void Initialize(StreamDeckConnection connection)
+        internal void Initialize(StreamDeckConnection connection)
         {
             this.connection = connection;
             this.connection.OnDidReceiveGlobalSettings += Connection_OnDidReceiveGlobalSettings;
             Logger.Instance.LogMessage(TracingLevel.INFO, "GlobalSettingsManager initialized");
         }
 
+        /// <summary>
+        /// Command to request the Global Settings. Use the OnDidReceiveGlobalSSettings callback function to receive the Global Settings.
+        /// </summary>
+        /// <returns></returns>
         public Task RequestGlobalSettings()
         {
             if (connection == null)
@@ -75,6 +85,12 @@ namespace BarRaider.SdTools
             return connection.GetGlobalSettingsAsync();
         }
 
+        /// <summary>
+        /// Sets the Global Settings for the plugin
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="triggerDidReceiveGlobalSettings"></param>
+        /// <returns></returns>
         public async Task SetGlobalSettings(JObject settings, bool triggerDidReceiveGlobalSettings = true)
         {
             if (connection == null)

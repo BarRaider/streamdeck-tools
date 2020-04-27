@@ -164,7 +164,7 @@ namespace BarRaider.SdTools
             {
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                   instances[e.Event.Context].Dispose();
+                   instances[e.Event.Context].Destroy();
                    instances.Remove(e.Event.Context);
                 }
             }

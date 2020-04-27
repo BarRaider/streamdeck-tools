@@ -13,7 +13,7 @@ namespace BarRaider.SdTools
     /// <summary>
     /// Connection object which handles your communication with the Stream Deck app
     /// </summary>
-    public class SDConnection
+    public class SDConnection : IDisposable
     {
         #region Private Methods
 
@@ -23,13 +23,37 @@ namespace BarRaider.SdTools
 
         #region Public Events
 
+        /// <summary>
+        /// Event received by the plugin when the Property Inspector uses the sendToPlugin event.
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<SendToPlugin>> OnSendToPlugin;
+        /// <summary>
+        /// Event received when the user changes the title or title parameters.
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<TitleParametersDidChange>> OnTitleParametersDidChange;
+        /// <summary>
+        /// Event received when a monitored application is terminated
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<ApplicationDidTerminate>> OnApplicationDidTerminate;
+        /// <summary>
+        /// Event received when a monitored application is launched
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<ApplicationDidLaunch>> OnApplicationDidLaunch;
+        /// <summary>
+        /// Event received when a device is unplugged from the computer
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<DeviceDidDisconnect>> OnDeviceDidDisconnect;
+        /// <summary>
+        /// Event received when a device is plugged to the computer.
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<DeviceDidConnect>> OnDeviceDidConnect;
+        /// <summary>
+        /// Event received when the Property Inspector appears in the Stream Deck software user interface, for example when selecting a new instance.
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<PropertyInspectorDidAppear>> OnPropertyInspectorDidAppear;
+        /// <summary>
+        /// Event received when the Property Inspector for an instance is removed from the Stream Deck software user interface, for example when selecting a different instance.
+        /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<PropertyInspectorDidDisappear>> OnPropertyInspectorDidDisappear;
 
         #endregion
@@ -97,6 +121,7 @@ namespace BarRaider.SdTools
         /// Sets an image on the StreamDeck key.
         /// </summary>
         /// <param name="base64Image">Base64 encoded image</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
         public async Task SetImageAsync(string base64Image, bool forceSendToStreamdeck = false)
         {
@@ -112,6 +137,7 @@ namespace BarRaider.SdTools
         /// Sets an image on the StreamDeck key
         /// </summary>
         /// <param name="image">Image object</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
         public async Task SetImageAsync(Image image, bool forceSendToStreamdeck = false)
         {
@@ -191,6 +217,10 @@ namespace BarRaider.SdTools
             await StreamDeckConnection.LogMessageAsync(message);
         }
 
+        /// <summary>
+        /// Gets the Stream Deck device's info
+        /// </summary>
+        /// <returns></returns>
         public StreamDeckDeviceInfo DeviceInfo()
         {
             if (deviceInfo == null || string.IsNullOrEmpty(DeviceId))
@@ -267,6 +297,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="pluginUUID"></param>
+        /// <param name="deviceInfo"></param>
         /// <param name="actionId"></param>
         /// <param name="contextId"></param>
         /// /// <param name="deviceId"></param>
@@ -279,14 +310,29 @@ namespace BarRaider.SdTools
             this.ContextId = contextId;
             this.DeviceId = deviceId;
 
-            connection.OnSendToPlugin += Connection_OnSendToPlugin;
-            connection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
-            connection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
-            connection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
-            connection.OnDeviceDidDisconnect += Connection_OnDeviceDidDisconnect;
-            connection.OnDeviceDidConnect += Connection_OnDeviceDidConnect;
-            connection.OnPropertyInspectorDidAppear += Connection_OnPropertyInspectorDidAppear;
-            connection.OnPropertyInspectorDidDisappear += Connection_OnPropertyInspectorDidDisappear;
+            StreamDeckConnection.OnSendToPlugin += Connection_OnSendToPlugin;
+            StreamDeckConnection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
+            StreamDeckConnection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
+            StreamDeckConnection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
+            StreamDeckConnection.OnDeviceDidDisconnect += Connection_OnDeviceDidDisconnect;
+            StreamDeckConnection.OnDeviceDidConnect += Connection_OnDeviceDidConnect;
+            StreamDeckConnection.OnPropertyInspectorDidAppear += Connection_OnPropertyInspectorDidAppear;
+            StreamDeckConnection.OnPropertyInspectorDidDisappear += Connection_OnPropertyInspectorDidDisappear;
+        }
+
+        /// <summary>
+        /// Dispose (Destructor) function
+        /// </summary>
+        public void Dispose()
+        {
+            StreamDeckConnection.OnSendToPlugin -= Connection_OnSendToPlugin;
+            StreamDeckConnection.OnTitleParametersDidChange -= Connection_OnTitleParametersDidChange;
+            StreamDeckConnection.OnApplicationDidTerminate -= Connection_OnApplicationDidTerminate;
+            StreamDeckConnection.OnApplicationDidLaunch -= Connection_OnApplicationDidLaunch;
+            StreamDeckConnection.OnDeviceDidDisconnect -= Connection_OnDeviceDidDisconnect;
+            StreamDeckConnection.OnDeviceDidConnect -= Connection_OnDeviceDidConnect;
+            StreamDeckConnection.OnPropertyInspectorDidAppear -= Connection_OnPropertyInspectorDidAppear;
+            StreamDeckConnection.OnPropertyInspectorDidDisappear -= Connection_OnPropertyInspectorDidDisappear;
         }
 
 

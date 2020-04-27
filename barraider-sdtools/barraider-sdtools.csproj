@@ -16,24 +16,27 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>2.7.0.0</AssemblyVersion>
-    <FileVersion>2.7.0.0</FileVersion>
-    <Version>2.7.0</Version>
-    <PackageReleaseNotes>2.7.0 - 1. Added wrappers to all existing Stream Deck events (All part of the SDConneciton class)
-2. Added extension methods for multiple classes related to brushes/colors
-3. Added additional methods under the Tools class, including AddTextPathToGraphics which can be used to correctly position text on a key image based on the Text Settings in the Property Inspectors (see TitleParametersDidChange) in SDConnection.
-4. Additional error checking
-5. Updated dependency packages to latest versions</PackageReleaseNotes>
+    <AssemblyVersion>2.8.0.0</AssemblyVersion>
+    <FileVersion>2.8.0.0</FileVersion>
+    <Version>2.8.0</Version>
+    <PackageReleaseNotes>2.8 - 1. Introduced GraphicsUtils class with a bunch of more helper functions to manipulate the SD images
+2. Added new FormatNumber function to Tools class (54,265 =&gt; 54.27k)
+3. New Graphics ExtensionMethods (DrawAndMeasureString &amp; GetTextCenter)
+4. Updated dependency packages to latest versions
+5. Bug fix where SDConnection was not properly disposed.</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>D:\Projects\github\barraider-sdtools\barraider-sdtools\barraider-sdtools.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>E:\Projects\GitHub\streamdeck-tools\\streamdeck-tools.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NLog" Version="4.6.8" />
+    <PackageReference Include="NLog" Version="4.7.0" />
     <PackageReference Include="streamdeck-client-csharp" Version="4.1.1" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>

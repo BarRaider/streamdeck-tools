@@ -37,8 +37,12 @@ namespace BarRaider.SdTools
             Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin Loading - {supportedActionIds.Length} Actions Found");
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
-            // The command line args parser expects all args to use `--`, so, let's append
-            for (int count = 0; count < args.Length; count++)
+#if DEBUG
+            Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Loading - Args: {String.Join(" ", args)}");
+#endif
+
+                // The command line args parser expects all args to use `--`, so, let's append
+                for (int count = 0; count < args.Length; count++)
             {
                 if (args[count].StartsWith("-") && !args[count].StartsWith("--"))
                 {

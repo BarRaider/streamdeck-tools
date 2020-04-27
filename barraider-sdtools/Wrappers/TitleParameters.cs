@@ -6,13 +6,30 @@ using System.Text;
 
 namespace BarRaider.SdTools.Wrappers
 {
+    /// <summary>
+    /// Enum for the alignment of the Title text on the key
+    /// </summary>
     public enum TitleVerticalAlignment
     {
+        /// <summary>
+        /// Top Alignment
+        /// </summary>
         Top,
+
+        /// <summary>
+        /// Middle/Center Alignment
+        /// </summary>
         Middle,
+
+        /// <summary>
+        /// Bottom Alignment
+        /// </summary>
         Bottom
     }
 
+    /// <summary>
+    /// Class holding all the Title Information set by a user in the Property Inspector
+    /// </summary>
     public class TitleParameters
     {
         #region Private Members
@@ -20,31 +37,63 @@ namespace BarRaider.SdTools.Wrappers
         private const int DEFAULT_IMAGE_SIZE_FONT_SCALE = 3;
         #endregion
 
-
+        /// <summary>
+        /// Title Color
+        /// </summary>
         [JsonProperty("titleColor")]
         public Color TitleColor { get; private set; } = Color.White;
 
+        /// <summary>
+        /// Font Size in Points
+        /// </summary>
         [JsonProperty("fontSize")]
         public double FontSizeInPoints { get; private set; } = 10;
 
+        /// <summary>
+        /// Font Size in Pixels
+        /// </summary>
         [JsonIgnore]
         public double FontSizeInPixels => Math.Round(FontSizeInPoints * POINTS_TO_PIXEL_CONVERT);
 
+        /// <summary>
+        /// Font Size Scaled to Image
+        /// </summary>
         [JsonIgnore]
         public double FontSizeInPixelsScaledToDefaultImage => Math.Round(FontSizeInPixels * DEFAULT_IMAGE_SIZE_FONT_SCALE);
         
+        /// <summary>
+        /// Font Family
+        /// </summary>
         [JsonProperty("fontFamily")]
         public FontFamily FontFamily { get; private set; } = new FontFamily("Verdana");
 
+        /// <summary>
+        /// Font Style
+        /// </summary>
         [JsonProperty("fontStyle")]
         public FontStyle FontStyle { get; private set; } = FontStyle.Bold;
 
+        /// <summary>
+        /// Should Title be shown
+        /// </summary>
         [JsonProperty("showTitle")]
         public bool ShowTitle { get; private set; }
 
+        /// <summary>
+        /// Alignment position of the Title text on the key
+        /// </summary>
         [JsonProperty("titleAlignment")]
         public TitleVerticalAlignment VerticalAlignment { get; private set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="fontFamily"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontSize"></param>
+        /// <param name="titleColor"></param>
+        /// <param name="showTitle"></param>
+        /// <param name="verticalAlignment"></param>
         public TitleParameters(FontFamily fontFamily, FontStyle fontStyle, double fontSize, Color titleColor, bool showTitle, TitleVerticalAlignment verticalAlignment)
         {
             FontFamily = fontFamily;
@@ -55,6 +104,16 @@ namespace BarRaider.SdTools.Wrappers
             VerticalAlignment = verticalAlignment;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="fontFamily"></param>
+        /// <param name="fontSize"></param>
+        /// <param name="fontStyle"></param>
+        /// <param name="fontUnderline"></param>
+        /// <param name="showTitle"></param>
+        /// <param name="titleAlignment"></param>
+        /// <param name="titleColor"></param>
         public TitleParameters(string fontFamily, uint fontSize, string fontStyle, bool fontUnderline, bool showTitle, string titleAlignment, string titleColor)
         {
             ParsePayload(fontFamily, fontSize, fontStyle, fontUnderline, showTitle, titleAlignment, titleColor);
