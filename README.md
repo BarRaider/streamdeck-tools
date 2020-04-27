@@ -36,6 +36,7 @@
 - Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
 
 ## Features
+- Sample plugin now included in this project on Github
 - Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
 - Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
 - Just call the `SDWrapper.Run()` and the library will take care of all the overhead
@@ -47,6 +48,8 @@
 - The DeviceId that the plugin is running on is now accessible from the `Connection` object
 - Added new MD5 functions in the `Tools` helper class
 - Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
+- ExtensionMethods for Brush/Color/Graphics objects
+- Helper functions in the `Tools` and `GraphicTools` classes
 
 ## How do I use this?
 A list of plugins already using this library can be found [here][1]
