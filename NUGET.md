@@ -7,15 +7,15 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 ** Samples of plugins using this framework: [Samples][1]
 
-### Version 2.7 is out!
-- Fully wrapped all Stream Deck events (All part of the SDConneciton class). See ***"Subscribing to events"*** section in readme.
-- Added extension methods for multiple classes related to brushes/colors
-- Added additional methods under the Tools class, including AddTextPathToGraphics which can be used to correctly position text on a key image based on the Text Settings in the Property Inspector see ***"Showing Title based on settings from Property Inspector"*** section in readme.
-- Additional error checking
+### Version 2.8 is out!
+- Introduced `GraphicsUtils` class with a bunch of helper functions to manipulate the SD images
+- Added new `Tools.FormatNumber()` function converts 54265 to 54.27k
+- New ExtensionMethods for `Graphics` object: `DrawAndMeasureString` / `GetTextCenter`
 - Updated dependency packages to latest versions
-- Sample plugin now included in this project on Github
+- Bug fix where SDConnection was not properly disposed.
 
 ## Features
+- Sample plugin now included in this project on Github
 - Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
 - Built-in integration with NLog. Use `Logger.LogMessage()` for logging. 
 - Just call the `SDWrapper.Run()` and the library will take care of all the overhead
@@ -27,6 +27,8 @@
 - The DeviceId that the plugin is running on is now accessible from the `Connection` object
 - Added new MD5 functions in the `Tools` helper class
 - Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
+- ExtensionMethods for Brush/Color/Graphics objects
+- Helper functions in the `Tools` and `GraphicTools` classes
 
 ## How do I use this?
 A list of plugins already using this library can be found [here][1]
