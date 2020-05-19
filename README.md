@@ -231,15 +231,15 @@ Below is an example of how to read and write to the Global Settings.
 ```
 public class GlobalSettings
 {
-        [JsonProperty(PropertyName = "myFirstField")]
-        public String MyFirstField { get; set; }
+	[JsonProperty(PropertyName = "myFirstField")]
+	public String MyFirstField { get; set; }
 
-        [JsonProperty(PropertyName = "mySecondFile")]
-        public bool MySecondField { get; set; }
+	[JsonProperty(PropertyName = "mySecondFile")]
+	public bool MySecondField { get; set; }
 }
 ```
 
-2. In the class you want to read/write the settings, subscribe to the `OnReceivedGlobalSettings` event. ***Remember:*** If you subscribe to an event, you must also unsubscribe to it. So make sure your class has a Dispose function (inherits from IDisposable).
+2. In the class you want to read/write the settings, subscribe to the `OnReceivedGlobalSettings` event. ***Remember:*** If you subscribe to an event, you must also unsubscribe to it. So make sure your class has a Dispose function (inherits from IDisposable).  
 **NOTE:** If this is in your action where you inherit from `PluginBase` you can skip this step as you already have a `OnReceivedGlobalSettings` function as part of the PluginBase implementation
 
 ```
@@ -253,8 +253,7 @@ public class MyClass : IDisposable
 	public override void Dispose()
 	{
 		GlobalSettingsManager.Instance.OnReceivedGlobalSettings -= MyClass_OnReceivedGlobalSettings;
-    }
-
+	}
 }
 ```
 
