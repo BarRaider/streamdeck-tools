@@ -20,21 +20,6 @@
 - Updated dependency packages to latest versions
 - Bug fix where SDConnection was not properly disposed.
 
-### Version 2.7 is out!
-- Fully wrapped all Stream Deck events (All part of the SDConneciton class). See ***"Subscribing to events"*** section below
-- Added extension methods for multiple classes related to brushes/colors
-- Added additional methods under the Tools class, including AddTextPathToGraphics which can be used to correctly position text on a key image based on the Text Settings in the Property Inspector see ***"Showing Title based on settings from Property Inspector"*** section below.
-- Additional error checking
-- Updated dependency packages to latest versions
-- Sample plugin now included in this project on Github
-
-### 2019-11-17
-- Updated Install.bat (above) to newer version
-
-### Version 2.6 is out!
-- Added new MD5 functions in the `Tools` helper class
-- Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
-
 ## Features
 - Sample plugin now included in this project on Github
 - Simplified working with filenames from the Stream Deck SDK. See ***"Working with files"*** section below
@@ -201,7 +186,9 @@ public MyPlugin(SDConnection connection, InitialPayload payload) : base(connecti
 {
 	if (payload.Settings == null || payload.Settings.Count == 0)
 	{
+		// Create default settings and save them
 		this.settings = PluginSettings.CreateDefaultSettings();
+		_ = Connection.SetSettingsAsync(JObject.FromObject(this.settings));
 	}
 	else
 	{
@@ -233,3 +220,101 @@ public async override void OnTick()
 ```
 
 [1]: https://github.com/BarRaider/streamdeck-tools/blob/master/samples.md
+
+
+## Working with Global Settings  
+Using the `GlobalSettingsManager` you can get access to the plugin's global settings from anywhere in your code.
+Below is an example of how to read and write to the Global Settings.
+
+1. Create a class that will store the fields of your Global Settings:
+
+```
+public class GlobalSettings
+{
+        [JsonProperty(PropertyName = "myFirstField")]
+        public String MyFirstField { get; set; }
+
+        [JsonProperty(PropertyName = "mySecondFile")]
+        public bool MySecondField { get; set; }
+}
+```
+
+2. In the class you want to read/write the settings, subscribe to the `OnReceivedGlobalSettings` event. ***Remember:*** If you subscribe to an event, you must also unsubscribe to it. So make sure your class has a Dispose function (inherits from IDisposable).
+**NOTE:** If this is in your action where you inherit from `PluginBase` you can skip this step as you already have a `OnReceivedGlobalSettings` function as part of the PluginBase implementation
+
+```
+public class MyClass : IDisposable
+{
+	public MyClass()
+	{
+		GlobalSettingsManager.Instance.OnReceivedGlobalSettings += MyClass_OnReceivedGlobalSettings;
+	}
+	
+	public override void Dispose()
+	{
+		GlobalSettingsManager.Instance.OnReceivedGlobalSettings -= MyClass_OnReceivedGlobalSettings;
+    }
+
+}
+```
+
+3. Use `RequestGlobalSettings()` method to request the Global Settings. You will then receive a callback in the `OnReceivedGlobalSettings` you set in step 2.
+
+```
+public class MyClass : IDisposable
+{
+	public MyClass()
+	{
+		GlobalSettingsManager.Instance.OnReceivedGlobalSettings += MyClass_OnReceivedGlobalSettings;
+		GlobalSettingsManager.Instance.RequestGlobalSettings();
+	}
+}
+```
+
+4. Example of reading and saving settings
+
+```
+
+private void MyClass_OnReceivedGlobalSettings(object sender, ReceivedGlobalSettingsPayload payload)
+{
+	// Global Settings exist
+	if (payload?.Settings != null && payload.Settings.Count > 0)
+	{
+		global = payload.Settings.ToObject<GlobalSettings>();
+		
+		// global now has all the settings
+		// Console.Writeline(global.MyFirstField);
+		
+	}
+	else // Global settings do not exist, create new one and SAVE it
+	{
+		Logger.Instance.LogMessage(TracingLevel.WARN, $"No global settings found, creating new object");
+		global = new GlobalSettings();
+		SetGlobalSettings();
+	}
+}
+
+// Saves the global object back the global settings
+private void SetGlobalSettings()
+{
+	Connection.SetGlobalSettingsAsync(JObject.FromObject(global));
+}
+
+```
+
+# Change Log
+### Version 2.7 is out!
+- Fully wrapped all Stream Deck events (All part of the SDConneciton class). See ***"Subscribing to events"*** section below
+- Added extension methods for multiple classes related to brushes/colors
+- Added additional methods under the Tools class, including AddTextPathToGraphics which can be used to correctly position text on a key image based on the Text Settings in the Property Inspector see ***"Showing Title based on settings from Property Inspector"*** section below.
+- Additional error checking
+- Updated dependency packages to latest versions
+- Sample plugin now included in this project on Github
+
+### 2019-11-17
+- Updated Install.bat (above) to newer version
+
+### Version 2.6 is out!
+- Added new MD5 functions in the `Tools` helper class
+- Optimized SetImage to not resubmit an image that was just posted to the device. Can be overridden with new property in Connection.SetImage() function.
+
