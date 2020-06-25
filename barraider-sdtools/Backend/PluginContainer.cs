@@ -126,7 +126,7 @@ namespace BarRaider.SdTools
             }
         }
 
-        // Stopwatch instance created
+        // Action is loaded in the Stream Deck
         private async void Connection_OnWillAppear(object sender, StreamDeckEventReceivedEventArgs<WillAppearEvent> e)
         {
             SDConnection conn = new SDConnection(connection, pluginUUID, deviceInfo, e.Event.Action, e.Event.Context, e.Event.Device);
@@ -137,13 +137,18 @@ namespace BarRaider.SdTools
                 {
                     try
                     {
+                        if (instances.ContainsKey(e.Event.Context) && instances[e.Event.Context] != null)
+                        {
+                            Logger.Instance.LogMessage(TracingLevel.INFO, $"WillAppear called for already existing context {e.Event.Context} (might be inside a multi-action)");
+                            return;
+                        }
                         InitialPayload payload = new InitialPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
                                                                     e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
                         instances[e.Event.Context] = (PluginBase)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
                     }
                     catch (Exception ex)
                     {
-                        Logger.Instance.LogMessage(TracingLevel.FATAL, $"Could not create instance of {supportedActions[e.Event.Action]} - Maybe class does not inherit PluginBase with the same constructor? {ex}");
+                        Logger.Instance.LogMessage(TracingLevel.FATAL, $"Could not create instance of {supportedActions[e.Event.Action]} with context {e.Event.Context} - This may be due to an Exception raised in the constructor, or the class does not inherit PluginBase with the same constructor {ex}");
                     }
                 }
                 else

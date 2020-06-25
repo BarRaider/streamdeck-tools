@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace BarRaider.SdTools
 {
@@ -209,6 +210,7 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Deprecated! Use AddTextPath on the Graphics extension method instead.
         /// Adds a text path to an existing Graphics object. Uses TitleParser to emulate the Text settings in the Property Inspector
         /// </summary>
         /// <param name="graphics"></param>
@@ -217,46 +219,12 @@ namespace BarRaider.SdTools
         /// <param name="imageWidth"></param>
         /// <param name="text"></param>
         /// <param name="pixelsAlignment"></param>
+        [Obsolete("Use graphics.AddTextPath() extension method instead")]
         public static void AddTextPathToGraphics(Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
         {
-            try
+            if (graphics != null)
             {
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle);
-                Color color = titleParameters.TitleColor;
-                graphics.PageUnit = GraphicsUnit.Pixel;
-                float ratio = graphics.DpiY / imageWidth;
-                SizeF stringSize = graphics.MeasureString(text, font);
-                float textWidth = stringSize.Width * (1 - ratio);
-                float textHeight = stringSize.Height * (1 - ratio);
-                int stringWidth = 0;
-                if (textWidth < imageWidth)
-                {
-                    stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
-                }
-
-                int stringHeight = pixelsAlignment; // Top
-                if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
-                {
-                    stringHeight = (imageHeight / 2) - pixelsAlignment;
-                }
-                else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
-                {
-                    stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
-                }
-
-                GraphicsPath gpath = new GraphicsPath();
-                gpath.AddString(text,
-                                    font.FontFamily,
-                                    (int)font.Style,
-                                    graphics.DpiY * font.SizeInPoints / imageWidth,
-                                    new Point(stringWidth, stringHeight),
-                                    new StringFormat());
-                graphics.DrawPath(Pens.Black, gpath);
-                graphics.FillPath(new SolidBrush(color), gpath);
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPathToGraphics Exception {ex}");
+                graphics.AddTextPath(titleParameters, imageHeight, imageWidth, text, pixelsAlignment);
             }
         }
 
@@ -315,6 +283,125 @@ namespace BarRaider.SdTools
             return num.ToString("#,0");
         }
 
+        /// <summary>
+        /// Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="titleParameters"></param>
+        /// <param name="leftPaddingPixels"></param>
+        /// <param name="rightPaddingPixels"></param>
+        /// <param name="imageWidthPixels"></param>
+        /// <returns></returns>
+        public static string SplitStringToFit(string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
+        {
+            try
+            {
+                if (titleParameters == null)
+                {
+                    return str;
+                }
+
+                int padding = leftPaddingPixels + rightPaddingPixels;
+                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                StringBuilder finalString = new StringBuilder();
+                StringBuilder currentLine = new StringBuilder();
+                SizeF currentLineSize;
+
+                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                {
+                    using (Graphics graphics = Graphics.FromImage(img))
+                    {
+                        for (int idx = 0; idx < str.Length; idx++)
+                        {
+                            currentLine.Append(str[idx]);
+                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
+                            if (currentLineSize.Width <= img.Width - padding)
+                            {
+                                finalString.Append(str[idx]);
+                            }
+                            else // Overflow
+                            {
+                                finalString.Append("\n" + str[idx]);
+                                currentLine = new StringBuilder(str[idx].ToString());
+                            }
+                        }
+                    }
+                }
+
+                return finalString.ToString();
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SplitStringToFit Exception: {ex}");
+                return str;
+            }
+        }
+
+        #endregion
+
+        #region SHA512
+
+        /// <summary>
+        /// Returns SHA512 Hash from an image object
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static string ImageToSHA512(Image image)
+        {
+            if (image == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    image.Save(ms, ImageFormat.Png);
+                    return BytesToSHA512(ms.ToArray());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"ImageToSHA512 Exception: {ex}");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns SHA512 Hash from a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string StringToSHA512(string str)
+        {
+            if (str == null)
+            {
+                return null;
+            }
+            return BytesToSHA512(System.Text.Encoding.UTF8.GetBytes(str));
+        }
+
+        /// <summary>
+        /// Returns SHA512 Hash from a byte stream
+        /// </summary>
+        /// <param name="byteStream"></param>
+        /// <returns></returns>
+        public static string BytesToSHA512(byte[] byteStream)
+        {
+            try
+            {
+                SHA512CryptoServiceProvider sha512 = new SHA512CryptoServiceProvider();
+                byte[] hash = sha512.ComputeHash(byteStream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"BytesToSHA512 Exception: {ex}");
+            }
+            return null;
+        }
+
         #endregion
 
         #region MD5
@@ -324,15 +411,17 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
+        [Obsolete("Use ImageToSHA512 instead. MD5 is not FIPS compliant")]
         public static string ImageToMD5(Image image)
         {
+            Logger.Instance.LogMessage(TracingLevel.WARN, $"ImageToMD5 is obsolete and will soon be deprecated");
             if (image == null)
             {
                 return null;
             }
 
             try
-            { 
+            {
                 using (MemoryStream ms = new MemoryStream())
                 {
                     image.Save(ms, ImageFormat.Png);
@@ -351,8 +440,10 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [Obsolete("Use StringToSHA512 instead. MD5 is not FIPS compliant")]
         public static string StringToMD5(string str)
         {
+            Logger.Instance.LogMessage(TracingLevel.WARN, $"StringToMD5 is obsolete and will soon be deprecated");
             if (str == null)
             {
                 return null;
@@ -365,8 +456,10 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="byteStream"></param>
         /// <returns></returns>
+        [Obsolete("Use BytesToSHA512 instead. MD5 is not FIPS compliant")]
         public static string BytesToMD5(byte[] byteStream)
         {
+            Logger.Instance.LogMessage(TracingLevel.WARN, $"BytesToMD5 is obsolete and will soon be deprecated");
             try
             {
                 MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
@@ -385,7 +478,7 @@ namespace BarRaider.SdTools
         #region JObject Related
 
         /// <summary>
-        /// Itterates through the fromJObject, finds the propery that matches in the toSettings object, and sets the value from the fromJObject object
+        /// Iterates through the fromJObject, finds the property that matches in the toSettings object, and sets the value from the fromJObject object
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="toSettings"></param>

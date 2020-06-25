@@ -1,7 +1,8 @@
-﻿using streamdeck_client_csharp.Events;
+﻿using BarRaider.SdTools.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
@@ -55,7 +56,7 @@ namespace BarRaider.SdTools
         /// <param name="deviceInfo"></param>
         /// <param name="deviceId"></param>
         /// <returns></returns>
-        public static StreamDeckDeviceInfo ToStreamDeckDeviceInfo(this DeviceInfo deviceInfo, string deviceId)
+        public static StreamDeckDeviceInfo ToStreamDeckDeviceInfo(this streamdeck_client_csharp.Events.DeviceInfo deviceInfo, string deviceId)
         {
             if (deviceInfo == null)
             {
@@ -161,6 +162,81 @@ namespace BarRaider.SdTools
                 stringWidth = Math.Abs((imageWidth - stringSize.Width)) / 2;
             }
             return stringWidth;
+        }
+
+        /// <summary>
+        /// Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="titleParameters"></param>
+        /// <param name="imageHeight"></param>
+        /// <param name="imageWidth"></param>
+        /// <param name="text"></param>
+        /// <param name="pixelsAlignment"></param>
+        public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
+        {
+            AddTextPath(graphics, titleParameters, imageHeight, imageWidth, text, Color.Black, 1, pixelsAlignment);
+        }
+
+        /// <summary>
+        /// Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="titleParameters"></param>
+        /// <param name="imageHeight"></param>
+        /// <param name="imageWidth"></param>
+        /// <param name="text"></param>
+        /// <param name="strokeColor"></param>
+        /// <param name="strokeThickness"></param>
+        /// <param name="pixelsAlignment"></param>
+        public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, Color strokeColor, float strokeThickness, int pixelsAlignment = 15)
+        {
+            try
+            {
+                if (titleParameters == null)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPath: titleParameters is null");
+                    return;
+                }
+
+                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                Color color = titleParameters.TitleColor;
+                graphics.PageUnit = GraphicsUnit.Pixel;
+                float ratio = graphics.DpiY / imageWidth;
+                SizeF stringSize = graphics.MeasureString(text, font);
+                float textWidth = stringSize.Width * (1 - ratio);
+                float textHeight = stringSize.Height * (1 - ratio);
+                int stringWidth = 0;
+                if (textWidth < imageWidth)
+                {
+                    stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
+                }
+
+                int stringHeight = pixelsAlignment; // Top
+                if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
+                {
+                    stringHeight = (imageHeight / 2) - pixelsAlignment;
+                }
+                else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
+                {
+                    stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
+                }
+
+                Pen stroke = new Pen(strokeColor, strokeThickness);
+                GraphicsPath gpath = new GraphicsPath();
+                gpath.AddString(text,
+                                    font.FontFamily,
+                                    (int)font.Style,
+                                    graphics.DpiY * font.SizeInPoints / imageWidth,
+                                    new Point(stringWidth, stringHeight),
+                                    new StringFormat());
+                graphics.DrawPath(stroke, gpath);
+                graphics.FillPath(new SolidBrush(color), gpath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPath Exception {ex}");
+            }
         }
 
         #endregion

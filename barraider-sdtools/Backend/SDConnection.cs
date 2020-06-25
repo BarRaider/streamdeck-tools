@@ -121,15 +121,16 @@ namespace BarRaider.SdTools
         /// Sets an image on the StreamDeck key.
         /// </summary>
         /// <param name="base64Image">Base64 encoded image</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
-        public async Task SetImageAsync(string base64Image, bool forceSendToStreamdeck = false)
+        public async Task SetImageAsync(string base64Image, int? state = null, bool forceSendToStreamdeck = false)
         {
-            string hash = Tools.StringToMD5(base64Image);
+            string hash = Tools.StringToSHA512(base64Image);
             if (forceSendToStreamdeck || hash != previousImageHash)
             {
                 previousImageHash = hash;
-                await StreamDeckConnection.SetImageAsync(base64Image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+                await StreamDeckConnection.SetImageAsync(base64Image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware, state);
             }
         }
 
@@ -137,15 +138,16 @@ namespace BarRaider.SdTools
         /// Sets an image on the StreamDeck key
         /// </summary>
         /// <param name="image">Image object</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
-        public async Task SetImageAsync(Image image, bool forceSendToStreamdeck = false)
+        public async Task SetImageAsync(Image image, int? state = null, bool forceSendToStreamdeck = false)
         {
-            string hash = Tools.ImageToMD5(image);
+            string hash = Tools.ImageToSHA512(image);
             if (forceSendToStreamdeck || hash != previousImageHash)
             {
                 previousImageHash = hash;
-                await StreamDeckConnection.SetImageAsync(image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+                await StreamDeckConnection.SetImageAsync(image, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware, state);
             }
         }
 
@@ -162,10 +164,11 @@ namespace BarRaider.SdTools
         /// Sets a title on the StreamDeck key
         /// </summary>
         /// <param name="title"></param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
         /// <returns></returns>
-        public async Task SetTitleAsync(string title)
+        public async Task SetTitleAsync(string title, int? state = null)
         {
-            await StreamDeckConnection.SetTitleAsync(title, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware);
+            await StreamDeckConnection.SetTitleAsync(title, ContextId, streamdeck_client_csharp.SDKTarget.HardwareAndSoftware, state);
         }
 
         /// <summary>

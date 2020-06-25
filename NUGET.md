@@ -7,12 +7,11 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 ** Samples of plugins using this framework: [Samples][1]
 
-### Version 2.8 is out!
-- Introduced `GraphicsUtils` class with a bunch of helper functions to manipulate the SD images
-- Added new `Tools.FormatNumber()` function converts 54265 to 54.27k
-- New ExtensionMethods for `Graphics` object: `DrawAndMeasureString` / `GetTextCenter`
-- Updated dependency packages to latest versions
-- Bug fix where SDConnection was not properly disposed.
+### Version 2.9 is out!
+- Updated plugin creation logic to support issue where Stream Deck sends multiple WillAppear messages in Multi-Actions
+- Updated API to support new State parameter in SetImageAsync/SetTitleAsync
+- Added FIPS-compliant support to SHA512 in Tools module. MD5 functions are now obsolete
+- New GraphicTools.WrapStringToFitImage() function will automatically wrap the text so it wil fit the key when using SetTitleAsync()
 
 ## Features
 - Sample plugin now included in this project on Github

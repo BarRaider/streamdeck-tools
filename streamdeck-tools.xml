@@ -100,19 +100,21 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.String,System.Boolean)">
+        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.String,System.Nullable{System.Int32},System.Boolean)">
             <summary>
             Sets an image on the StreamDeck key.
             </summary>
             <param name="base64Image">Base64 encoded image</param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.Drawing.Image,System.Boolean)">
+        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(System.Drawing.Image,System.Nullable{System.Int32},System.Boolean)">
             <summary>
             Sets an image on the StreamDeck key
             </summary>
             <param name="image">Image object</param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
         </member>
@@ -122,11 +124,12 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.SetTitleAsync(System.String)">
+        <member name="M:BarRaider.SdTools.SDConnection.SetTitleAsync(System.String,System.Nullable{System.Int32})">
             <summary>
             Sets a title on the StreamDeck key
             </summary>
             <param name="title"></param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.SDConnection.SwitchProfileAsync(System.String)">
@@ -862,6 +865,30 @@
             <param name="minIndentation"></param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.AddTextPath(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Int32)">
+            <summary>
+            Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
+            </summary>
+            <param name="graphics"></param>
+            <param name="titleParameters"></param>
+            <param name="imageHeight"></param>
+            <param name="imageWidth"></param>
+            <param name="text"></param>
+            <param name="pixelsAlignment"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.AddTextPath(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Drawing.Color,System.Single,System.Int32)">
+            <summary>
+            Adds a text path to an existing Graphics object. Uses TitleParameters to emulate the Text settings in the Property Inspector
+            </summary>
+            <param name="graphics"></param>
+            <param name="titleParameters"></param>
+            <param name="imageHeight"></param>
+            <param name="imageWidth"></param>
+            <param name="text"></param>
+            <param name="strokeColor"></param>
+            <param name="strokeThickness"></param>
+            <param name="pixelsAlignment"></param>
+        </member>
         <member name="T:BarRaider.SdTools.GlobalSettingsManager">
             <summary>
             Helper class which allows fetching the GlobalSettings of a plugin
@@ -954,6 +981,17 @@
             <param name="textColor"></param>
             <param name="expandToNextImage"></param>
             <param name="keyDrawStartingPosition"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.GraphicsTools.WrapStringToFitImage(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Adds line breaks ('\n') to the string every time the text would overflow the image
+            </summary>
+            <param name="str"></param>
+            <param name="titleParameters"></param>
+            <param name="leftPaddingPixels"></param>
+            <param name="rightPaddingPixels"></param>
+            <param name="imageWidthPixels"></param>
             <returns></returns>
         </member>
         <member name="T:BarRaider.SdTools.TracingLevel">
@@ -1164,6 +1202,7 @@
         </member>
         <member name="M:BarRaider.SdTools.Tools.AddTextPathToGraphics(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Int32)">
             <summary>
+            Deprecated! Use AddTextPath on the Graphics extension method instead.
             Adds a text path to an existing Graphics object. Uses TitleParser to emulate the Text settings in the Property Inspector
             </summary>
             <param name="graphics"></param>
@@ -1185,6 +1224,38 @@
             Converts a long to a human-readable string. Example: 54,265 => 54.27k
             </summary>
             <param name="num"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.SplitStringToFit(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
+            </summary>
+            <param name="str"></param>
+            <param name="titleParameters"></param>
+            <param name="leftPaddingPixels"></param>
+            <param name="rightPaddingPixels"></param>
+            <param name="imageWidthPixels"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.ImageToSHA512(System.Drawing.Image)">
+            <summary>
+            Returns SHA512 Hash from an image object
+            </summary>
+            <param name="image"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.StringToSHA512(System.String)">
+            <summary>
+            Returns SHA512 Hash from a string
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.BytesToSHA512(System.Byte[])">
+            <summary>
+            Returns SHA512 Hash from a byte stream
+            </summary>
+            <param name="byteStream"></param>
             <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.Tools.ImageToMD5(System.Drawing.Image)">
@@ -1210,7 +1281,7 @@
         </member>
         <member name="M:BarRaider.SdTools.Tools.AutoPopulateSettings``1(``0,Newtonsoft.Json.Linq.JObject)">
             <summary>
-            Itterates through the fromJObject, finds the propery that matches in the toSettings object, and sets the value from the fromJObject object
+            Iterates through the fromJObject, finds the property that matches in the toSettings object, and sets the value from the fromJObject object
             </summary>
             <typeparam name="T"></typeparam>
             <param name="toSettings"></param>

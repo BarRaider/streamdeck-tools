@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BarRaider.SdTools.Wrappers;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -216,6 +217,60 @@ namespace BarRaider.SdTools
             }
             graphics.Dispose();
             return images.ToArray();
+        }
+
+        /// <summary>
+        /// Adds line breaks ('\n') to the string every time the text would overflow the image
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="titleParameters"></param>
+        /// <param name="leftPaddingPixels"></param>
+        /// <param name="rightPaddingPixels"></param>
+        /// <param name="imageWidthPixels"></param>
+        /// <returns></returns>
+        public static string WrapStringToFitImage(string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
+        {
+            try
+            {
+                if (titleParameters == null)
+                {
+                    return str;
+                }
+
+                int padding = leftPaddingPixels + rightPaddingPixels;
+                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                StringBuilder finalString = new StringBuilder();
+                StringBuilder currentLine = new StringBuilder();
+                SizeF currentLineSize;
+
+                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                {
+                    using (Graphics graphics = Graphics.FromImage(img))
+                    {
+                        for (int idx = 0; idx < str.Length; idx++)
+                        {
+                            currentLine.Append(str[idx]);
+                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
+                            if (currentLineSize.Width <= img.Width - padding)
+                            {
+                                finalString.Append(str[idx]);
+                            }
+                            else // Overflow
+                            {
+                                finalString.Append("\n" + str[idx]);
+                                currentLine = new StringBuilder(str[idx].ToString());
+                            }
+                        }
+                    }
+                }
+
+                return finalString.ToString();
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SplitStringToFit Exception: {ex}");
+                return str;
+            }
         }
     }
 }

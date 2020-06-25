@@ -13,7 +13,12 @@
 * [Install.bat](https://github.com/BarRaider/streamdeck-tools/blob/master/utils/install.bat) - Script that quickly uninstalls and reinstalls your plugin on the streamdeck (view batch file for more details)  
 * [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin
 
-### Version 2.8 is out!
+### Version 2.9 is out!
+- Updated plugin creation logic to support issue where Stream Deck sends multiple WillAppear messages in Multi-Actions
+- Updated API to support new State parameter in SetImageAsync/SetTitleAsync
+- Added FIPS-compliant support to SHA512 in Tools module. MD5 functions are now obsolete
+- New GraphicTools.WrapStringToFitImage() function will automatically wrap the text so it wil fit the key when using SetTitleAsync()
+
 - Introduced `GraphicsUtils` class with a bunch of helper functions to manipulate the SD images
 - Added new `Tools.FormatNumber()` function converts 54265 to 54.27k
 - New ExtensionMethods for `Graphics` object: `DrawAndMeasureString` / `GetTextCenter`

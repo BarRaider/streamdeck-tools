@@ -1,8 +1,10 @@
 ﻿using BarRaider.SdTools;
+using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -102,12 +104,32 @@ namespace SamplePlugin
             Logger.Instance.LogMessage(TracingLevel.INFO, $"Destructor called");
         }
 
-        public override void KeyPressed(KeyPayload payload)
+        public async override void KeyPressed(KeyPayload payload)
         {
             Logger.Instance.LogMessage(TracingLevel.INFO, "Key Pressed");
+            TitleParameters tp = new TitleParameters(new FontFamily("Arial"), FontStyle.Bold, 20, Color.White, true, TitleVerticalAlignment.Middle);
+            using (Image image = Tools.GenerateGenericKeyImage(out Graphics graphics))
+            {
+                graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
+                graphics.AddTextPath(tp, image.Height, image.Width, "Test");
+                graphics.Dispose();
+
+                await Connection.SetImageAsync(image);
+            }
         }
 
-        public override void KeyReleased(KeyPayload payload) { }
+        public async override void KeyReleased(KeyPayload payload) 
+        {
+            TitleParameters tp = new TitleParameters(new FontFamily("Arial"), FontStyle.Bold, 20, Color.White, true, TitleVerticalAlignment.Middle);
+            using (Image image = Tools.GenerateGenericKeyImage(out Graphics graphics))
+            {
+                graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
+                graphics.AddTextPath(tp, image.Height, image.Width, "Test", Color.Black, 7);
+                graphics.Dispose();
+
+                await Connection.SetImageAsync(image);
+            }
+        }
 
         public override void OnTick() { }
 
