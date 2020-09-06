@@ -12,6 +12,7 @@
 * [EasyPI](https://github.com/BarRaider/streamdeck-easypi) - Easily pass information from the PI (Property Inspector) to your plugin.  
 * [Install.bat](https://github.com/BarRaider/streamdeck-tools/blob/master/utils/install.bat) - Script that quickly uninstalls and reinstalls your plugin on the streamdeck (view batch file for more details)  
 * [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin
+* [Profiles](https://barraider.com/profiles) Downloadable empty profiles for the XL (32-key), Classic (15-key), Mini (6-key) and Mobile devices at https://barraider.com/profiles
 
 ### Version 2.9 is out!
 - Updated plugin creation logic to support issue where Stream Deck sends multiple WillAppear messages in Multi-Actions
