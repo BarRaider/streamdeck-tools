@@ -7,11 +7,16 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 ** Samples of plugins using this framework: [Samples][1]
 
-### Version 2.9 is out!
-- Updated plugin creation logic to support issue where Stream Deck sends multiple WillAppear messages in Multi-Actions
-- Updated API to support new State parameter in SetImageAsync/SetTitleAsync
-- Added FIPS-compliant support to SHA512 in Tools module. MD5 functions are now obsolete
-- New GraphicTools.WrapStringToFitImage() function will automatically wrap the text so it wil fit the key when using SetTitleAsync()
+### Version 3.0 is out!
+- Updated file handling in `Tools.AutoPopulateSettings` and `Tools.FilenameFromPayload` methods
+- Removed obsolete MD5 functions, use SHA512 functions instead
+- `Tools.CenterText` function now has optional out `textFitsImage` value to verify the text does not exceed the image width
+- New `Tools.FormatBytes` function converts bytes to human-readable value
+- New `Tools.FormatNumber()` function converts 54265 to 54.27k
+- New `Graphics.GetFontSizeWhereTextFitsImage` function helps locate the best size for a text to fit an image on 1 line
+- New ExtensionMethods for `Graphics` object: `DrawAndMeasureString` / `GetTextCenter`
+- Updated dependency packages to latest versions
+- Bug fix where FileNameProperty attribute
 
 ## Features
 - Sample plugin now included in this project on Github
