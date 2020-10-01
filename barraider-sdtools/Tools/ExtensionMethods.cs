@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace BarRaider.SdTools
@@ -151,17 +152,66 @@ namespace BarRaider.SdTools
         /// <param name="text"></param>
         /// <param name="imageWidth"></param>
         /// <param name="font"></param>
+        /// /// <param name="textFitsImage">True/False - Does text fit image? False if text overflows</param>
         /// <param name="minIndentation"></param>
+        /// 
         /// <returns></returns>
-        public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, int minIndentation = 0)
+        public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, out bool textFitsImage, int minIndentation = 0)
         {
             SizeF stringSize = graphics.MeasureString(text, font);
             float stringWidth = minIndentation;
+            textFitsImage = false;
             if (stringSize.Width < imageWidth)
             {
+                textFitsImage = true;
                 stringWidth = Math.Abs((imageWidth - stringSize.Width)) / 2;
             }
             return stringWidth;
+        }
+
+        /// <summary>
+        /// Returns the center X position of a string, given the image's max Width and Font information
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="text"></param>
+        /// <param name="imageWidth"></param>
+        /// <param name="font"></param>
+        /// <param name="minIndentation"></param>
+        /// 
+        /// <returns></returns>
+        public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, int minIndentation = 0)
+        {
+            return graphics.GetTextCenter(text, imageWidth, font, out _, minIndentation);
+        }
+
+        /// <summary>
+        /// Returns the highest size of the given font in which the text fits the image
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="text"></param>
+        /// <param name="imageWidth"></param>
+        /// <param name="font"></param>
+        /// /// <param name="minimalFontSize"></param>
+        /// <returns></returns>
+        public static float GetFontSizeWhereTextFitsImage(this Graphics graphics, string text, int imageWidth, Font font, int minimalFontSize = 6)
+        {
+            bool textFitsImage;
+            float size = font.Size;
+            Font variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
+            do
+            {
+                graphics.GetTextCenter(text, imageWidth, variableFont, out textFitsImage);
+                if (!textFitsImage)
+                {
+                    variableFont.Dispose();
+                    size -= 0.5f;
+                    variableFont = new Font(font.Name, size, font.Style, GraphicsUnit.Pixel);
+                }
+            }
+            while (!textFitsImage && size > minimalFontSize);
+
+            variableFont.Dispose();
+            return size;
         }
 
         /// <summary>

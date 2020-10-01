@@ -27,6 +27,7 @@ namespace BarRaider.SdTools
         private const int XL_KEY_DEFAULT_HEIGHT = 96;
         private const int XL_KEY_DEFAULT_WIDTH = 96;
         private const int GENERIC_KEY_IMAGE_SIZE = 144;
+        private const string FILENAME_NO_FILE_STRING = "No file...";
 
         #region Image Related
 
@@ -249,6 +250,11 @@ namespace BarRaider.SdTools
                 return null;
             }
 
+            if (filenameWithFakepath == FILENAME_NO_FILE_STRING)
+            {
+                return String.Empty;
+            }
+
             return Uri.UnescapeDataString(filenameWithFakepath.Replace("C:\\fakepath\\", ""));
         }
 
@@ -281,6 +287,21 @@ namespace BarRaider.SdTools
             }
 
             return num.ToString("#,0");
+        }
+
+        //// <summary>Converts number in bytes to human-readable size (ex. "2 GB")</summary>
+        /// <param name="numberInBytes">Size in bytes</param>
+        /// <returns>Formatted human-readable string (ex. "2 MB")</returns>
+        public static string FormatBytes(double numberInBytes)
+        {
+            var sizeCounter = 0;
+            var format = new[] { "{0:F0} B", "{0:F0} KB", "{0:F0} MB", "{0:F0} GB", "{0:F2} TB", "{0:F2} PB", "{0:F2} EB" };
+            while (sizeCounter < format.Length && numberInBytes >= 1024d)
+            {
+                numberInBytes = 100d * numberInBytes / 1024d / 100d;
+                sizeCounter++;
+            }
+            return String.Format(format[sizeCounter], numberInBytes);
         }
 
         /// <summary>
@@ -391,84 +412,15 @@ namespace BarRaider.SdTools
         {
             try
             {
-                SHA512CryptoServiceProvider sha512 = new SHA512CryptoServiceProvider();
-                byte[] hash = sha512.ComputeHash(byteStream);
-                return BitConverter.ToString(hash).Replace("-", "").ToLower();
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"BytesToSHA512 Exception: {ex}");
-            }
-            return null;
-        }
-
-        #endregion
-
-        #region MD5
-
-        /// <summary>
-        /// Returns MD5 Hash from an image object
-        /// </summary>
-        /// <param name="image"></param>
-        /// <returns></returns>
-        [Obsolete("Use ImageToSHA512 instead. MD5 is not FIPS compliant")]
-        public static string ImageToMD5(Image image)
-        {
-            Logger.Instance.LogMessage(TracingLevel.WARN, $"ImageToMD5 is obsolete and will soon be deprecated");
-            if (image == null)
-            {
-                return null;
-            }
-
-            try
-            {
-                using (MemoryStream ms = new MemoryStream())
+                using (SHA512CryptoServiceProvider sha512 = new SHA512CryptoServiceProvider())
                 {
-                    image.Save(ms, ImageFormat.Png);
-                    return BytesToMD5(ms.ToArray());
+                    byte[] hash = sha512.ComputeHash(byteStream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"ImageToMD5 Exception: {ex}");
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Returns MD5 Hash from a string
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        [Obsolete("Use StringToSHA512 instead. MD5 is not FIPS compliant")]
-        public static string StringToMD5(string str)
-        {
-            Logger.Instance.LogMessage(TracingLevel.WARN, $"StringToMD5 is obsolete and will soon be deprecated");
-            if (str == null)
-            {
-                return null;
-            }
-            return BytesToMD5(System.Text.Encoding.UTF8.GetBytes(str));
-        }
-
-        /// <summary>
-        /// Returns MD5 Hash from a byte stream
-        /// </summary>
-        /// <param name="byteStream"></param>
-        /// <returns></returns>
-        [Obsolete("Use BytesToSHA512 instead. MD5 is not FIPS compliant")]
-        public static string BytesToMD5(byte[] byteStream)
-        {
-            Logger.Instance.LogMessage(TracingLevel.WARN, $"BytesToMD5 is obsolete and will soon be deprecated");
-            try
-            {
-                MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
-                byte[] hash = md5.ComputeHash(byteStream);
-                return BitConverter.ToString(hash).Replace("-", "").ToLower();
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"BytesToMD5 Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"BytesToSHA512 Exception: {ex}");
             }
             return null;
         }

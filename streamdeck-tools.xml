@@ -854,6 +854,19 @@
             <param name="position"></param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.GetTextCenter(System.Drawing.Graphics,System.String,System.Int32,System.Drawing.Font,System.Boolean@,System.Int32)">
+            <summary>
+            Returns the center X position of a string, given the image's max Width and Font information
+            </summary>
+            <param name="graphics"></param>
+            <param name="text"></param>
+            <param name="imageWidth"></param>
+            <param name="font"></param>
+            /// <param name="textFitsImage">True/False - Does text fit image? False if text overflows</param>
+            <param name="minIndentation"></param>
+            
+            <returns></returns>
+        </member>
         <member name="M:BarRaider.SdTools.ExtensionMethods.GetTextCenter(System.Drawing.Graphics,System.String,System.Int32,System.Drawing.Font,System.Int32)">
             <summary>
             Returns the center X position of a string, given the image's max Width and Font information
@@ -863,6 +876,18 @@
             <param name="imageWidth"></param>
             <param name="font"></param>
             <param name="minIndentation"></param>
+            
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.GetFontSizeWhereTextFitsImage(System.Drawing.Graphics,System.String,System.Int32,System.Drawing.Font,System.Int32)">
+            <summary>
+            Returns the highest size of the given font in which the text fits the image
+            </summary>
+            <param name="graphics"></param>
+            <param name="text"></param>
+            <param name="imageWidth"></param>
+            <param name="font"></param>
+            /// <param name="minimalFontSize"></param>
             <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.ExtensionMethods.AddTextPath(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Int32)">
@@ -1226,6 +1251,10 @@
             <param name="num"></param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.Tools.FormatBytes(System.Double)">
+            <param name="numberInBytes">Size in bytes</param>
+            <returns>Formatted human-readable string (ex. "2 MB")</returns>
+        </member>
         <member name="M:BarRaider.SdTools.Tools.SplitStringToFit(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
             <summary>
             Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
@@ -1254,27 +1283,6 @@
         <member name="M:BarRaider.SdTools.Tools.BytesToSHA512(System.Byte[])">
             <summary>
             Returns SHA512 Hash from a byte stream
-            </summary>
-            <param name="byteStream"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BarRaider.SdTools.Tools.ImageToMD5(System.Drawing.Image)">
-            <summary>
-            Returns MD5 Hash from an image object
-            </summary>
-            <param name="image"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BarRaider.SdTools.Tools.StringToMD5(System.String)">
-            <summary>
-            Returns MD5 Hash from a string
-            </summary>
-            <param name="str"></param>
-            <returns></returns>
-        </member>
-        <member name="M:BarRaider.SdTools.Tools.BytesToMD5(System.Byte[])">
-            <summary>
-            Returns MD5 Hash from a byte stream
             </summary>
             <param name="byteStream"></param>
             <returns></returns>

@@ -16,13 +16,15 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>2.9.0.0</AssemblyVersion>
-    <FileVersion>2.9.0.0</FileVersion>
-    <Version>2.9.0</Version>
-    <PackageReleaseNotes>2.9 - 1. Added support to SHA512 in Tools module. MD5 functions are now obsolete
-2. Updated plugin creation logic to support issue where Stream Deck sends multiple WillAppear messages in Multi-Actions
-3. Updated API to support new State parameter in SetImageAsync/SetTitleAsync
-3. New GraphicTools.WrapStringToFitImage() function will automatically wrap the text so it wil fit the key when using SetTitleAsync()</PackageReleaseNotes>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version>3.0</Version>
+    <PackageReleaseNotes>3.0 - 1. Updated file handling in `Tools.AutoPopulateSettings` and `Tools.FilenameFromPayload` methods
+2. Removed obsolete MD5 functions, use SHA512 functions instead
+3. `Tools.CenterText` function now has optional out `textFitsImage` value to verify the text does not exceed the image width
+4. New `Tools.FormatBytes` function converts bytes to human-readable value
+5. New `Graphics.GetFontSizeWhereTextFitsImage` function helps locate the best size for a text to fit an image on 1 line
+6. Updated dependencies</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
   </PropertyGroup>
@@ -35,7 +37,7 @@ Feel free to contact me for more information: https://barraider.com</Description
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NLog" Version="4.7.4" />
+    <PackageReference Include="NLog" Version="4.7.5" />
     <PackageReference Include="streamdeck-client-csharp" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
