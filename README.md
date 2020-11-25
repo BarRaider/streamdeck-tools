@@ -47,7 +47,7 @@
 ## How do I use this?
 A list of plugins already using this library can be found [here][1]
 
-This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
+This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.  
 **New:** Use the [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio which automatically creates a project with all the files needed to compile a plugin
 -- OR -- follow the step-by-step instructions below:  
   
@@ -97,7 +97,7 @@ class Program
 }
 ~~~~
 
-3. There is no step 3 - that's it! The abstract functions from PluginBase that are implemented in MyPlugin hold all the basics needed for a plugin to work. You can always listen to additional events using the `Connection` property.
+3. There is no step 3 - that's it! The abstract functions from PluginBase that are implemented in MyPlugin hold all the basics needed for a plugin to work. You can always listen to additional events using the `Connection` property (see the "Subscribing to events" section below).
 
 ## Auto-populating plugin settings
 By following a very basic convention, the StreamDeck-Tools can handle populating all the settings between the PropertyInspector and your plugin. All the Stream-Deck Tools samples use this convention so you can see it in the samples too:
