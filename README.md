@@ -48,6 +48,9 @@
 A list of plugins already using this library can be found [here][1]
 
 This library wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
+**New:** Use the [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio which automatically creates a project with all the files needed to compile a plugin
+-- OR -- follow the step-by-step instructions below:  
+  
 After creating a C# Console application, using this library requires two steps:
 
 1. Create a class that inherits the PluginBase abstract class.  
