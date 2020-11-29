@@ -677,6 +677,12 @@
             Current version of the StreamDeck app
             </summary>
         </member>
+        <member name="M:BarRaider.SdTools.StreamDeckApplicationInfo.ToString">
+            <summary>
+            Shows class information as string
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:BarRaider.SdTools.StreamDeckDeviceType">
             <summary>
             Type of StreamDeck hardware device, currently two are supported (classic and mini)
@@ -700,6 +706,11 @@
         <member name="F:BarRaider.SdTools.StreamDeckDeviceType.StreamDeckMobile">
             <summary>
             StreamDeck Mobile version
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.StreamDeckDeviceType.CorsairGKeys">
+            <summary>
+            Corsair G-Keys version
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.StreamDeckDeviceInfo">
@@ -730,6 +741,12 @@
             <param name="type"></param>
             <param name="deviceId"></param>
         </member>
+        <member name="M:BarRaider.SdTools.StreamDeckDeviceInfo.ToString">
+            <summary>
+            Shows class information as string
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:BarRaider.SdTools.StreamDeckDeviceSize">
             <summary>
             Layout of the keys on the StreamDeck hardware device
@@ -751,6 +768,12 @@
             </summary>
             <param name="rows"></param>
             <param name="cols"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.StreamDeckDeviceSize.ToString">
+            <summary>
+            Shows class information as string
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:BarRaider.SdTools.StreamDeckInfo">
             <summary>
@@ -777,6 +800,12 @@
             Device pixel ratio
             </summary>
         </member>
+        <member name="M:BarRaider.SdTools.StreamDeckInfo.ToString">
+            <summary>
+            Shows class information as string
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:BarRaider.SdTools.StreamDeckPluginInfo">
             <summary>
             Holds general information on the StreamDeck App we're communicating with
@@ -786,6 +815,12 @@
             <summary>
             Current version of the plugin
             </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.StreamDeckPluginInfo.ToString">
+            <summary>
+            Shows class information as string
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:BarRaider.SdTools.ExtensionMethods">
             <summary>

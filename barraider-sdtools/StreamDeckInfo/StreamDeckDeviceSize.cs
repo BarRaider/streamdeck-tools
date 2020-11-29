@@ -34,5 +34,14 @@ namespace BarRaider.SdTools
             Rows = rows;
             Cols = cols;
         }
+
+        /// <summary>
+        /// Shows class information as string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"Rows: {Rows} Columns: {Cols}";
+        }
     }
 }

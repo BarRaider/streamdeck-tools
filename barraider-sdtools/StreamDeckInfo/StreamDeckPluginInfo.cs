@@ -17,5 +17,14 @@ namespace BarRaider.SdTools
         /// </summary>
         [JsonProperty(PropertyName = "version")]
         public string Version { get; private set; }
+
+        /// <summary>
+        /// Shows class information as string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"Version: {Version}";
+        }
     }
 }

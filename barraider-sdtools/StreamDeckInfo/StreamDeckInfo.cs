@@ -35,5 +35,36 @@ namespace BarRaider.SdTools
         /// </summary>
         [JsonProperty(PropertyName = "devicePixelRatio")]
         public int DevicePixelRatio { get; private set; }
+
+        /// <summary>
+        /// Shows class information as string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (Devices != null)
+            {
+                sb.Append("Devices:\n");
+                for (int device = 0; device < Devices.Length; device++)
+                {
+                    if (Devices[device] != null)
+                    {
+                        sb.Append($"[{Devices[device]}]\n");
+                    }
+                }
+            }
+
+            if (Application != null)
+            {
+                sb.Append($"ApplicationInfo: {Application}\n");
+            }
+
+            if (Plugin != null)
+            {
+                sb.Append($"PluginInfo: {Plugin}\n");
+            }
+            return sb.ToString();
+        }
     }
 }

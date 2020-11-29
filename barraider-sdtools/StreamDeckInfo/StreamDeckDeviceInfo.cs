@@ -30,7 +30,12 @@ namespace BarRaider.SdTools
         /// <summary>
         /// StreamDeck Mobile version
         /// </summary>
-        StreamDeckMobile = 3
+        StreamDeckMobile = 3,
+
+        /// <summary>
+        /// Corsair G-Keys version
+        /// </summary>
+        CorsairGKeys = 4
     }
 
     /// <summary>
@@ -67,6 +72,15 @@ namespace BarRaider.SdTools
             Size = size;
             Type = type;
             Id = deviceId;
+        }
+
+        /// <summary>
+        /// Shows class information as string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"Id: {Id} Type: {Type} Size: {Size?.ToString()}";
         }
     }
 }

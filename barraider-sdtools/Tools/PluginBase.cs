@@ -82,7 +82,9 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="connection">Communication module with Stream Deck</param>
         /// <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
+#pragma warning disable IDE0060 // Remove unused parameter
         public PluginBase(SDConnection connection, InitialPayload payload)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             Connection = connection;
         }

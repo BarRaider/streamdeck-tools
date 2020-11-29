@@ -13,20 +13,17 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/BarRaider/streamdeck-tools</RepositoryUrl>
-    <PackageTags>StreamDeck Elgato Library Plugin Stream Deck</PackageTags>
+    <PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
-    <PackageIconUrl>https://raw.githubusercontent.com/BarRaider/barraider.github.io/master/images/BRLogo.png</PackageIconUrl>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
-    <Version>3.0</Version>
-    <PackageReleaseNotes>3.0 - 1. Updated file handling in `Tools.AutoPopulateSettings` and `Tools.FilenameFromPayload` methods
-2. Removed obsolete MD5 functions, use SHA512 functions instead
-3. `Tools.CenterText` function now has optional out `textFitsImage` value to verify the text does not exceed the image width
-4. New `Tools.FormatBytes` function converts bytes to human-readable value
-5. New `Graphics.GetFontSizeWhereTextFitsImage` function helps locate the best size for a text to fit an image on 1 line
-6. Updated dependencies</PackageReleaseNotes>
+    <PackageIconUrl></PackageIconUrl>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
+    <Version>3.1</Version>
+    <PackageReleaseNotes>3.1 - 1. Updated Logger class to include process name and thread id
+2. Updated StreamDeck-Tools template for Visual Studio</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
+    <PackageIcon>BRLogo_460.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile></DocumentationFile>
@@ -42,5 +39,11 @@ Feel free to contact me for more information: https://barraider.com</Description
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Documents\My Pictures\PSD\BRLogo_460.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>

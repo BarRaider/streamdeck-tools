@@ -14,6 +14,10 @@
 * [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin
 * [Profiles](https://barraider.com/profiles) Downloadable empty profiles for the XL (32-key), Classic (15-key), Mini (6-key) and Mobile devices at https://barraider.com/profiles
 
+### Version 3.1 is out!
+- Updated Logger class to include process name and thread id
+- Updated [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio
+
 ### Version 3.0 is out!
 - Updated file handling in `Tools.AutoPopulateSettings` and `Tools.FilenameFromPayload` methods
 - Removed obsolete MD5 functions, use SHA512 functions instead
@@ -310,6 +314,18 @@ private void SetGlobalSettings()
 ```
 
 # Change Log
+### Version 3.1 is out!
+- Updated Logger class to include process name and thread id
+
+### Version 3.0 is out!
+- Updated file handling in `Tools.AutoPopulateSettings` and `Tools.FilenameFromPayload` methods
+- Removed obsolete MD5 functions, use SHA512 functions instead
+- `Tools.CenterText` function now has optional out `textFitsImage` value to verify the text does not exceed the image width
+- New `Tools.FormatBytes` function converts bytes to human-readable value
+- New `Graphics.GetFontSizeWhereTextFitsImage` function helps locate the best size for a text to fit an image on 1 line
+- Updated dependency packages to latest versions
+- Bug fix where FileNameProperty attribute
+
 ### Version 2.7 is out!
 - Fully wrapped all Stream Deck events (All part of the SDConneciton class). See ***"Subscribing to events"*** section below
 - Added extension methods for multiple classes related to brushes/colors

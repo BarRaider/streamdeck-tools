@@ -34,7 +34,7 @@ namespace BarRaider.SdTools
         /// <param name="supportedActionIds"></param>
         public static void Run(string[] args, PluginActionId[] supportedActionIds)
         {
-            Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin Loading - {supportedActionIds.Length} Actions Found");
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin [{GetExeName()}] Loading - {supportedActionIds.Length} Actions Found");
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
 #if DEBUG
@@ -82,6 +82,19 @@ namespace BarRaider.SdTools
         private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs e)
         {
             Logger.Instance.LogMessage(TracingLevel.FATAL, $"Unhandled Exception: {e.ExceptionObject}");
+        }
+
+        private static string GetExeName()
+        {
+            try
+            {
+                return System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.WARN, $"GetExeName failed {ex}");
+            }
+            return String.Empty;
         }
     }
 }

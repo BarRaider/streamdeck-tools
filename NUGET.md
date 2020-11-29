@@ -7,6 +7,10 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 ** Samples of plugins using this framework: [Samples][1]
 
+### Version 3.1 is out!
+- Updated Logger class to include process name and thread id
+- Updated [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio
+
 ### Version 3.0 is out!
 - Updated file handling in `Tools.AutoPopulateSettings` and `Tools.FilenameFromPayload` methods
 - Removed obsolete MD5 functions, use SHA512 functions instead

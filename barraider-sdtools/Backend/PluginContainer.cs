@@ -43,13 +43,16 @@ namespace BarRaider.SdTools
             connection.OnKeyUp += Connection_OnKeyUp;
             connection.OnWillAppear += Connection_OnWillAppear;
             connection.OnWillDisappear += Connection_OnWillDisappear;
-            
+
             // Settings changed
             connection.OnDidReceiveSettings += Connection_OnDidReceiveSettings;
             connection.OnDidReceiveGlobalSettings += Connection_OnDidReceiveGlobalSettings;
 
             // Start the connection
             connection.Run();
+#if DEBUG
+            Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Loaded: UUID: {pluginUUID} Device Info: {deviceInfo}");
+#endif
             Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin version: {deviceInfo.Plugin.Version}");
             Logger.Instance.LogMessage(TracingLevel.INFO, "Connecting to Stream Deck");
 
@@ -76,6 +79,10 @@ namespace BarRaider.SdTools
             await instancesLock.WaitAsync();
             try
             {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Keydown: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
                 if (instances.ContainsKey(e.Event.Context))
                 {
                     KeyPayload payload = new KeyPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
@@ -95,6 +102,10 @@ namespace BarRaider.SdTools
             await instancesLock.WaitAsync();
             try
             {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Keyup: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
                 if (instances.ContainsKey(e.Event.Context))
                 {
                     KeyPayload payload = new KeyPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
@@ -133,6 +144,10 @@ namespace BarRaider.SdTools
             await instancesLock.WaitAsync();
             try
             {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin OnWillAppear: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
                 if (supportedActions.ContainsKey(e.Event.Action))
                 {
                     try
@@ -167,6 +182,10 @@ namespace BarRaider.SdTools
             await instancesLock.WaitAsync();
             try
             {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin OnWillDisappear: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
                 if (instances.ContainsKey(e.Event.Context))
                 {
                    instances[e.Event.Context].Destroy();
@@ -185,6 +204,10 @@ namespace BarRaider.SdTools
             await instancesLock.WaitAsync();
             try
             {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin OnDidReceiveSettings: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
                 if (instances.ContainsKey(e.Event.Context))
                 {
                     instances[e.Event.Context].ReceivedSettings(JObject.FromObject(e.Event.Payload).ToObject<ReceivedSettingsPayload>());
@@ -202,6 +225,10 @@ namespace BarRaider.SdTools
             await instancesLock.WaitAsync();
             try
             {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin OnDidReceiveGlobalSettings: Settings: {e.Event.Payload?.ToStringEx()}");
+#endif
+
                 var globalSettings = JObject.FromObject(e.Event.Payload).ToObject<ReceivedGlobalSettingsPayload>();
                 foreach (string key in instances.Keys)
                 {
@@ -235,5 +262,6 @@ namespace BarRaider.SdTools
 
             return new KeyCoordinates() { Column = coordinates.Columns, Row = coordinates.Rows };
         }
+
     }
 }
