@@ -13,7 +13,7 @@ namespace BarRaider.SdTools
     /// <summary>
     /// Connection object which handles your communication with the Stream Deck app
     /// </summary>
-    public class SDConnection : IDisposable
+    public class SDConnection : ISDConnection
     {
         #region Private Methods
 

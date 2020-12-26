@@ -38,7 +38,7 @@ namespace SamplePlugin
         private PluginSettings settings;
 
         #endregion
-        public PluginAction(SDConnection connection, InitialPayload payload) : base(connection, payload)
+        public PluginAction(ISDConnection connection, InitialPayload payload) : base(connection, payload)
         {
             if (payload.Settings == null || payload.Settings.Count == 0)
             {
