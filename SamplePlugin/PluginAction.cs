@@ -19,9 +19,11 @@ namespace SamplePlugin
         {
             public static PluginSettings CreateDefaultSettings()
             {
-                PluginSettings instance = new PluginSettings();
-                instance.OutputFileName = String.Empty;
-                instance.InputString = String.Empty;
+                PluginSettings instance = new PluginSettings
+                {
+                    OutputFileName = String.Empty,
+                    InputString = String.Empty
+                };
                 return instance;
             }
 
@@ -35,10 +37,10 @@ namespace SamplePlugin
 
         #region Private Members
 
-        private PluginSettings settings;
+        private readonly PluginSettings settings;
 
         #endregion
-        public PluginAction(SDConnection connection, InitialPayload payload) : base(connection, payload)
+        public PluginAction(ISDConnection connection, InitialPayload payload) : base(connection, payload)
         {
             if (payload.Settings == null || payload.Settings.Count == 0)
             {

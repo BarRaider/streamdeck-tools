@@ -7,20 +7,10 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 ** Samples of plugins using this framework: [Samples][1]
 
-### Version 3.1 is out!
-- Updated Logger class to include process name and thread id
-- Updated [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio
-
-### Version 3.0 is out!
-- Updated file handling in `Tools.AutoPopulateSettings` and `Tools.FilenameFromPayload` methods
-- Removed obsolete MD5 functions, use SHA512 functions instead
-- `Tools.CenterText` function now has optional out `textFitsImage` value to verify the text does not exceed the image width
-- New `Tools.FormatBytes` function converts bytes to human-readable value
-- New `Tools.FormatNumber()` function converts 54265 to 54.27k
-- New `Graphics.GetFontSizeWhereTextFitsImage` function helps locate the best size for a text to fit an image on 1 line
-- New ExtensionMethods for `Graphics` object: `DrawAndMeasureString` / `GetTextCenter`
-- Updated dependency packages to latest versions
-- Bug fix where FileNameProperty attribute
+### Version 3.2 is out!
+- Created new `ISDConnection` interface which is now implemented by SDConnection and used by PluginAction.
+- GlobalSettingsManager now has a short delay before calling GetGlobalSettings(), to reduce spamming the Stream Deck SDK.
+- Updated dependencies to latest version
 
 ## Features
 - Sample plugin now included in this project on Github

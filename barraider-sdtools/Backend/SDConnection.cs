@@ -13,11 +13,26 @@ namespace BarRaider.SdTools
     /// <summary>
     /// Connection object which handles your communication with the Stream Deck app
     /// </summary>
-    public class SDConnection : IDisposable
+    public class SDConnection : ISDConnection
     {
-        #region Private Methods
+        #region Private Members
 
         private string previousImageHash = null;
+
+        [JsonIgnore]
+        private readonly string actionId;
+
+        /// <summary>
+        /// An opaque value identifying the plugin. Received as an argument when the executable was launched.
+        /// </summary>
+        [JsonIgnore]
+        private readonly string pluginUUID;
+
+        /// <summary>
+        /// Holds information about the devices connected to the computer
+        /// </summary>
+        [JsonIgnore]
+        private readonly StreamDeckInfo deviceInfo;
 
         #endregion
 
@@ -394,25 +409,6 @@ namespace BarRaider.SdTools
                 OnSendToPlugin?.Invoke(this, new SDEventReceivedEventArgs<SendToPlugin>(new SendToPlugin(e.Event.Action, e.Event.Context, e.Event.Payload)));
             }
         }
-
-        #endregion
-
-        #region Private Members
-
-        [JsonIgnore]
-        private readonly string actionId;
-
-        /// <summary>
-        /// An opaque value identifying the plugin. Received as an argument when the executable was launched.
-        /// </summary>
-        [JsonIgnore]
-        private readonly string pluginUUID;
-
-        /// <summary>
-        /// Holds information about the devices connected to the computer
-        /// </summary>
-        [JsonIgnore]
-        private readonly StreamDeckInfo deviceInfo;
 
         #endregion
     }

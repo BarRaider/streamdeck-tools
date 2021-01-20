@@ -27,9 +27,206 @@
             </summary>
             <param name="ActionId"></param>
         </member>
+        <member name="T:BarRaider.SdTools.ISDConnection">
+            <summary>
+            Interface for a Stream Deck connection
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnSendToPlugin">
+            <summary>
+            Event received by the plugin when the Property Inspector uses the sendToPlugin event.
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnTitleParametersDidChange">
+            <summary>
+            Event received when the user changes the title or title parameters.
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnApplicationDidTerminate">
+            <summary>
+            Event received when a monitored application is terminated
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnApplicationDidLaunch">
+            <summary>
+            Event received when a monitored application is launched
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnDeviceDidDisconnect">
+            <summary>
+            Event received when a device is unplugged from the computer
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnDeviceDidConnect">
+            <summary>
+            Event received when a device is plugged to the computer.
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnPropertyInspectorDidAppear">
+            <summary>
+            Event received when the Property Inspector appears in the Stream Deck software user interface, for example when selecting a new instance.
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.ISDConnection.OnPropertyInspectorDidDisappear">
+            <summary>
+            Event received when the Property Inspector for an instance is removed from the Stream Deck software user interface, for example when selecting a different instance.
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SendToPropertyInspectorAsync(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Send settings to the PropertyInspector
+            </summary>
+            <param name="settings"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetSettingsAsync(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Persists your plugin settings
+            </summary>
+            <param name="settings"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetGlobalSettingsAsync(Newtonsoft.Json.Linq.JObject,System.Boolean)">
+            <summary>
+            Persists your global plugin settings
+            </summary>
+            <param name="settings">Settings to save globally</param>
+            <param name="triggerDidReceiveGlobalSettings">Boolean whether to also trigger a didReceiveGlobalSettings event. Default is true</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.GetGlobalSettingsAsync">
+            <summary>
+            Persists your global plugin settings
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetImageAsync(System.String,System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            Sets an image on the StreamDeck key.
+            </summary>
+            <param name="base64Image">Base64 encoded image</param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+            <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetImageAsync(System.Drawing.Image,System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            Sets an image on the StreamDeck key
+            </summary>
+            <param name="image">Image object</param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+            <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetDefaultImageAsync">
+            <summary>
+            Sets the default image for this state, as configured in the manifest
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetTitleAsync(System.String,System.Nullable{System.Int32})">
+            <summary>
+            Sets a title on the StreamDeck key
+            </summary>
+            <param name="title"></param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SwitchProfileAsync(System.String)">
+            <summary>
+            Switches to one of the plugin's built-in profiles
+            </summary>
+            <param name="profileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SwitchProfileAsync(System.String,System.String)">
+            <summary>
+            Switches to one of the plugin's built-in profiles. Allows to choose which device to switch it on.
+            </summary>
+            <param name="profileName"></param>
+            <param name="deviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.ShowAlert">
+            <summary>
+            Shows the Alert (Yellow Triangle) on the StreamDeck key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.ShowOk">
+            <summary>
+            Shows the Success (Green checkmark) on the StreamDeck key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.LogSDMessage(System.String)">
+            <summary>
+            Add a message to the Stream Deck log. This is the log located at: %appdata%\Elgato\StreamDeck\logs\StreamDeck0.log
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.DeviceInfo">
+            <summary>
+            Gets the Stream Deck device's info
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.GetSettingsAsync">
+            <summary>
+            Tells Stream Deck to return the current plugin settings via the ReceivedSettings function
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.OpenUrlAsync(System.String)">
+            <summary>
+            Opens a URI in the user's browser
+            </summary>
+            <param name="uri"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.OpenUrlAsync(System.Uri)">
+            <summary>
+            Opens a URI in the user's browser
+            </summary>
+            <param name="uri"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetStateAsync(System.UInt32)">
+            <summary>
+            Sets the plugin to a specific state which is pre-configured in the manifest file
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="P:BarRaider.SdTools.ISDConnection.ContextId">
+            <summary>
+            An opaque value identifying the plugin. This value is received during the Registration procedure
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.ISDConnection.DeviceId">
+            <summary>
+            An opaque value identifying the device the plugin is launched on.
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.ISDConnection.StreamDeckConnection">
+            <summary>
+            StreamDeckConnection object, initialized based on the args received when launching the program
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.SDConnection">
             <summary>
             Connection object which handles your communication with the Stream Deck app
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.SDConnection.pluginUUID">
+            <summary>
+            An opaque value identifying the plugin. Received as an argument when the executable was launched.
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.SDConnection.deviceInfo">
+            <summary>
+            Holds information about the devices connected to the computer
             </summary>
         </member>
         <member name="E:BarRaider.SdTools.SDConnection.OnSendToPlugin">
@@ -229,16 +426,6 @@
         <member name="M:BarRaider.SdTools.SDConnection.Dispose">
             <summary>
             Dispose (Destructor) function
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.SDConnection.pluginUUID">
-            <summary>
-            An opaque value identifying the plugin. Received as an argument when the executable was launched.
-            </summary>
-        </member>
-        <member name="F:BarRaider.SdTools.SDConnection.deviceInfo">
-            <summary>
-            Holds information about the devices connected to the computer
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.SDWrapper">
@@ -1151,7 +1338,7 @@
             Connection object which handles your communication with the Stream Deck app
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.PluginBase.#ctor(BarRaider.SdTools.SDConnection,BarRaider.SdTools.InitialPayload)">
+        <member name="M:BarRaider.SdTools.PluginBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
             <summary>
             Constructor for PluginBase. Receives the communication and plugin settings 
             Note that the settings object is not used by the base and should be consumed by the deriving class.
