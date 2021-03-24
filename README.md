@@ -6,8 +6,11 @@
 
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 
-## New Tutorial Wiki!
-* Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) packed with usage instructions, examples and more.
+# Getting Started
+Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) packed with usage instructions, examples and more.
+
+# Dev Discussions / Support
+**Discord:** Discuss in #developers-chat in [Bar Raiders](https://discord.gg/khpafQa)
 
 ## Library Features
 - Encapsulates all the communicating with the Stream Deck, getting a plugin working on the Stream Deck only requires implementing the PluginBase class.
