@@ -36,7 +36,7 @@ Feel free to contact me for more information: https://barraider.com</Description
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NLog" Version="4.7.6" />
+    <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="streamdeck-client-csharp" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
