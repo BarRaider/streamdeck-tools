@@ -31,7 +31,7 @@ Feel free to contact me for more information: https://barraider.com</Description
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>E:\Projects\GitHub\streamdeck-tools\\streamdeck-tools.xml</DocumentationFile>
+    <DocumentationFile>streamdeck-tools.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
@@ -43,7 +43,7 @@ Feel free to contact me for more information: https://barraider.com</Description
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="D:\Documents\My Pictures\PSD\BRLogo_460.png">
+    <None Include="BRLogo_460.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
