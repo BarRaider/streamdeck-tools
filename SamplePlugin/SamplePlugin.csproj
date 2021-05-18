@@ -68,4 +68,7 @@
   <ItemGroup>
     <ProjectReference Include="..\barraider-sdtools\barraider-sdtools.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>
