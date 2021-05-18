@@ -2,7 +2,7 @@
 
 #### C# library that wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
 
-[![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
+[![Build status](https://github.com/BarRaider/streamdeck-tools/actions/workflows/dotnetcore.yml/badge.svg)](https://github.com/BarRaider/streamdeck-tools/actions/workflows/dotnetcore.yml)  [![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
 
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 
