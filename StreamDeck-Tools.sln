@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28917.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "barraider-sdtools", "barraider-sdtools\barraider-sdtools.csproj", "{DABBD97D-6687-4CBD-A19E-AC9FFA3CEF03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "streamdeck-client-csharp", "..\streamdeck-client-csharp\streamdeck-client-csharp\streamdeck-client-csharp.csproj", "{8D3FE999-1DCC-42A3-9B8F-E3B0838F6DF7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamplePlugin", "SamplePlugin\SamplePlugin.csproj", "{4635D874-69C0-4010-BE46-77EF92EB1553}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{DABBD97D-6687-4CBD-A19E-AC9FFA3CEF03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DABBD97D-6687-4CBD-A19E-AC9FFA3CEF03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DABBD97D-6687-4CBD-A19E-AC9FFA3CEF03}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D3FE999-1DCC-42A3-9B8F-E3B0838F6DF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D3FE999-1DCC-42A3-9B8F-E3B0838F6DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D3FE999-1DCC-42A3-9B8F-E3B0838F6DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D3FE999-1DCC-42A3-9B8F-E3B0838F6DF7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4635D874-69C0-4010-BE46-77EF92EB1553}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4635D874-69C0-4010-BE46-77EF92EB1553}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4635D874-69C0-4010-BE46-77EF92EB1553}.Release|Any CPU.ActiveCfg = Release|Any CPU
