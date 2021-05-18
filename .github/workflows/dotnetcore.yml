@@ -1,14 +1,18 @@
-name: .NET Core
+name: dotnet build win
 
 on: [push]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v1
+    - name: Setup nuget
+      uses: warrenbuckley/Setup-Nuget@v1
+    - name: Restore packages
+      run:  nuget restore streamdeck-tools\streamdeck-tools.sln
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
