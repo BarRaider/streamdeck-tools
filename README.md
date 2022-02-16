@@ -13,7 +13,7 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 **Discord:** Discuss in #developers-chat in [Bar Raiders](https://discord.gg/khpafQa)
 
 ## Downloadable Resources
-* [StreamDeck-Tools Template] for Visual Studio - Automatically creates a project with all the files needed to compile a plugin. This is the best way to start a new plugin!
+* [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio - Automatically creates a project with all the files needed to compile a plugin. This is the best way to start a new plugin!
 * [Install.bat](https://github.com/BarRaider/streamdeck-tools/blob/master/utils/install.bat) - Script that quickly uninstalls and reinstalls your plugin on the streamdeck (edit the batch file for more details). Put the install.bat file in your BIN folder (same folder that has Debug/Release sub-folders)
 * [EasyPI](https://github.com/BarRaider/streamdeck-easypi) - Additional library used to easily pass information from the PI (Property Inspector) to your plugin.
 * [Profiles](https://barraider.com/profiles) Downloadable empty profiles for the XL (32-key), Classic (15-key), Mini (6-key) and Mobile devices at https://barraider.com/profiles
