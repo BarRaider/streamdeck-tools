@@ -10,7 +10,7 @@
 Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) packed with usage instructions, examples and more.
 
 # Dev Discussions / Support
-**Discord:** Discuss in #developers-chat in [Bar Raiders](https://discord.gg/khpafQa)
+**Discord:** Discuss in #developers-chat in [Bar Raiders](http://discord.barraider.com)
 
 ## Downloadable Resources
 * [StreamDeck-Tools Template](https://github.com/BarRaider/streamdeck-tools/raw/master/utils/StreamDeck-Tools%20Template.vsix) for Visual Studio (2019/2022) - Automatically creates a project with all the files needed to compile a plugin. This is the best way to start a new plugin!
