@@ -1136,6 +1136,25 @@
             <param name="strokeThickness"></param>
             <param name="pixelsAlignment"></param>
         </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.Truncate(System.String,System.Int32)">
+            <summary>
+            /// Truncates a string to the first maxSize characters. If maxSize is less than string length, original string will be returned
+            </summary>
+            <param name="str">String</param>
+            <param name="maxSize">Max size for string</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.SplitToFitKey(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
+            </summary>
+            <param name="str"></param>
+            <param name="titleParameters"></param>
+            <param name="leftPaddingPixels"></param>
+            <param name="rightPaddingPixels"></param>
+            <param name="imageWidthPixels"></param>
+            <returns></returns>
+        </member>
         <member name="T:BarRaider.SdTools.GlobalSettingsManager">
             <summary>
             Helper class which allows fetching the GlobalSettings of a plugin
@@ -1479,7 +1498,7 @@
         </member>
         <member name="M:BarRaider.SdTools.Tools.SplitStringToFit(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
             <summary>
-            Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
+            OBSOLETE - Use String.SplitToFitKey() from SdTools.ExtensionMethods
             </summary>
             <param name="str"></param>
             <param name="titleParameters"></param>

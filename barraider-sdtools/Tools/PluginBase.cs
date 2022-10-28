@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BarRaider.SdTools.Payloads;
 using Newtonsoft.Json.Linq;
 
 namespace BarRaider.SdTools

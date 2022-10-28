@@ -16,12 +16,12 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl></PackageIconUrl>
-    <AssemblyVersion>3.2.0.0</AssemblyVersion>
-    <FileVersion>3.2.0.0</FileVersion>
-    <Version>3.2</Version>
-    <PackageReleaseNotes>3.2 - 1. Created new ISDConnection interface which is now implemented by SDConnection and used by PluginAction.
-2. GlobalSettingsManager now has a short delay before calling GetGlobalSettings, to reduce spamming the Stream Deck SDK.
-3. Updated dependencies to latest version
+    <AssemblyVersion>3.9.0.0</AssemblyVersion>
+    <FileVersion>3.9.0.0</FileVersion>
+    <Version>3.9.1</Version>
+    <PackageReleaseNotes>4.0 - 1. Merged streamdeck-client-csharp package into library to allow better logging of errors
+2. Increased timeout of connection to Stream Deck due to the Stream Deck taking longer than before to reply on load
+3. Added error catching to prevent 3rd party plugin exception to impact communication
 </PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
@@ -34,10 +34,10 @@ Feel free to contact me for more information: https://barraider.com</Description
     <DocumentationFile>streamdeck-tools.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NLog" Version="4.7.10" />
-    <PackageReference Include="streamdeck-client-csharp" Version="4.3.0" />
+    <PackageReference Include="NLog" Version="5.0.4" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

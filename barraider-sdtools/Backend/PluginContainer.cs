@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-using streamdeck_client_csharp;
-using streamdeck_client_csharp.Events;
+﻿using BarRaider.SdTools.Communication;
+using BarRaider.SdTools.Communication.SDEvents;
+using BarRaider.SdTools.Payloads;
+using BarRaider.SdTools.Wrappers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,14 +52,11 @@ namespace BarRaider.SdTools
 
             // Start the connection
             connection.Run();
-#if DEBUG
             Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Loaded: UUID: {pluginUUID} Device Info: {deviceInfo}");
-#endif
             Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin version: {deviceInfo.Plugin.Version}");
-            Logger.Instance.LogMessage(TracingLevel.INFO, "Connecting to Stream Deck");
+            Logger.Instance.LogMessage(TracingLevel.INFO, "Connecting to Stream Deck...");
 
-            // Wait for up to 10 seconds to connect
-            if (connectEvent.WaitOne(TimeSpan.FromSeconds(10)))
+            // Time to wait for initial connection
             {
                 Logger.Instance.LogMessage(TracingLevel.INFO, "Connected to Stream Deck");
 
@@ -74,7 +73,7 @@ namespace BarRaider.SdTools
         }
 
         // Button pressed
-        private async void Connection_OnKeyDown(object sender, StreamDeckEventReceivedEventArgs<KeyDownEvent> e)
+        private async void Connection_OnKeyDown(object sender, SDEventReceivedEventArgs<KeyDownEvent> e)
         {
             await instancesLock.WaitAsync();
             try
@@ -85,7 +84,7 @@ namespace BarRaider.SdTools
 
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    KeyPayload payload = new KeyPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
+                    KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
                                                         e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
                     instances[e.Event.Context].KeyPressed(payload);
                 }
@@ -97,7 +96,7 @@ namespace BarRaider.SdTools
         }
 
         // Button released
-        private async void Connection_OnKeyUp(object sender, StreamDeckEventReceivedEventArgs<KeyUpEvent> e)
+        private async void Connection_OnKeyUp(object sender, SDEventReceivedEventArgs<KeyUpEvent> e)
         {
             await instancesLock.WaitAsync();
             try
@@ -108,7 +107,7 @@ namespace BarRaider.SdTools
 
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    KeyPayload payload = new KeyPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
+                    KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
                                                         e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
                     instances[e.Event.Context].KeyReleased(payload);
                 }
@@ -138,7 +137,7 @@ namespace BarRaider.SdTools
         }
 
         // Action is loaded in the Stream Deck
-        private async void Connection_OnWillAppear(object sender, StreamDeckEventReceivedEventArgs<WillAppearEvent> e)
+        private async void Connection_OnWillAppear(object sender, SDEventReceivedEventArgs<WillAppearEvent> e)
         {
             SDConnection conn = new SDConnection(connection, pluginUUID, deviceInfo, e.Event.Action, e.Event.Context, e.Event.Device);
             await instancesLock.WaitAsync();
@@ -157,7 +156,7 @@ namespace BarRaider.SdTools
                             Logger.Instance.LogMessage(TracingLevel.INFO, $"WillAppear called for already existing context {e.Event.Context} (might be inside a multi-action)");
                             return;
                         }
-                        InitialPayload payload = new InitialPayload(GenerateKeyCoordinates(e.Event.Payload.Coordinates),
+                        InitialPayload payload = new InitialPayload(e.Event.Payload.Coordinates,
                                                                     e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
                         instances[e.Event.Context] = (PluginBase)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
                     }
@@ -177,7 +176,7 @@ namespace BarRaider.SdTools
             }
         }
 
-        private async void Connection_OnWillDisappear(object sender, StreamDeckEventReceivedEventArgs<WillDisappearEvent> e)
+        private async void Connection_OnWillDisappear(object sender, SDEventReceivedEventArgs<WillDisappearEvent> e)
         {
             await instancesLock.WaitAsync();
             try
@@ -199,7 +198,7 @@ namespace BarRaider.SdTools
         }
 
         // Settings updated
-        private async void Connection_OnDidReceiveSettings(object sender, StreamDeckEventReceivedEventArgs<DidReceiveSettingsEvent> e)
+        private async void Connection_OnDidReceiveSettings(object sender, SDEventReceivedEventArgs<DidReceiveSettingsEvent> e)
         {
             await instancesLock.WaitAsync();
             try
@@ -220,7 +219,7 @@ namespace BarRaider.SdTools
         }
 
         // Global settings updated
-        private async void Connection_OnDidReceiveGlobalSettings(object sender, StreamDeckEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
+        private async void Connection_OnDidReceiveGlobalSettings(object sender, SDEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
         {
             await instancesLock.WaitAsync();
             try
@@ -252,16 +251,5 @@ namespace BarRaider.SdTools
             Logger.Instance.LogMessage(TracingLevel.INFO, "Disconnect event received");
             disconnectEvent.Set();
         }
-
-        private KeyCoordinates GenerateKeyCoordinates(Coordinates coordinates)
-        {
-            if (coordinates == null)
-            {
-                return null;
-            }
-
-            return new KeyCoordinates() { Column = coordinates.Columns, Row = coordinates.Rows };
-        }
-
     }
 }

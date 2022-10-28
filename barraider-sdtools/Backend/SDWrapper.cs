@@ -1,4 +1,5 @@
 ﻿using BarRaider.SdTools;
+using BarRaider.SdTools.Payloads;
 using CommandLine;
 using System;
 
@@ -25,14 +26,24 @@ namespace BarRaider.SdTools
         /// * https://github.com/SaviorXTanren/mixer-mixitup/
         /// *************************************************************************/
 
+        
         /// <summary>
-        /// Obsolete! Use the new Run(string[]) overload
+        /// Library's main initialization point. 
+        /// Pass the args from your Main function. We'll handle the rest
+        /// </summary>
+        /// <param name="args"></param>
+        public static void Run(string[] args)
+        {
+            Run(args, Tools.AutoLoadPluginActions());
+        }
+
+        /// <summary>
         /// Library's main initialization point. 
         /// Pass the args from your Main function and a list of supported PluginActionIds, the framework will handle the rest.
         /// </summary>
         /// <param name="args"></param>
         /// <param name="supportedActionIds"></param>
-        public static void Run(string[] args, PluginActionId[] supportedActionIds)
+        private static void Run(string[] args, PluginActionId[] supportedActionIds)
         {
             Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin [{GetExeName()}] Loading - {supportedActionIds.Length} Actions Found");
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
@@ -41,8 +52,8 @@ namespace BarRaider.SdTools
             Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Loading - Args: {String.Join(" ", args)}");
 #endif
 
-                // The command line args parser expects all args to use `--`, so, let's append
-                for (int count = 0; count < args.Length; count++)
+            // The command line args parser expects all args to use `--`, so, let's append
+            for (int count = 0; count < args.Length; count++)
             {
                 if (args[count].StartsWith("-") && !args[count].StartsWith("--"))
                 {
@@ -63,15 +74,6 @@ namespace BarRaider.SdTools
             options.WithParsed<StreamDeckOptions>(o => RunPlugin(o, supportedActionIds));
         }
 
-        /// <summary>
-        /// Library's main initialization point. 
-        /// Pass the args from your Main function. We'll handle the rest
-        /// </summary>
-        /// <param name="args"></param>
-        public static void Run(string[] args)
-        {
-            Run(args, Tools.AutoLoadPluginActions());
-        }
 
         private static void RunPlugin(StreamDeckOptions options, PluginActionId[] supportedActionIds)
         {

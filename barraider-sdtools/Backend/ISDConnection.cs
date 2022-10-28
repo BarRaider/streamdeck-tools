@@ -49,6 +49,10 @@ namespace BarRaider.SdTools
         /// Event received when the Property Inspector for an instance is removed from the Stream Deck software user interface, for example when selecting a different instance.
         /// </summary>
         event EventHandler<SDEventReceivedEventArgs<PropertyInspectorDidDisappear>> OnPropertyInspectorDidDisappear;
+        /// <summary>
+        /// Event received when the computer wakes up
+        /// </summary>
+        event EventHandler<SDEventReceivedEventArgs<SystemDidWakeUp>> OnSystemDidWakeUp;
 
         #endregion
 
@@ -199,6 +203,6 @@ namespace BarRaider.SdTools
         /// StreamDeckConnection object, initialized based on the args received when launching the program
         /// </summary>
         [JsonIgnore]
-        streamdeck_client_csharp.StreamDeckConnection StreamDeckConnection { get; }
+        Communication.StreamDeckConnection StreamDeckConnection { get; }
     }
 }

@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using streamdeck_client_csharp;
+﻿using BarRaider.SdTools.Communication;
+using BarRaider.SdTools.Communication.SDEvents;
+using BarRaider.SdTools.Payloads;
+using BarRaider.SdTools.Wrappers;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BarRaider.SdTools
@@ -23,7 +24,7 @@ namespace BarRaider.SdTools
 
         private const int GET_GLOBAL_SETTINGS_DELAY_MS = 300;
 
-        private StreamDeckConnection connection;
+        private Communication.StreamDeckConnection connection;
         private readonly System.Timers.Timer tmrGetGlobalSettings = new System.Timers.Timer();
 
         #endregion
@@ -124,7 +125,7 @@ namespace BarRaider.SdTools
 
         #region Private Methods
 
-        private void Connection_OnDidReceiveGlobalSettings(object sender, StreamDeckEventReceivedEventArgs<streamdeck_client_csharp.Events.DidReceiveGlobalSettingsEvent> e)
+        private void Connection_OnDidReceiveGlobalSettings(object sender, SDEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
         {
             OnReceivedGlobalSettings?.Invoke(this, JObject.FromObject(e.Event.Payload).ToObject<ReceivedGlobalSettingsPayload>());
         }
