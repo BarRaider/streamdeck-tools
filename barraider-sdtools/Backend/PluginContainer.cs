@@ -12,6 +12,7 @@ namespace BarRaider.SdTools
 {
     class PluginContainer
     {
+        private const int STREAMDECK_INITIAL_CONNECTION_TIMEOUT_SECONDS = 60;
         private StreamDeckConnection connection;
         private readonly ManualResetEvent connectEvent = new ManualResetEvent(false);
         private readonly ManualResetEvent disconnectEvent = new ManualResetEvent(false);
@@ -57,6 +58,7 @@ namespace BarRaider.SdTools
             Logger.Instance.LogMessage(TracingLevel.INFO, "Connecting to Stream Deck...");
 
             // Time to wait for initial connection
+            if (connectEvent.WaitOne(TimeSpan.FromSeconds(STREAMDECK_INITIAL_CONNECTION_TIMEOUT_SECONDS)))
             {
                 Logger.Instance.LogMessage(TracingLevel.INFO, "Connected to Stream Deck");
 
