@@ -1,12 +1,15 @@
 ﻿using BarRaider.SdTools.Payloads;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace BarRaider.SdTools.Communication.SDEvents
 {
     /// <summary>
-    /// Payload for WillDisappearEvent event
+    /// Payload for dial rotation event
     /// </summary>
-    public class WillDisappearEvent : BaseEvent
+    public class DialRotateEvent : BaseEvent
     {
         /// <summary>
         /// Action Name
@@ -21,15 +24,15 @@ namespace BarRaider.SdTools.Communication.SDEvents
         public string Context { get; private set; }
 
         /// <summary>
-        /// Stream Deck device UUID
+        /// Device UUID key was pressed on
         /// </summary>
         [JsonProperty("device")]
         public string Device { get; private set; }
 
         /// <summary>
-        /// settings
+        /// Information on dial rotation
         /// </summary>
         [JsonProperty("payload")]
-        public AppearancePayload Payload { get; private set; }
+        public DialRotatePayload Payload { get; private set; }
     }
 }
