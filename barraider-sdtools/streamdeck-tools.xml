@@ -102,6 +102,11 @@
             <param name="connection">Communication module with Stream Deck</param>
             <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         </member>
+        <member name="T:BarRaider.SdTools.ICommonPluginFunctions">
+            <summary>
+            Common functions used by both keypad and dial plugins
+            </summary>
+        </member>
         <member name="M:BarRaider.SdTools.ICommonPluginFunctions.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
             <summary>
             Called when the PropertyInspector has new settings
@@ -148,6 +153,11 @@
         <member name="T:BarRaider.SdTools.IKeypadPlugin">
             <summary>
             Interface used to capture key events
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.IKeypadPlugin.KeyPressed(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is pressed
             </summary>
         </member>
         <member name="M:BarRaider.SdTools.IKeypadPlugin.KeyReleased(BarRaider.SdTools.KeyPayload)">
@@ -343,7 +353,6 @@
             <summary>
             Sets the value of a single touchpad layout item
             </summary>
-            <param name="dictKeyValues"></param>
             <returns></returns>
         </member>
         <member name="P:BarRaider.SdTools.ISDConnection.ContextId">
@@ -813,7 +822,6 @@
             <summary>
             Sets the value of a single touchpad layout item
             </summary>
-            <param name="dictKeyValues"></param>
             <returns></returns>
         </member>
         <member name="T:BarRaider.SdTools.SDWrapper">
@@ -1668,6 +1676,7 @@
             <param name="settings"></param>
             <param name="controller"></param>
             <param name="ticks"></param>
+            <param name="isDialPressed"></param>
         </member>
         <member name="M:BarRaider.SdTools.Payloads.DialRotatePayload.#ctor">
             <summary>
@@ -1831,7 +1840,8 @@
             <param name="coordinates"></param>
             <param name="settings"></param>
             <param name="controller"></param>
-            <param name="isDialPressed"></param>
+            <param name="isLongPress"></param>
+            <param name="tapPosition"></param>
         </member>
         <member name="M:BarRaider.SdTools.Payloads.TouchpadPressPayload.#ctor">
             <summary>

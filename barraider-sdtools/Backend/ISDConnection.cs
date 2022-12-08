@@ -195,7 +195,6 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Sets the value of a single touchpad layout item
         /// </summary>
-        /// <param name="dictKeyValues"></param>
         /// <returns></returns>
         Task SetFeedbackAsync(string layoutItemKey, string value);
 

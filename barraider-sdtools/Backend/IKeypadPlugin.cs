@@ -9,6 +9,9 @@ namespace BarRaider.SdTools
     /// </summary>
     public interface IKeypadPlugin : ICommonPluginFunctions
     {
+        /// <summary>
+        /// Called when a Stream Deck key is pressed
+        /// </summary>
         void KeyPressed(KeyPayload payload);
 
         /// <summary>

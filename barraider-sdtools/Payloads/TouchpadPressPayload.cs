@@ -48,7 +48,8 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="coordinates"></param>
         /// <param name="settings"></param>
         /// <param name="controller"></param>
-        /// <param name="isDialPressed"></param>
+        /// <param name="isLongPress"></param>
+        /// <param name="tapPosition"></param>
         public TouchpadPressPayload(KeyCoordinates coordinates, JObject settings, string controller, bool isLongPress, int[] tapPosition)
         {
             Coordinates = coordinates;

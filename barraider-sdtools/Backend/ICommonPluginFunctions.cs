@@ -4,6 +4,9 @@ using System.Text;
 
 namespace BarRaider.SdTools
 {
+    /// <summary>
+    /// Common functions used by both keypad and dial plugins
+    /// </summary>
     public interface ICommonPluginFunctions : IDisposable
     {
         /// <summary>

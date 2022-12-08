@@ -48,6 +48,7 @@ namespace BarRaider.SdTools.Payloads
         /// <param name="settings"></param>
         /// <param name="controller"></param>
         /// <param name="ticks"></param>
+        /// <param name="isDialPressed"></param>
         public DialRotatePayload(KeyCoordinates coordinates, JObject settings, string controller, int ticks, bool isDialPressed)
         {
             Coordinates = coordinates;

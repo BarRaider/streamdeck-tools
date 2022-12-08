@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>BarRaider</Authors>
+    <Product>Stream Deck Tools by BarRaider</Product>
+    <Description>Start developing your Elgato StreamDeck plugin faster!  
+This library encapsulates all the overhead of setting up the framework, so that you can focus on writing the logic of the plugin itself.  
+[Samples for using the library are provided here: https://github.com/BarRaider/streamdeck-tools]  
+Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More info and working samples here: https://github.com/BarRaider/streamdeck-tools .  
+Feel free to contact me for more information: https://barraider.com</Description>
+    <Copyright>Copyright © BarRaider 2022</Copyright>
+    <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BarRaider/streamdeck-tools</RepositoryUrl>
+    <PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
+    <PackageId>StreamDeck-Tools</PackageId>
+    <PackageIconUrl></PackageIconUrl>
+    <AssemblyVersion>3.9.0.0</AssemblyVersion>
+    <FileVersion>3.9.0.0</FileVersion>
+    <Version>5.9.0-Beta1</Version>
+    <PackageReleaseNotes>4.0 - 1. Merged streamdeck-client-csharp package into library to allow better logging of errors
+2. Increased timeout of connection to Stream Deck due to the Stream Deck taking longer than before to reply on load
+3. Added error catching to prevent 3rd party plugin exception to impact communication
+</PackageReleaseNotes>
+    <RootNamespace>BarRaider.SdTools</RootNamespace>
+    <AssemblyName>StreamDeckTools</AssemblyName>
+    <PackageIcon>BRLogo_460.png</PackageIcon>
+    <Platforms>AnyCPU;x64</Platforms>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|x64'">
+    <DocumentationFile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>streamdeck-tools.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|x64'">
+    <DocumentationFile>streamdeck-tools.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLog" Version="5.0.4" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BRLogo_460.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+</Project>
