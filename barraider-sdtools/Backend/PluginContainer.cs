@@ -23,7 +23,7 @@ namespace BarRaider.SdTools
         private static readonly Dictionary<string, Type> supportedActions = new Dictionary<string, Type>();
 
         // Holds all instances of plugin
-        private static readonly Dictionary<string, PluginBase> instances = new Dictionary<string, PluginBase>();
+        private static readonly Dictionary<string, ICommonPluginFunctions> instances = new Dictionary<string, ICommonPluginFunctions>();
 
         public PluginContainer(PluginActionId[] supportedActionIds)
         {
@@ -46,6 +46,9 @@ namespace BarRaider.SdTools
             connection.OnKeyUp += Connection_OnKeyUp;
             connection.OnWillAppear += Connection_OnWillAppear;
             connection.OnWillDisappear += Connection_OnWillDisappear;
+            connection.OnDialRotate += Connection_OnDialRotate;
+            connection.OnDialPress += Connection_OnDialPress;
+            connection.OnTouchpadPress += Connection_OnTouchpadPress;
 
             // Settings changed
             connection.OnDidReceiveSettings += Connection_OnDidReceiveSettings;
@@ -88,7 +91,14 @@ namespace BarRaider.SdTools
                 {
                     KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
                                                         e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
-                    instances[e.Event.Context].KeyPressed(payload);
+                    if (instances[e.Event.Context] is IKeypadPlugin plugin)
+                    {
+                        plugin.KeyPressed(payload);
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keydown General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
+                    }
                 }
             }
             finally
@@ -111,7 +121,14 @@ namespace BarRaider.SdTools
                 {
                     KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
                                                         e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
-                    instances[e.Event.Context].KeyReleased(payload);
+                    if (instances[e.Event.Context] is IKeypadPlugin plugin)
+                    {
+                        plugin.KeyReleased(payload);
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keyup General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
+                    }
                 }
             }
             finally
@@ -120,14 +137,13 @@ namespace BarRaider.SdTools
             }
         }
 
-
         // Function runs every second, used to update UI
         private async void RunTick()
         {
             await instancesLock.WaitAsync();
             try
             {
-                foreach (KeyValuePair<string, PluginBase> kvp in instances.ToArray())
+                foreach (KeyValuePair<string, ICommonPluginFunctions> kvp in instances.ToArray())
                 {
                     kvp.Value.OnTick();
                 }
@@ -160,7 +176,7 @@ namespace BarRaider.SdTools
                         }
                         InitialPayload payload = new InitialPayload(e.Event.Payload.Coordinates,
                                                                     e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
-                        instances[e.Event.Context] = (PluginBase)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
+                        instances[e.Event.Context] = (ICommonPluginFunctions)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
                     }
                     catch (Exception ex)
                     {
@@ -189,8 +205,8 @@ namespace BarRaider.SdTools
 
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                   instances[e.Event.Context].Destroy();
-                   instances.Remove(e.Event.Context);
+                    instances[e.Event.Context].Destroy();
+                    instances.Remove(e.Event.Context);
                 }
             }
             finally
@@ -241,6 +257,91 @@ namespace BarRaider.SdTools
                 instancesLock.Release();
             }
         }
+
+        private async void Connection_OnTouchpadPress(object sender, SDEventReceivedEventArgs<TouchpadPress> e)
+        {
+            await instancesLock.WaitAsync();
+            try
+            {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"TouchpadPress: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
+                if (instances.ContainsKey(e.Event.Context))
+                {
+                    TouchpadPressPayload payload = new TouchpadPressPayload(e.Event.Payload.Coordinates,e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.IsLongPress, e.Event.Payload.TapPosition);
+                    if (instances[e.Event.Context] is IEncoderPlugin plugin)
+                    {
+                        plugin.TouchPress(payload);
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"TouchpadPress General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                    }
+                }
+            }
+            finally
+            {
+                instancesLock.Release();
+            }
+        }
+
+        private async void Connection_OnDialPress(object sender, SDEventReceivedEventArgs<DialPressEvent> e)
+        {
+            await instancesLock.WaitAsync();
+            try
+            {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"DialPress: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
+                if (instances.ContainsKey(e.Event.Context))
+                {
+                    DialPressPayload payload = new DialPressPayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.IsDialPressed);
+                    if (instances[e.Event.Context] is IEncoderPlugin plugin)
+                    {
+                        plugin.DialPress(payload);
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialPress General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                    }
+                }
+            }
+            finally
+            {
+                instancesLock.Release();
+            }
+        }
+
+        private async void Connection_OnDialRotate(object sender, SDEventReceivedEventArgs<DialRotateEvent> e)
+        {
+            await instancesLock.WaitAsync();
+            try
+            {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"DialRotate: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
+                if (instances.ContainsKey(e.Event.Context))
+                {
+                    DialRotatePayload payload = new DialRotatePayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.Ticks, e.Event.Payload.IsDialPressed);
+                    if (instances[e.Event.Context] is IEncoderPlugin plugin)
+                    {
+                        plugin.DialRotate(payload);
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialRotate General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                    }
+                }
+            }
+            finally
+            {
+                instancesLock.Release();
+            }
+        }
+
 
 
         private void Connection_OnConnected(object sender, EventArgs e)
