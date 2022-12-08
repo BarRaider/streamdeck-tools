@@ -6,6 +6,10 @@
 
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 
+# Stream Deck+ Support  
+Docs are still not ready, for support check our discord (link below). Read release information for usage.
+
+
 # Getting Started
 Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) packed with usage instructions, examples and more.
 
