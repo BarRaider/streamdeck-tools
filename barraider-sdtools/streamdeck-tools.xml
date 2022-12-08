@@ -27,6 +27,134 @@
             </summary>
             <param name="ActionId"></param>
         </member>
+        <member name="T:BarRaider.SdTools.EncoderBase">
+            <summary>
+            Main abstract class your plugin should derive from for dials (not keys)
+            For keys use the KeyBase or KeyAndEncoderBase
+            Holds implementation for all the basic functions
+            If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
+            <summary>
+            Called when the dial is rotated
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.DialPress(BarRaider.SdTools.Payloads.DialPressPayload)">
+            <summary>
+            Called when the Dial is pressed or released
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
+            <summary>
+            Called when the touchpad (above the dials) is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+            <summary>
+            Called when the PropertyInspector has new settings
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+            <summary>
+            Called when GetGlobalSettings is called.
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.OnTick">
+            <summary>
+            Called every second
+            Logic for displaying title/image can go here
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.Dispose">
+            <summary>
+            Abstract method Called when the plugin is disposed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.Destroy">
+            <summary>
+            Main iDisposable Dispose function
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.EncoderBase.Connection">
+            <summary>
+            Connection object which handles your communication with the Stream Deck app
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
+            <summary>
+            Constructor for PluginBase. Receives the communication and plugin settings 
+            Note that the settings object is not used by the base and should be consumed by the deriving class.
+            Usually, a private class inside the deriving class is created which stores the settings
+            Example for settings usage:
+            * if (payload.Settings == null || payload.Settings.Count == 0)
+            * {
+            *         // Create default settings
+            * }
+            * else
+            * {
+                this.settings = payload.Settings.ToObject();
+            * }
+            
+            </summary>
+            <param name="connection">Communication module with Stream Deck</param>
+            <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
+        </member>
+        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+            <summary>
+            Called when the PropertyInspector has new settings
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+            <summary>
+            Called when GetGlobalSettings is called.
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.OnTick">
+            <summary>
+            Called every second
+            Logic for displaying title/image can go here
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.ICommonPluginFunctions.Destroy">
+            <summary>
+            Internal function used by StreamDeckTools to prevent memory leaks
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.IEncoderPlugin">
+            <summary>
+            Interface used to capture dial/encoder events
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
+            <summary>
+            Called when the dial is rotated
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialPress(BarRaider.SdTools.Payloads.DialPressPayload)">
+            <summary>
+            Called when the Dial is pressed or released
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.IEncoderPlugin.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
+            <summary>
+            Called when the touchpad (above the dials) is pressed
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.IKeypadPlugin">
+            <summary>
+            Interface used to capture key events
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.IKeypadPlugin.KeyReleased(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is released
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.ISDConnection">
             <summary>
             Interface for a Stream Deck connection
@@ -204,6 +332,20 @@
             <param name="state"></param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackAsync(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Sets the values of touchpad layouts items
+            </summary>
+            <param name="dictKeyValue">Dictionary holding the layout item keys and values you want to change</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackAsync(System.String,System.String)">
+            <summary>
+            Sets the value of a single touchpad layout item
+            </summary>
+            <param name="dictKeyValues"></param>
+            <returns></returns>
+        </member>
         <member name="P:BarRaider.SdTools.ISDConnection.ContextId">
             <summary>
             An opaque value identifying the plugin. This value is received during the Registration procedure
@@ -218,6 +360,228 @@
             <summary>
             StreamDeckConnection object, initialized based on the args received when launching the program
             </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.KeyAndEncoderBase">
+            <summary>
+            Main abstract class your plugin should derive from for keys (not dials)
+            For dials use the EncoderBase or KeyAndEncoderBase
+            Holds implementation for all the basic functions
+            If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialRotate(BarRaider.SdTools.Payloads.DialRotatePayload)">
+            <summary>
+            Called when the dial is rotated
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialPress(BarRaider.SdTools.Payloads.DialPressPayload)">
+            <summary>
+            Called when the Dial is pressed or released
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
+            <summary>
+            Called when the touchpad (above the dials) is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.KeyPressed(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.KeyReleased(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is released
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+            <summary>
+            Called when the PropertyInspector has new settings
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+            <summary>
+            Called when GetGlobalSettings is called.
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.OnTick">
+            <summary>
+            Called every second
+            Logic for displaying title/image can go here
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.Dispose">
+            <summary>
+            Abstract method Called when the plugin is disposed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.Destroy">
+            <summary>
+            Main iDisposable Dispose function
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.KeyAndEncoderBase.Connection">
+            <summary>
+            Connection object which handles your communication with the Stream Deck app
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
+            <summary>
+            Constructor for PluginBase. Receives the communication and plugin settings 
+            Note that the settings object is not used by the base and should be consumed by the deriving class.
+            Usually, a private class inside the deriving class is created which stores the settings
+            Example for settings usage:
+            * if (payload.Settings == null || payload.Settings.Count == 0)
+            * {
+            *         // Create default settings
+            * }
+            * else
+            * {
+                this.settings = payload.Settings.ToObject();
+            * }
+            
+            </summary>
+            <param name="connection">Communication module with Stream Deck</param>
+            <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
+        </member>
+        <member name="T:BarRaider.SdTools.KeypadBase">
+            <summary>
+            Main abstract class your plugin should derive from for keys (not dials)
+            For dials use the EncoderBase or KeyAndEncoderBase
+            Holds implementation for all the basic functions
+            If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.KeyPressed(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.KeyReleased(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is released
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+            <summary>
+            Called when the PropertyInspector has new settings
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+            <summary>
+            Called when GetGlobalSettings is called.
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.OnTick">
+            <summary>
+            Called every second
+            Logic for displaying title/image can go here
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.Dispose">
+            <summary>
+            Abstract method Called when the plugin is disposed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.Destroy">
+            <summary>
+            Main iDisposable Dispose function
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.KeypadBase.Connection">
+            <summary>
+            Connection object which handles your communication with the Stream Deck app
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeypadBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
+            <summary>
+            Constructor for PluginBase. Receives the communication and plugin settings 
+            Note that the settings object is not used by the base and should be consumed by the deriving class.
+            Usually, a private class inside the deriving class is created which stores the settings
+            Example for settings usage:
+            * if (payload.Settings == null || payload.Settings.Count == 0)
+            * {
+            *         // Create default settings
+            * }
+            * else
+            * {
+                this.settings = payload.Settings.ToObject();
+            * }
+            
+            </summary>
+            <param name="connection">Communication module with Stream Deck</param>
+            <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
+        </member>
+        <member name="T:BarRaider.SdTools.PluginBase">
+            <summary>
+            Obsolete! Use `KeypadBase` moving forward, or choose one of the other options: `EncoderBase`, `KeyAndEncoderBase`
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.KeyPressed(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.KeyReleased(BarRaider.SdTools.KeyPayload)">
+            <summary>
+            Called when a Stream Deck key is released
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
+            <summary>
+            Called when the PropertyInspector has new settings
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
+            <summary>
+            Called when GetGlobalSettings is called.
+            </summary>
+            <param name="payload"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.OnTick">
+            <summary>
+            Called every second
+            Logic for displaying title/image can go here
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.Dispose">
+            <summary>
+            Abstract method Called when the plugin is disposed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.Destroy">
+            <summary>
+            Main iDisposable Dispose function
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.PluginBase.Connection">
+            <summary>
+            Connection object which handles your communication with the Stream Deck app
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
+            <summary>
+            Constructor for PluginBase. Receives the communication and plugin settings 
+            Note that the settings object is not used by the base and should be consumed by the deriving class.
+            Usually, a private class inside the deriving class is created which stores the settings
+            Example for settings usage:
+            * if (payload.Settings == null || payload.Settings.Count == 0)
+            * {
+            *         // Create default settings
+            * }
+            * else
+            * {
+                this.settings = payload.Settings.ToObject();
+            * }
+            
+            </summary>
+            <param name="connection">Communication module with Stream Deck</param>
+            <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         </member>
         <member name="T:BarRaider.SdTools.SDConnection">
             <summary>
@@ -278,6 +642,44 @@
             <summary>
             Event received when the computer wakes up
             </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.SDConnection.ContextId">
+            <summary>
+            An opaque value identifying the plugin. This value is received during the Registration procedure
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.SDConnection.DeviceId">
+            <summary>
+            An opaque value identifying the device the plugin is launched on.
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.SDConnection.StreamDeckConnection">
+            <summary>
+            StreamDeckConnection object, initialized based on the args received when launching the program
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.#ctor(BarRaider.SdTools.Communication.StreamDeckConnection,System.String,BarRaider.SdTools.StreamDeckInfo,System.String,System.String,System.String)">
+            <summary>
+            Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
+            These will be used to correctly communicate with the StreamDeck App
+            </summary>
+            <param name="connection"></param>
+            <param name="pluginUUID"></param>
+            <param name="deviceInfo"></param>
+            <param name="actionId"></param>
+            <param name="contextId"></param>
+            /// <param name="deviceId"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.Dispose">
+            <summary>
+            Dispose (Destructor) function
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.DeviceInfo">
+            <summary>
+            Gets the Stream Deck device's info
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.SDConnection.SendToPropertyInspectorAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
@@ -373,12 +775,6 @@
             <param name="message"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.SDConnection.DeviceInfo">
-            <summary>
-            Gets the Stream Deck device's info
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:BarRaider.SdTools.SDConnection.GetSettingsAsync">
             <summary>
             Tells Stream Deck to return the current plugin settings via the ReceivedSettings function
@@ -406,37 +802,19 @@
             <param name="state"></param>
             <returns></returns>
         </member>
-        <member name="P:BarRaider.SdTools.SDConnection.ContextId">
+        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackAsync(System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
-            An opaque value identifying the plugin. This value is received during the Registration procedure
+            Sets the values of touchpad layouts items
             </summary>
+            <param name="dictKeyValues"></param>
+            <returns></returns>
         </member>
-        <member name="P:BarRaider.SdTools.SDConnection.DeviceId">
+        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackAsync(System.String,System.String)">
             <summary>
-            An opaque value identifying the device the plugin is launched on.
+            Sets the value of a single touchpad layout item
             </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.SDConnection.StreamDeckConnection">
-            <summary>
-            StreamDeckConnection object, initialized based on the args received when launching the program
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.SDConnection.#ctor(BarRaider.SdTools.Communication.StreamDeckConnection,System.String,BarRaider.SdTools.StreamDeckInfo,System.String,System.String,System.String)">
-            <summary>
-            Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
-            These will be used to correctly communicate with the StreamDeck App
-            </summary>
-            <param name="connection"></param>
-            <param name="pluginUUID"></param>
-            <param name="deviceInfo"></param>
-            <param name="actionId"></param>
-            <param name="contextId"></param>
-            /// <param name="deviceId"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.SDConnection.Dispose">
-            <summary>
-            Dispose (Destructor) function
-            </summary>
+            <param name="dictKeyValues"></param>
+            <returns></returns>
         </member>
         <member name="T:BarRaider.SdTools.SDWrapper">
              <summary>
@@ -473,31 +851,6 @@
         <member name="T:BarRaider.SdTools.Communication.Messages.EmptyPayload">
             <summary>
             Empty payload in event
-            </summary>
-        </member>
-        <member name="T:BarRaider.SdTools.Communication.SDEvents.AppearancePayload">
-            <summary>
-            Payload for Apperance settings
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.AppearancePayload.Settings">
-            <summary>
-            Additional settings
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.AppearancePayload.Coordinates">
-            <summary>
-            Coordinates of key pressed
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.AppearancePayload.State">
-            <summary>
-            State of key
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.AppearancePayload.IsInMultiAction">
-            <summary>
-            Is action in MultiAction
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.Communication.SDEvents.ApplicationDidLaunchEvent">
@@ -558,6 +911,56 @@
         <member name="P:BarRaider.SdTools.Communication.SDEvents.DeviceDidDisconnectEvent.Device">
             <summary>
             UUID of device that was disconnected
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Communication.SDEvents.DialPressEvent">
+            <summary>
+            Payload for Dial press/unpress event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Action">
+            <summary>
+            Action Name
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Context">
+            <summary>
+            Unique Action UUID
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Device">
+            <summary>
+            Device UUID key was pressed on
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Payload">
+            <summary>
+            Information on dial rotation
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Communication.SDEvents.DialRotateEvent">
+            <summary>
+            Payload for dial rotation event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialRotateEvent.Action">
+            <summary>
+            Action Name
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialRotateEvent.Context">
+            <summary>
+            Unique Action UUID
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialRotateEvent.Device">
+            <summary>
+            Device UUID key was pressed on
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialRotateEvent.Payload">
+            <summary>
+            Information on dial rotation
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.Communication.SDEvents.DidReceiveGlobalSettingsEvent">
@@ -735,6 +1138,31 @@
             Title settings
             </summary>
         </member>
+        <member name="T:BarRaider.SdTools.Communication.SDEvents.TouchpadPress">
+            <summary>
+            Payload for touchpad press
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Action">
+            <summary>
+            Action Name
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Context">
+            <summary>
+            Unique Action UUID
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Device">
+            <summary>
+            Device UUID key was pressed on
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Payload">
+            <summary>
+            Information on touchpad press
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.Communication.SDEvents.WillAppearEvent">
             <summary>
             Payload for WillAppearEvent event
@@ -903,6 +1331,21 @@
         <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnSendToPlugin">
             <summary>
             Raised when a payload is sent to the plugin from the PI
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnDialRotate">
+            <summary>
+            Raised when a dial is rotated
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnDialPress">
+            <summary>
+            Raised when a dial is pressed or unpressed
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnTouchpadPress">
+            <summary>
+            Raised when the tochpad is pressed
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.Events.ApplicationDidLaunch">
@@ -1102,6 +1545,36 @@
             <param name="device"></param>
             <param name="payload"></param>
         </member>
+        <member name="T:BarRaider.SdTools.Payloads.AppearancePayload">
+            <summary>
+            Payload for Apperance settings
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.AppearancePayload.Settings">
+            <summary>
+            Additional settings
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.AppearancePayload.Coordinates">
+            <summary>
+            Coordinates of key pressed
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.AppearancePayload.State">
+            <summary>
+            State of key
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.AppearancePayload.IsInMultiAction">
+            <summary>
+            Is action in MultiAction
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.AppearancePayload.Controller">
+            <summary>
+            Controller which issued the event
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.Payloads.ApplicationPayload">
             <summary>
             ApplicationPayload
@@ -1117,6 +1590,89 @@
             Constructor
             </summary>
             <param name="application"></param>
+        </member>
+        <member name="T:BarRaider.SdTools.Payloads.DialPressPayload">
+            <summary>
+            Payload received when a dial is pressed or unpressed
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.Controller">
+            <summary>
+            Controller which issued the event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.Settings">
+            <summary>
+            Current event settings
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.Coordinates">
+            <summary>
+            Coordinates of key on the stream deck
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.IsDialPressed">
+            <summary>
+            Boolean whether the dial is currently pressed or not
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.DialPressPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="coordinates"></param>
+            <param name="settings"></param>
+            <param name="controller"></param>
+            <param name="isDialPressed"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.DialPressPayload.#ctor">
+            <summary>
+            Default constructor for serialization
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Payloads.DialRotatePayload">
+            <summary>
+            Payload received when a dial is rotated
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialRotatePayload.Controller">
+            <summary>
+            Controller which issued the event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialRotatePayload.Settings">
+            <summary>
+            Current event settings
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialRotatePayload.Coordinates">
+            <summary>
+            Coordinates of key on the stream deck
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialRotatePayload.Ticks">
+            <summary>
+            Number of ticks rotated. Positive is to the right, negative to the left
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.DialRotatePayload.IsDialPressed">
+            <summary>
+            Boolean whether the dial is currently pressed or not
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.DialRotatePayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="coordinates"></param>
+            <param name="settings"></param>
+            <param name="controller"></param>
+            <param name="ticks"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.DialRotatePayload.#ctor">
+            <summary>
+            Default constructor for serialization
+            </summary>
         </member>
         <member name="T:BarRaider.SdTools.Payloads.StreamDeckOptions">
             <summary>
@@ -1238,6 +1794,50 @@
             Color of title
             </summary>
         </member>
+        <member name="T:BarRaider.SdTools.Payloads.TouchpadPressPayload">
+            <summary>
+            Payload received when the touchpad (above the dials) is pressed
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.TouchpadPressPayload.Controller">
+            <summary>
+            Controller which issued the event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.TouchpadPressPayload.Settings">
+            <summary>
+            Current event settings
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.TouchpadPressPayload.Coordinates">
+            <summary>
+            Coordinates of key on the stream deck
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.TouchpadPressPayload.IsLongPress">
+            <summary>
+            Boolean whether it was a long press or not
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Payloads.TouchpadPressPayload.TapPosition">
+            <summary>
+            Position on touchpad which was pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.TouchpadPressPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Boolean,System.Int32[])">
+            <summary>
+            Constructor
+            </summary>
+            <param name="coordinates"></param>
+            <param name="settings"></param>
+            <param name="controller"></param>
+            <param name="isDialPressed"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.Payloads.TouchpadPressPayload.#ctor">
+            <summary>
+            Default constructor for serialization
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.InitialPayload">
             <summary>
             Payload received during the plugin's constructor
@@ -1285,17 +1885,17 @@
         </member>
         <member name="P:BarRaider.SdTools.KeyPayload.Settings">
             <summary>
-            Current plugin settings
+            Current event settings
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.KeyPayload.Coordinates">
             <summary>
-            Location of plugin on the stream deck
+            Coordinates of key on the stream deck
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.KeyPayload.State">
             <summary>
-            Current plugin state
+            Current key state
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.KeyPayload.UserDesiredState">
@@ -1808,75 +2408,6 @@
             </summary>
             <param name="Level"></param>
             <param name="Message"></param>
-        </member>
-        <member name="T:BarRaider.SdTools.PluginBase">
-            <summary>
-            Main abstract class your plugin should derive from
-            Holds implementation for all the basic functions
-            If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.KeyPressed(BarRaider.SdTools.KeyPayload)">
-            <summary>
-            Called when a Stream Deck key is pressed
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.KeyReleased(BarRaider.SdTools.KeyPayload)">
-            <summary>
-            Called when a Stream Deck key is released
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.ReceivedSettings(BarRaider.SdTools.ReceivedSettingsPayload)">
-            <summary>
-            Called when the PropertyInspector has new settings
-            </summary>
-            <param name="payload"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.ReceivedGlobalSettings(BarRaider.SdTools.ReceivedGlobalSettingsPayload)">
-            <summary>
-            Called when GetGlobalSettings is called.
-            </summary>
-            <param name="payload"></param>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.OnTick">
-            <summary>
-            Called every second
-            Logic for displaying title/image can go here
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.Dispose">
-            <summary>
-            Abstract method Called when the plugin is disposed
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.Destroy">
-            <summary>
-            Main iDisposable Dispose function
-            </summary>
-        </member>
-        <member name="P:BarRaider.SdTools.PluginBase.Connection">
-            <summary>
-            Connection object which handles your communication with the Stream Deck app
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.PluginBase.#ctor(BarRaider.SdTools.ISDConnection,BarRaider.SdTools.InitialPayload)">
-            <summary>
-            Constructor for PluginBase. Receives the communication and plugin settings 
-            Note that the settings object is not used by the base and should be consumed by the deriving class.
-            Usually, a private class inside the deriving class is created which stores the settings
-            Example for settings usage:
-            * if (payload.Settings == null || payload.Settings.Count == 0)
-            * {
-            *         // Create default settings
-            * }
-            * else
-            * {
-                this.settings = payload.Settings.ToObject();
-            * }
-            
-            </summary>
-            <param name="connection">Communication module with Stream Deck</param>
-            <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
         </member>
         <member name="T:BarRaider.SdTools.RandomGenerator">
             <summary>

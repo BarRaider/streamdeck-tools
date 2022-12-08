@@ -1,30 +1,32 @@
-﻿using System;
+﻿using BarRaider.SdTools.Payloads;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using BarRaider.SdTools.Payloads;
-using Newtonsoft.Json.Linq;
 
 namespace BarRaider.SdTools
 {
-
     /// <summary>
-    /// Main abstract class your plugin should derive from
+    /// Main abstract class your plugin should derive from for dials (not keys)
+    /// For keys use the KeyBase or KeyAndEncoderBase
     /// Holds implementation for all the basic functions
     /// If you're missing an event, you can register to it from the Connection.StreamDeckConnection object
     /// </summary>
-    public abstract class PluginBase : IDisposable
+    public abstract class EncoderBase : IEncoderPlugin
     {
         /// <summary>
-        /// Called when a Stream Deck key is pressed
+        /// Called when the dial is rotated
         /// </summary>
-        public abstract void KeyPressed(KeyPayload payload);
+        public abstract void DialRotate(DialRotatePayload payload);
 
         /// <summary>
-        /// Called when a Stream Deck key is released
+        /// Called when the Dial is pressed or released
         /// </summary>
-        public abstract void KeyReleased(KeyPayload payload);
+        public abstract void DialPress(DialPressPayload payload);
+
+        /// <summary>
+        /// Called when the touchpad (above the dials) is pressed
+        /// </summary>
+        public abstract void TouchPress(TouchpadPressPayload payload);
 
         /// <summary>
         /// Called when the PropertyInspector has new settings
@@ -84,7 +86,7 @@ namespace BarRaider.SdTools
         /// <param name="connection">Communication module with Stream Deck</param>
         /// <param name="payload">Plugin settings - NOTE: Not used in base class, should be consumed by deriving class</param>
 #pragma warning disable IDE0060 // Remove unused parameter
-        public PluginBase(ISDConnection connection, InitialPayload payload)
+        public EncoderBase(ISDConnection connection, InitialPayload payload)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
             Connection = connection;

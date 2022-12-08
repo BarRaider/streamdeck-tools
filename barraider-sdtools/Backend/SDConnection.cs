@@ -9,6 +9,7 @@ using BarRaider.SdTools.Events;
 using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Communication;
 using BarRaider.SdTools.Communication.SDEvents;
+using System.Collections.Generic;
 
 namespace BarRaider.SdTools
 {
@@ -79,7 +80,95 @@ namespace BarRaider.SdTools
 
         #endregion
 
-        #region Public Implementations
+        #region Public Properties
+
+
+        /// <summary>
+        /// An opaque value identifying the plugin. This value is received during the Registration procedure
+        /// </summary>
+        [JsonIgnore]
+        public String ContextId { get; private set; }
+
+        /// <summary>
+        /// An opaque value identifying the device the plugin is launched on.
+        /// </summary>
+        [JsonIgnore]
+        public String DeviceId { get; private set; }
+
+        /// <summary>
+        /// StreamDeckConnection object, initialized based on the args received when launching the program
+        /// </summary>
+        [JsonIgnore]
+        public StreamDeckConnection StreamDeckConnection { get; private set; }
+
+        #endregion
+
+        /// <summary>
+        /// Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
+        /// These will be used to correctly communicate with the StreamDeck App
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="pluginUUID"></param>
+        /// <param name="deviceInfo"></param>
+        /// <param name="actionId"></param>
+        /// <param name="contextId"></param>
+        /// /// <param name="deviceId"></param>
+        public SDConnection(StreamDeckConnection connection, string pluginUUID, StreamDeckInfo deviceInfo, string actionId, string contextId, string deviceId)
+        {
+            StreamDeckConnection = connection;
+            this.pluginUUID = pluginUUID;
+            this.deviceInfo = deviceInfo;
+            this.actionId = actionId;
+            this.ContextId = contextId;
+            this.DeviceId = deviceId;
+
+            StreamDeckConnection.OnSendToPlugin += Connection_OnSendToPlugin;
+            StreamDeckConnection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
+            StreamDeckConnection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
+            StreamDeckConnection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
+            StreamDeckConnection.OnDeviceDidDisconnect += Connection_OnDeviceDidDisconnect;
+            StreamDeckConnection.OnDeviceDidConnect += Connection_OnDeviceDidConnect;
+            StreamDeckConnection.OnPropertyInspectorDidAppear += Connection_OnPropertyInspectorDidAppear;
+            StreamDeckConnection.OnPropertyInspectorDidDisappear += Connection_OnPropertyInspectorDidDisappear;
+            StreamDeckConnection.OnSystemDidWakeUp += StreamDeckConnection_OnSystemDidWakeUp;
+        }
+
+        #region Public Methods
+
+        /// <summary>
+        /// Dispose (Destructor) function
+        /// </summary>
+        public void Dispose()
+        {
+            StreamDeckConnection.OnSendToPlugin -= Connection_OnSendToPlugin;
+            StreamDeckConnection.OnTitleParametersDidChange -= Connection_OnTitleParametersDidChange;
+            StreamDeckConnection.OnApplicationDidTerminate -= Connection_OnApplicationDidTerminate;
+            StreamDeckConnection.OnApplicationDidLaunch -= Connection_OnApplicationDidLaunch;
+            StreamDeckConnection.OnDeviceDidDisconnect -= Connection_OnDeviceDidDisconnect;
+            StreamDeckConnection.OnDeviceDidConnect -= Connection_OnDeviceDidConnect;
+            StreamDeckConnection.OnPropertyInspectorDidAppear -= Connection_OnPropertyInspectorDidAppear;
+            StreamDeckConnection.OnPropertyInspectorDidDisappear -= Connection_OnPropertyInspectorDidDisappear;
+            StreamDeckConnection.OnSystemDidWakeUp -= StreamDeckConnection_OnSystemDidWakeUp;
+        }
+
+        /// <summary>
+        /// Gets the Stream Deck device's info
+        /// </summary>
+        /// <returns></returns>
+        public StreamDeckDeviceInfo DeviceInfo()
+        {
+            if (deviceInfo == null || string.IsNullOrEmpty(DeviceId))
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"Could not get DeviceInfo for DeviceId: {DeviceId} Devices: {deviceInfo?.Devices?.Length}");
+                return null;
+            }
+
+            return deviceInfo.Devices.Where(d => d.Id == DeviceId).FirstOrDefault();
+        }
+
+        #endregion
+
+        #region Public Requests
 
         /// <summary>
         /// Send settings to the PropertyInspector
@@ -242,21 +331,6 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
-        /// Gets the Stream Deck device's info
-        /// </summary>
-        /// <returns></returns>
-        public StreamDeckDeviceInfo DeviceInfo()
-        {
-            if (deviceInfo == null || string.IsNullOrEmpty(DeviceId))
-            {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"Could not get DeviceInfo for DeviceId: {DeviceId} Devices: {deviceInfo?.Devices?.Length}");
-                return null;
-            }
-
-            return deviceInfo.Devices.Where(d => d.Id == DeviceId).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Tells Stream Deck to return the current plugin settings via the ReceivedSettings function
         /// </summary>
         /// <returns></returns>
@@ -295,72 +369,27 @@ namespace BarRaider.SdTools
             await StreamDeckConnection.SetStateAsync(state, ContextId);
         }
 
+        /// <summary>
+        /// Sets the values of touchpad layouts items
+        /// </summary>
+        /// <param name="dictKeyValues"></param>
+        /// <returns></returns>
+        public async Task SetFeedbackAsync(Dictionary<string, string> dictKeyValues)
+        {
+            await StreamDeckConnection.SetFeedbackAsync(dictKeyValues, ContextId);
+        }
+
+        /// <summary>
+        /// Sets the value of a single touchpad layout item
+        /// </summary>
+        /// <param name="dictKeyValues"></param>
+        /// <returns></returns>
+        public async Task SetFeedbackAsync(string layoutItemKey, string value)
+        {
+            await StreamDeckConnection.SetFeedbackAsync(new Dictionary<string, string>() { { layoutItemKey, value } }, ContextId);
+        }
+
         #endregion
-
-        /// <summary>
-        /// An opaque value identifying the plugin. This value is received during the Registration procedure
-        /// </summary>
-        [JsonIgnore]
-        public String ContextId { get; private set; }
-
-        /// <summary>
-        /// An opaque value identifying the device the plugin is launched on.
-        /// </summary>
-        [JsonIgnore]
-        public String DeviceId { get; private set; }
-
-        /// <summary>
-        /// StreamDeckConnection object, initialized based on the args received when launching the program
-        /// </summary>
-        [JsonIgnore]
-        public StreamDeckConnection StreamDeckConnection { get; private set; }
-
-        /// <summary>
-        /// Public constructor, a StreamDeckConnection object is required along with the current action and context IDs
-        /// These will be used to correctly communicate with the StreamDeck App
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="pluginUUID"></param>
-        /// <param name="deviceInfo"></param>
-        /// <param name="actionId"></param>
-        /// <param name="contextId"></param>
-        /// /// <param name="deviceId"></param>
-        public SDConnection(StreamDeckConnection connection, string pluginUUID, StreamDeckInfo deviceInfo, string actionId, string contextId, string deviceId)
-        {
-            StreamDeckConnection = connection;
-            this.pluginUUID = pluginUUID;
-            this.deviceInfo = deviceInfo;
-            this.actionId = actionId;
-            this.ContextId = contextId;
-            this.DeviceId = deviceId;
-
-            StreamDeckConnection.OnSendToPlugin += Connection_OnSendToPlugin;
-            StreamDeckConnection.OnTitleParametersDidChange += Connection_OnTitleParametersDidChange;
-            StreamDeckConnection.OnApplicationDidTerminate += Connection_OnApplicationDidTerminate;
-            StreamDeckConnection.OnApplicationDidLaunch += Connection_OnApplicationDidLaunch;
-            StreamDeckConnection.OnDeviceDidDisconnect += Connection_OnDeviceDidDisconnect;
-            StreamDeckConnection.OnDeviceDidConnect += Connection_OnDeviceDidConnect;
-            StreamDeckConnection.OnPropertyInspectorDidAppear += Connection_OnPropertyInspectorDidAppear;
-            StreamDeckConnection.OnPropertyInspectorDidDisappear += Connection_OnPropertyInspectorDidDisappear;
-            StreamDeckConnection.OnSystemDidWakeUp += StreamDeckConnection_OnSystemDidWakeUp;
-        }
-
-        /// <summary>
-        /// Dispose (Destructor) function
-        /// </summary>
-        public void Dispose()
-        {
-            StreamDeckConnection.OnSendToPlugin -= Connection_OnSendToPlugin;
-            StreamDeckConnection.OnTitleParametersDidChange -= Connection_OnTitleParametersDidChange;
-            StreamDeckConnection.OnApplicationDidTerminate -= Connection_OnApplicationDidTerminate;
-            StreamDeckConnection.OnApplicationDidLaunch -= Connection_OnApplicationDidLaunch;
-            StreamDeckConnection.OnDeviceDidDisconnect -= Connection_OnDeviceDidDisconnect;
-            StreamDeckConnection.OnDeviceDidConnect -= Connection_OnDeviceDidConnect;
-            StreamDeckConnection.OnPropertyInspectorDidAppear -= Connection_OnPropertyInspectorDidAppear;
-            StreamDeckConnection.OnPropertyInspectorDidDisappear -= Connection_OnPropertyInspectorDidDisappear;
-            StreamDeckConnection.OnSystemDidWakeUp -= StreamDeckConnection_OnSystemDidWakeUp;
-        }
-
 
         #region Event Wrappers
 

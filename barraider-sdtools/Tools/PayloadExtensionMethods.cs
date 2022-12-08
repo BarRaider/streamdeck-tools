@@ -1,5 +1,4 @@
-﻿using BarRaider.SdTools.Communication.SDEvents;
-using BarRaider.SdTools.Payloads;
+﻿using BarRaider.SdTools.Payloads;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,6 +41,33 @@ namespace BarRaider.SdTools
                 return "ReceiveGlobalSettingsPayload is null!";
             }
             return $"Settings: {gsp.Settings}";
+        }
+
+        internal static string ToStringEx(this DialRotatePayload drp)
+        {
+            if (drp == null)
+            {
+                return "DialRotatePayload is null!";
+            }
+            return $"Controller: {drp.Controller} Ticks: {drp.Ticks} Coordinates: ({drp.Coordinates?.Row},{drp.Coordinates?.Column}) Settings: {drp.Settings}";
+        }
+
+        internal static string ToStringEx(this DialPressPayload dpp)
+        {
+            if (dpp == null)
+            {
+                return "DialPressPayload is null!";
+            }
+            return $"Controller: {dpp.Controller} IsDialPressed: {dpp.IsDialPressed} Coordinates: ({dpp.Coordinates?.Row},{dpp.Coordinates?.Column}) Settings: {dpp.Settings}";
+        }
+
+        internal static string ToStringEx(this TouchpadPressPayload tpp)
+        {
+            if (tpp == null)
+            {
+                return "KeyPayload is null!";
+            }
+            return $"Controller: {tpp.Controller} LongPress: {tpp.IsLongPress} Position: {(tpp.TapPosition?.Length == 2 ? tpp.TapPosition[0].ToString() + "," + tpp.TapPosition[1] : "Invalid")} Coordinates: ({tpp.Coordinates?.Row},{tpp.Coordinates?.Column}) Settings: {tpp.Settings}";
         }
     }
 }

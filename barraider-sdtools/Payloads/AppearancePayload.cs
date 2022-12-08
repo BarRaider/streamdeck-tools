@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BarRaider.SdTools.Communication.SDEvents
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Payload for Apperance settings
@@ -31,5 +31,11 @@ namespace BarRaider.SdTools.Communication.SDEvents
         /// </summary>
         [JsonProperty("isInMultiAction")]
         public bool IsInMultiAction { get; private set; }
+
+        /// <summary>
+        /// Controller which issued the event
+        /// </summary>
+        [JsonProperty("controller")]
+        public string Controller { get; private set; }
     }
 }

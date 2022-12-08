@@ -26,6 +26,9 @@ namespace BarRaider.SdTools.Communication.SDEvents
         public const string PropertyInspectorDidAppear = "propertyInspectorDidAppear";
         public const string PropertyInspectorDidDisappear = "propertyInspectorDidDisappear";
         public const string SendToPlugin = "sendToPlugin";
+        public const string DialRotate = "dialRotate";
+        public const string DialPress = "dialPress";
+        public const string TouchpadPress = "touchTap";
     }
 
     /// <summary>
@@ -58,6 +61,10 @@ namespace BarRaider.SdTools.Communication.SDEvents
             { EventTypes.PropertyInspectorDidDisappear, typeof(PropertyInspectorDidDisappearEvent) },
 
             { EventTypes.SendToPlugin, typeof(SendToPluginEvent) },
+
+            { EventTypes.DialRotate, typeof(DialRotateEvent) },
+            { EventTypes.DialPress, typeof(DialPressEvent) },
+            { EventTypes.TouchpadPress, typeof(TouchpadPress) },
         };
 
         /// <summary>

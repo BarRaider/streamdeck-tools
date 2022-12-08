@@ -4,6 +4,7 @@ using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -35,6 +36,8 @@ namespace BarRaider.SdTools.Communication
         /// This is the unique identifier used to communicate with the register StreamDeck plugin.
         /// </summary>
         public string UUID { get; private set; }
+
+        #region Public Events
 
         /// <summary>
         /// Raised when plugin is connected to stream deck app
@@ -121,6 +124,23 @@ namespace BarRaider.SdTools.Communication
         /// </summary>
         public event EventHandler<SDEventReceivedEventArgs<SendToPluginEvent>> OnSendToPlugin;
 
+        /// <summary>
+        /// Raised when a dial is rotated
+        /// </summary>
+        public event EventHandler<SDEventReceivedEventArgs<DialRotateEvent>> OnDialRotate;
+
+        /// <summary>
+        /// Raised when a dial is pressed or unpressed
+        /// </summary>
+        public event EventHandler<SDEventReceivedEventArgs<DialPressEvent>> OnDialPress;
+
+        /// <summary>
+        /// Raised when the tochpad is pressed
+        /// </summary>
+        public event EventHandler<SDEventReceivedEventArgs<TouchpadPress>> OnTouchpadPress;
+
+        #endregion
+
         internal StreamDeckConnection(int port, string uuid, string registerEvent)
         {
             this.Port = port;
@@ -141,6 +161,13 @@ namespace BarRaider.SdTools.Communication
         {
             cancelTokenSource.Cancel();
         }
+
+        internal Task SendAsync(IMessage message)
+        {
+            return SendAsync(JsonConvert.SerializeObject(message));
+        }
+
+        #region Requests
 
         internal Task SetTitleAsync(string title, string context, SDKTarget target, int? state)
         {
@@ -224,10 +251,12 @@ namespace BarRaider.SdTools.Communication
             return SendAsync(new OpenUrlMessage(uri));
         }
 
-        internal Task SendAsync(IMessage message)
+        internal Task SetFeedbackAsync(Dictionary<string,string> dictKeyValues, string context)
         {
-            return SendAsync(JsonConvert.SerializeObject(message));
+            return SendAsync(new SetFeedbackMessage(dictKeyValues, context));
         }
+
+        #endregion
 
         #region Private Methods
 
@@ -319,37 +348,38 @@ namespace BarRaider.SdTools.Communication
                                     continue;
                                 }
 
-                                _ = Task.Run(() =>
+                                try
                                 {
-                                    try
+                                    switch (evt.Event)
                                     {
-                                        switch (evt.Event)
-                                        {
-                                            case EventTypes.KeyDown: OnKeyDown?.Invoke(this, new SDEventReceivedEventArgs<KeyDownEvent>(evt as KeyDownEvent)); break;
-                                            case EventTypes.KeyUp: OnKeyUp?.Invoke(this, new SDEventReceivedEventArgs<KeyUpEvent>(evt as KeyUpEvent)); break;
-                                            case EventTypes.WillAppear: OnWillAppear?.Invoke(this, new SDEventReceivedEventArgs<WillAppearEvent>(evt as WillAppearEvent)); break;
-                                            case EventTypes.WillDisappear: OnWillDisappear?.Invoke(this, new SDEventReceivedEventArgs<WillDisappearEvent>(evt as WillDisappearEvent)); break;
-                                            case EventTypes.TitleParametersDidChange: OnTitleParametersDidChange?.Invoke(this, new SDEventReceivedEventArgs<TitleParametersDidChangeEvent>(evt as TitleParametersDidChangeEvent)); break;
-                                            case EventTypes.DeviceDidConnect: OnDeviceDidConnect?.Invoke(this, new SDEventReceivedEventArgs<DeviceDidConnectEvent>(evt as DeviceDidConnectEvent)); break;
-                                            case EventTypes.DeviceDidDisconnect: OnDeviceDidDisconnect?.Invoke(this, new SDEventReceivedEventArgs<DeviceDidDisconnectEvent>(evt as DeviceDidDisconnectEvent)); break;
-                                            case EventTypes.ApplicationDidLaunch: OnApplicationDidLaunch?.Invoke(this, new SDEventReceivedEventArgs<ApplicationDidLaunchEvent>(evt as ApplicationDidLaunchEvent)); break;
-                                            case EventTypes.ApplicationDidTerminate: OnApplicationDidTerminate?.Invoke(this, new SDEventReceivedEventArgs<ApplicationDidTerminateEvent>(evt as ApplicationDidTerminateEvent)); break;
-                                            case EventTypes.SystemDidWakeUp: OnSystemDidWakeUp?.Invoke(this, new SDEventReceivedEventArgs<SystemDidWakeUpEvent>(evt as SystemDidWakeUpEvent)); break;
-                                            case EventTypes.DidReceiveSettings: OnDidReceiveSettings?.Invoke(this, new SDEventReceivedEventArgs<DidReceiveSettingsEvent>(evt as DidReceiveSettingsEvent)); break;
-                                            case EventTypes.DidReceiveGlobalSettings: OnDidReceiveGlobalSettings?.Invoke(this, new SDEventReceivedEventArgs<DidReceiveGlobalSettingsEvent>(evt as DidReceiveGlobalSettingsEvent)); break;
-                                            case EventTypes.PropertyInspectorDidAppear: OnPropertyInspectorDidAppear?.Invoke(this, new SDEventReceivedEventArgs<PropertyInspectorDidAppearEvent>(evt as PropertyInspectorDidAppearEvent)); break;
-                                            case EventTypes.PropertyInspectorDidDisappear: OnPropertyInspectorDidDisappear?.Invoke(this, new SDEventReceivedEventArgs<PropertyInspectorDidDisappearEvent>(evt as PropertyInspectorDidDisappearEvent)); break;
-                                            case EventTypes.SendToPlugin: OnSendToPlugin?.Invoke(this, new SDEventReceivedEventArgs<SendToPluginEvent>(evt as SendToPluginEvent)); break;
-                                            default:
-                                                Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Unsupported Stream Deck event: {strBuffer}");
-                                                break;
-                                        }
+                                        case EventTypes.KeyDown: OnKeyDown?.Invoke(this, new SDEventReceivedEventArgs<KeyDownEvent>(evt as KeyDownEvent)); break;
+                                        case EventTypes.KeyUp: OnKeyUp?.Invoke(this, new SDEventReceivedEventArgs<KeyUpEvent>(evt as KeyUpEvent)); break;
+                                        case EventTypes.WillAppear: OnWillAppear?.Invoke(this, new SDEventReceivedEventArgs<WillAppearEvent>(evt as WillAppearEvent)); break;
+                                        case EventTypes.WillDisappear: OnWillDisappear?.Invoke(this, new SDEventReceivedEventArgs<WillDisappearEvent>(evt as WillDisappearEvent)); break;
+                                        case EventTypes.TitleParametersDidChange: OnTitleParametersDidChange?.Invoke(this, new SDEventReceivedEventArgs<TitleParametersDidChangeEvent>(evt as TitleParametersDidChangeEvent)); break;
+                                        case EventTypes.DeviceDidConnect: OnDeviceDidConnect?.Invoke(this, new SDEventReceivedEventArgs<DeviceDidConnectEvent>(evt as DeviceDidConnectEvent)); break;
+                                        case EventTypes.DeviceDidDisconnect: OnDeviceDidDisconnect?.Invoke(this, new SDEventReceivedEventArgs<DeviceDidDisconnectEvent>(evt as DeviceDidDisconnectEvent)); break;
+                                        case EventTypes.ApplicationDidLaunch: OnApplicationDidLaunch?.Invoke(this, new SDEventReceivedEventArgs<ApplicationDidLaunchEvent>(evt as ApplicationDidLaunchEvent)); break;
+                                        case EventTypes.ApplicationDidTerminate: OnApplicationDidTerminate?.Invoke(this, new SDEventReceivedEventArgs<ApplicationDidTerminateEvent>(evt as ApplicationDidTerminateEvent)); break;
+                                        case EventTypes.SystemDidWakeUp: OnSystemDidWakeUp?.Invoke(this, new SDEventReceivedEventArgs<SystemDidWakeUpEvent>(evt as SystemDidWakeUpEvent)); break;
+                                        case EventTypes.DidReceiveSettings: OnDidReceiveSettings?.Invoke(this, new SDEventReceivedEventArgs<DidReceiveSettingsEvent>(evt as DidReceiveSettingsEvent)); break;
+                                        case EventTypes.DidReceiveGlobalSettings: OnDidReceiveGlobalSettings?.Invoke(this, new SDEventReceivedEventArgs<DidReceiveGlobalSettingsEvent>(evt as DidReceiveGlobalSettingsEvent)); break;
+                                        case EventTypes.PropertyInspectorDidAppear: OnPropertyInspectorDidAppear?.Invoke(this, new SDEventReceivedEventArgs<PropertyInspectorDidAppearEvent>(evt as PropertyInspectorDidAppearEvent)); break;
+                                        case EventTypes.PropertyInspectorDidDisappear: OnPropertyInspectorDidDisappear?.Invoke(this, new SDEventReceivedEventArgs<PropertyInspectorDidDisappearEvent>(evt as PropertyInspectorDidDisappearEvent)); break;
+                                        case EventTypes.SendToPlugin: OnSendToPlugin?.Invoke(this, new SDEventReceivedEventArgs<SendToPluginEvent>(evt as SendToPluginEvent)); break;
+                                        case EventTypes.DialRotate: OnDialRotate?.Invoke(this, new SDEventReceivedEventArgs<DialRotateEvent>(evt as DialRotateEvent)); break;
+                                        case EventTypes.DialPress: OnDialPress?.Invoke(this, new SDEventReceivedEventArgs<DialPressEvent>(evt as DialPressEvent)); break;
+                                        case EventTypes.TouchpadPress: OnTouchpadPress?.Invoke(this, new SDEventReceivedEventArgs<TouchpadPress>(evt as TouchpadPress)); break;
+                                        default:
+                                            Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Unsupported Stream Deck event: {strBuffer}");
+                                            break;
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} Unhandled 3rd party exception when triggering {evt.Event} event. Exception: {ex}");
-                                    }
-                                });
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} Unhandled 3rd party exception when triggering {evt.Event} event. Exception: {ex}");
+                                }
+
                             }
                         }
                     }

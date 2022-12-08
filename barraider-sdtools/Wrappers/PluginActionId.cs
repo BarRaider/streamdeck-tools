@@ -31,9 +31,9 @@ namespace BarRaider.SdTools
             }
             private set
             {
-                if (value == null || !value.IsSubclassOf(typeof(PluginBase)))
+                if (value == null || (!typeof(IKeypadPlugin).IsAssignableFrom(value) && !typeof(IEncoderPlugin).IsAssignableFrom(value)))
                 {
-                    throw new NotSupportedException("Class type set to PluginBaseType does not inherit PluginBase");
+                    throw new NotSupportedException("Class type set to PluginBaseType does not inherit IKeypadPlugin or IEncoderPlugin");
                 }
                 pluginBaseType = value;
             }

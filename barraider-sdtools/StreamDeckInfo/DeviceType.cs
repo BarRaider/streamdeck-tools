@@ -39,5 +39,14 @@ namespace BarRaider.SdTools
         /// </summary>
         StreamDeckPedal = 5,
 
+        /// <summary>
+        /// Corsair CUE SDK (?)
+        /// </summary>
+        CorsairCueSDK = 6,
+
+        /// <summary>
+        /// Stream Deck+
+        /// </summary>
+        StreamDeckPlus = 7,
     }
 }
