@@ -113,15 +113,15 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="streamDeckType"></param>
         /// <returns></returns>
-        public static int GetKeyDefaultHeight(StreamDeckDeviceType streamDeckType)
+        public static int GetKeyDefaultHeight(DeviceType streamDeckType)
         {
             switch (streamDeckType)
             {
-                case StreamDeckDeviceType.StreamDeckClassic:
-                case StreamDeckDeviceType.StreamDeckMini:
-                case StreamDeckDeviceType.StreamDeckMobile:
+                case DeviceType.StreamDeckClassic:
+                case DeviceType.StreamDeckMini:
+                case DeviceType.StreamDeckMobile:
                     return CLASSIC_KEY_DEFAULT_HEIGHT;
-                case StreamDeckDeviceType.StreamDeckXL:
+                case DeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_HEIGHT;
                 default:
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
@@ -136,15 +136,15 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="streamDeckType"></param>
         /// <returns></returns>
-        public static int GetKeyDefaultWidth(StreamDeckDeviceType streamDeckType)
+        public static int GetKeyDefaultWidth(DeviceType streamDeckType)
         {
             switch (streamDeckType)
             {
-                case StreamDeckDeviceType.StreamDeckClassic:
-                case StreamDeckDeviceType.StreamDeckMini:
-                case StreamDeckDeviceType.StreamDeckMobile:
+                case DeviceType.StreamDeckClassic:
+                case DeviceType.StreamDeckMini:
+                case DeviceType.StreamDeckMobile:
                     return CLASSIC_KEY_DEFAULT_WIDTH;
-                case StreamDeckDeviceType.StreamDeckXL:
+                case DeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_WIDTH;
                 default:
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
@@ -160,7 +160,7 @@ namespace BarRaider.SdTools
         /// <param name="streamDeckType"></param>
         /// <param name="graphics"></param>
         /// <returns></returns>
-        public static Bitmap GenerateKeyImage(StreamDeckDeviceType streamDeckType, out Graphics graphics)
+        public static Bitmap GenerateKeyImage(DeviceType streamDeckType, out Graphics graphics)
         {
             int height = GetKeyDefaultHeight(streamDeckType);
             int width = GetKeyDefaultWidth(streamDeckType);
@@ -305,7 +305,7 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
-        /// Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
+        /// OBSOLETE - Use String.SplitToFitKey() from SdTools.ExtensionMethods
         /// </summary>
         /// <param name="str"></param>
         /// <param name="titleParameters"></param>
@@ -313,49 +313,10 @@ namespace BarRaider.SdTools
         /// <param name="rightPaddingPixels"></param>
         /// <param name="imageWidthPixels"></param>
         /// <returns></returns>
+        [Obsolete("Use String.SplitToFitKey(), now part of the SdTools.ExtensionMethods")]
         public static string SplitStringToFit(string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
         {
-            try
-            {
-                if (titleParameters == null)
-                {
-                    return str;
-                }
-
-                int padding = leftPaddingPixels + rightPaddingPixels;
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                StringBuilder finalString = new StringBuilder();
-                StringBuilder currentLine = new StringBuilder();
-                SizeF currentLineSize;
-
-                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
-                {
-                    using (Graphics graphics = Graphics.FromImage(img))
-                    {
-                        for (int idx = 0; idx < str.Length; idx++)
-                        {
-                            currentLine.Append(str[idx]);
-                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
-                            if (currentLineSize.Width <= img.Width - padding)
-                            {
-                                finalString.Append(str[idx]);
-                            }
-                            else // Overflow
-                            {
-                                finalString.Append("\n" + str[idx]);
-                                currentLine = new StringBuilder(str[idx].ToString());
-                            }
-                        }
-                    }
-                }
-
-                return finalString.ToString();
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SplitStringToFit Exception: {ex}");
-                return str;
-            }
+            return str.SplitToFitKey(titleParameters, leftPaddingPixels, rightPaddingPixels, imageWidthPixels);
         }
 
         #endregion

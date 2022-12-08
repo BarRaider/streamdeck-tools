@@ -35,6 +35,7 @@ namespace BarRaider.SdTools.Wrappers
         #region Private Members
         private const double POINTS_TO_PIXEL_CONVERT = 1.3;
         private const int DEFAULT_IMAGE_SIZE_FONT_SCALE = 3;
+        private const string DEFAULT_FONT_FAMILY_NAME = "Verdana";
         #endregion
 
         /// <summary>
@@ -60,12 +61,12 @@ namespace BarRaider.SdTools.Wrappers
         /// </summary>
         [JsonIgnore]
         public double FontSizeInPixelsScaledToDefaultImage => Math.Round(FontSizeInPixels * DEFAULT_IMAGE_SIZE_FONT_SCALE);
-        
+
         /// <summary>
         /// Font Family
         /// </summary>
         [JsonProperty("fontFamily")]
-        public FontFamily FontFamily { get; private set; } = new FontFamily("Verdana");
+        public FontFamily FontFamily { get; private set; } = new FontFamily(DEFAULT_FONT_FAMILY_NAME);
 
         /// <summary>
         /// Font Style
@@ -119,6 +120,7 @@ namespace BarRaider.SdTools.Wrappers
             ParsePayload(fontFamily, fontSize, fontStyle, fontUnderline, showTitle, titleAlignment, titleColor);
         }
 
+
         private void ParsePayload(string fontFamily, uint fontSize, string fontStyle, bool fontUnderline, bool showTitle, string titleAlignment, string titleColor)
         {
             try
@@ -153,6 +155,9 @@ namespace BarRaider.SdTools.Wrappers
                         case "bold italic":
                             FontStyle = FontStyle.Bold | FontStyle.Italic;
                             break;
+                        default:
+                            Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} Cannot parse Font Style: {fontStyle}");
+                            break;
                     }
                 }
                 if (fontUnderline)
@@ -178,7 +183,7 @@ namespace BarRaider.SdTools.Wrappers
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"TitleParser failed to parse payload {ex}");
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"TitleParameters failed to parse payload {ex}");
             }
         }
     }

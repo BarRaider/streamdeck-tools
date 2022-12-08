@@ -54,5 +54,10 @@ namespace BarRaider.SdTools
             UserDesiredState = userDesiredState;
             IsInMultiAction = isInMultiAction;
         }
+
+        /// <summary>
+        /// For Seralization
+        /// </summary>
+        public KeyPayload() { }
     }
 }

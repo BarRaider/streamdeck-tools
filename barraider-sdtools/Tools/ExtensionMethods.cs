@@ -32,59 +32,9 @@ namespace BarRaider.SdTools
             return coordinates.Row == secondCoordinates.Row && coordinates.Column == secondCoordinates.Column;
         }
 
-        /// <summary>
-        /// Converts to a SDTools.KeyCoordinates
-        /// </summary>
-        /// <param name="coordinates"></param>
-        /// <returns></returns>
-        public static KeyCoordinates ToKeyCoordinates(this streamdeck_client_csharp.Events.Coordinates coordinates)
-        {
-            if (coordinates == null)
-            {
-                return null;
-            }
-
-            return new KeyCoordinates() { Column = coordinates.Columns, Row = coordinates.Rows };
-        }
-
-        #endregion
-
-        #region Devices
-
-        /// <summary>
-        /// Converts to a SDTools StreamDeckDeviceInfo object
-        /// </summary>
-        /// <param name="deviceInfo"></param>
-        /// <param name="deviceId"></param>
-        /// <returns></returns>
-        public static StreamDeckDeviceInfo ToStreamDeckDeviceInfo(this streamdeck_client_csharp.Events.DeviceInfo deviceInfo, string deviceId)
-        {
-            if (deviceInfo == null)
-            {
-                return null;
-            }
-
-            return new StreamDeckDeviceInfo(new StreamDeckDeviceSize(deviceInfo.Size.Rows, deviceInfo.Size.Columns), (StreamDeckDeviceType) ((int) deviceInfo.Type), deviceId);
-        }
-
         #endregion
 
         #region Brushes/Colors
-
-        /// <summary>
-        /// Converts to an SDTools TitleParameters
-        /// </summary>
-        /// <param name="titleParameters"></param>
-        /// <returns></returns>
-        public static Wrappers.TitleParameters ToSDTitleParameters(this streamdeck_client_csharp.Events.TitleParameters titleParameters)
-        {
-            if (titleParameters == null)
-            {
-                return null;
-            }
-
-            return new Wrappers.TitleParameters(titleParameters.FontFamily, titleParameters.FontSize, titleParameters.FontStyle, titleParameters.FontUnderline, titleParameters.ShowTitle, titleParameters.TitleAlignment, titleParameters.TitleColor);
-        }
 
         /// <summary>
         /// Shows Color In Hex Format
@@ -288,6 +238,87 @@ namespace BarRaider.SdTools
                 Logger.Instance.LogMessage(TracingLevel.ERROR, $"AddTextPath Exception {ex}");
             }
         }
+
+        #endregion
+
+        #region String
+
+
+        /// <summary>
+        /// /// Truncates a string to the first maxSize characters. If maxSize is less than string length, original string will be returned
+        /// </summary>
+        /// <param name="str">String</param>
+        /// <param name="maxSize">Max size for string</param>
+        /// <returns></returns>
+        public static string Truncate(this string str, int maxSize)
+        {
+            if (String.IsNullOrEmpty(str))
+            {
+                return null;
+            }
+
+            if (maxSize < 1)
+            {
+                return str;
+            }
+
+            return str.Substring(0, Math.Min(Math.Max(0, maxSize), str.Length));
+        }
+
+        /// <summary>
+        /// Adds line breaks (\n) to the text to make sure it fits the key when using SetTitleAsync()
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="titleParameters"></param>
+        /// <param name="leftPaddingPixels"></param>
+        /// <param name="rightPaddingPixels"></param>
+        /// <param name="imageWidthPixels"></param>
+        /// <returns></returns>
+        public static string SplitToFitKey(this string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
+        {
+            try
+            {
+                if (titleParameters == null)
+                {
+                    return str;
+                }
+
+                int padding = leftPaddingPixels + rightPaddingPixels;
+                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                StringBuilder finalString = new StringBuilder();
+                StringBuilder currentLine = new StringBuilder();
+                SizeF currentLineSize;
+
+                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                {
+                    using (Graphics graphics = Graphics.FromImage(img))
+                    {
+                        for (int idx = 0; idx < str.Length; idx++)
+                        {
+                            currentLine.Append(str[idx]);
+                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
+                            if (currentLineSize.Width <= img.Width - padding)
+                            {
+                                finalString.Append(str[idx]);
+                            }
+                            else // Overflow
+                            {
+                                finalString.Append("\n" + str[idx]);
+                                currentLine = new StringBuilder(str[idx].ToString());
+                            }
+                        }
+                    }
+                }
+
+                return finalString.ToString();
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SplitStringToFit Exception: {ex}");
+                return str;
+            }
+        }
+
 
         #endregion
     }

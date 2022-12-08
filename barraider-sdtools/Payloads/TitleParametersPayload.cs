@@ -12,6 +12,8 @@ namespace BarRaider.SdTools.Payloads
     /// </summary>
     public class TitleParametersPayload
     {
+        private TitleParameters titleParameters = null;
+
         /// <summary>
         /// Settings JSON Object
         /// </summary>
@@ -39,8 +41,34 @@ namespace BarRaider.SdTools.Payloads
         /// <summary>
         /// Title Parameters
         /// </summary>
+        [JsonIgnore]
+        public TitleParameters TitleParameters
+        { 
+            get
+            {
+                if (titleParameters != null)
+                {
+                    return titleParameters;
+                }
+
+                if (TitleParametersRaw != null)
+                {
+                    titleParameters = new TitleParameters(TitleParametersRaw.FontFamily, TitleParametersRaw.FontSize, TitleParametersRaw.FontStyle, TitleParametersRaw.FontUnderline, TitleParametersRaw.ShowTitle, TitleParametersRaw.TitleAlignment, TitleParametersRaw.TitleColor);
+                }
+
+                return titleParameters;
+            }
+            private set
+            {
+                titleParameters = value;
+            }
+        }
+
+        /// <summary>
+        /// Raw Title Parameters (not as proper object)
+        /// </summary>
         [JsonProperty("titleParameters")]
-        public TitleParameters TitleParameters { get; private set; }
+        public TitleParametersRawPayload TitleParametersRaw { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -58,5 +86,10 @@ namespace BarRaider.SdTools.Payloads
             Title = title;
             TitleParameters = titleParameters;
         }
+
+        /// <summary>
+        /// For Serilization
+        /// </summary>
+        public TitleParametersPayload() { }
     }
 }

@@ -8,37 +8,6 @@ using System.Threading.Tasks;
 namespace BarRaider.SdTools
 {
     /// <summary>
-    /// Type of StreamDeck hardware device, currently two are supported (classic and mini)
-    /// </summary>
-    public enum StreamDeckDeviceType
-    {
-        /// <summary>
-        /// StreamDeck classic with 15 keys
-        /// </summary>
-        StreamDeckClassic = 0,
-
-        /// <summary>
-        /// StreamDeck mini with 6 keys
-        /// </summary>
-        StreamDeckMini = 1,
-
-        /// <summary>
-        /// StreamDeck XL with 32 keys
-        /// </summary>
-        StreamDeckXL = 2,
-
-        /// <summary>
-        /// StreamDeck Mobile version
-        /// </summary>
-        StreamDeckMobile = 3,
-
-        /// <summary>
-        /// Corsair G-Keys version
-        /// </summary>
-        CorsairGKeys = 4
-    }
-
-    /// <summary>
     /// Class which holds information on the StreamDeck hardware device
     /// </summary>
     public class StreamDeckDeviceInfo
@@ -53,7 +22,7 @@ namespace BarRaider.SdTools
         /// Type of StreamDeck hardware device
         /// </summary>
         [JsonProperty(PropertyName = "type")]
-        public StreamDeckDeviceType Type { get; private set; }
+        public DeviceType Type { get; private set; }
 
         /// <summary>
         /// Id of the StreamDeck hardware device
@@ -67,7 +36,7 @@ namespace BarRaider.SdTools
         /// <param name="size"></param>
         /// <param name="type"></param>
         /// <param name="deviceId"></param>
-        public StreamDeckDeviceInfo(StreamDeckDeviceSize size, StreamDeckDeviceType type, string deviceId)
+        public StreamDeckDeviceInfo(StreamDeckDeviceSize size, DeviceType type, string deviceId)
         {
             Size = size;
             Type = type;

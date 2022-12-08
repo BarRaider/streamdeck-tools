@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using Newtonsoft.Json.Linq;
 
-namespace BarRaider.SdTools
+namespace BarRaider.SdTools.Payloads
 {
     /// <summary>
     /// Class holding all the information passed to the plugin when the program was launched

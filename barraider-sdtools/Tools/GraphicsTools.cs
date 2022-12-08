@@ -268,7 +268,7 @@ namespace BarRaider.SdTools
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SplitStringToFit Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"WrapStringToFitImage Exception: {ex}");
                 return str;
             }
         }
