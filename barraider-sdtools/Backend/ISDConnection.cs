@@ -198,6 +198,12 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         Task SetFeedbackAsync(string layoutItemKey, string value);
 
+        /// <summary>
+        /// Changes the current Stream Deck+ touch display layout
+        /// </summary>
+        /// <returns></returns>
+        Task SetFeedbackLayoutAsync(string layout);
+
         #endregion
 
         /// <summary>

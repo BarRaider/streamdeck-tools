@@ -355,6 +355,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackLayoutAsync(System.String)">
+            <summary>
+            Changes the current Stream Deck+ touch display layout
+            </summary>
+            <returns></returns>
+        </member>
         <member name="P:BarRaider.SdTools.ISDConnection.ContextId">
             <summary>
             An opaque value identifying the plugin. This value is received during the Registration procedure
@@ -826,7 +832,7 @@
         </member>
         <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackLayoutAsync(System.String)">
             <summary>
-            Change the current Stream Deck + touch display layout
+            Changes the current Stream Deck+ touch display layout
             </summary>
             <returns></returns>
         </member>
