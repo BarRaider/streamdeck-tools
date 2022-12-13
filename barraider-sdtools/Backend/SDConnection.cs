@@ -388,6 +388,15 @@ namespace BarRaider.SdTools
             await StreamDeckConnection.SetFeedbackAsync(new Dictionary<string, string>() { { layoutItemKey, value } }, ContextId);
         }
 
+        /// <summary>
+        /// Change the current Stream Deck + touch display layout
+        /// </summary>
+        /// <returns></returns>
+        public async Task SetFeedbackLayoutAsync(string layout)
+        {
+            await StreamDeckConnection.SetFeedbackLayoutAsync(layout, ContextId);
+        }
+
         #endregion
 
         #region Event Wrappers

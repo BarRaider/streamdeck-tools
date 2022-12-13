@@ -256,6 +256,11 @@ namespace BarRaider.SdTools.Communication
             return SendAsync(new SetFeedbackMessage(dictKeyValues, context));
         }
 
+        internal Task SetFeedbackLayoutAsync(string layout, string context)
+        {
+            return SendAsync(new SetFeedbackLayoutMessage(layout,context));
+        }
+
         #endregion
 
         #region Private Methods

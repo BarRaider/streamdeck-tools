@@ -824,6 +824,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackLayoutAsync(System.String)">
+            <summary>
+            Change the current Stream Deck + touch display layout
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:BarRaider.SdTools.SDWrapper">
              <summary>
              * Easy Configuration Instructions:
