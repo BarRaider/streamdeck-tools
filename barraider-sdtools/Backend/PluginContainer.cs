@@ -82,8 +82,6 @@ namespace BarRaider.SdTools
         // Button pressed
         private void Connection_OnKeyDown(object sender, SDEventReceivedEventArgs<KeyDownEvent> e)
         {
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -112,14 +110,11 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keydown General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
         // Button released
         private void Connection_OnKeyUp(object sender, SDEventReceivedEventArgs<KeyUpEvent> e)
         {
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -148,7 +143,6 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keyup General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
         // Function runs every second, used to update UI
@@ -171,8 +165,6 @@ namespace BarRaider.SdTools
         private void Connection_OnWillAppear(object sender, SDEventReceivedEventArgs<WillAppearEvent> e)
         {
             SDConnection conn = new SDConnection(connection, pluginUUID, deviceInfo, e.Event.Action, e.Event.Context, e.Event.Device);
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -206,13 +198,10 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"WillAppear General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
         private void Connection_OnWillDisappear(object sender, SDEventReceivedEventArgs<WillDisappearEvent> e)
         {
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -232,14 +221,11 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"WillDisappear General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
         // Settings updated
         private void Connection_OnDidReceiveSettings(object sender, SDEventReceivedEventArgs<DidReceiveSettingsEvent> e)
         {
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -259,7 +245,6 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"DidReceiveSettings General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
         // Global settings updated
@@ -285,8 +270,6 @@ namespace BarRaider.SdTools
 
         private void Connection_OnTouchpadPress(object sender, SDEventReceivedEventArgs<TouchpadPress> e)
         {
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -310,13 +293,10 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"TouchpadPress General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
         private void Connection_OnDialPress(object sender, SDEventReceivedEventArgs<DialPressEvent> e)
         {
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -340,14 +320,11 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialPress General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
         private void Connection_OnDialRotate(object sender, SDEventReceivedEventArgs<DialRotateEvent> e)
         {
 
-            Task.Run(() =>
-            {
                 try
                 {
 #if DEBUG
@@ -371,7 +348,6 @@ namespace BarRaider.SdTools
                 {
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialRotate General Exception for {e.Event.Context}: {ex}");
                 }
-            }).ConfigureAwait(false);
         }
 
 
