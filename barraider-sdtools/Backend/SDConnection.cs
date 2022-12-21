@@ -441,6 +441,20 @@ namespace BarRaider.SdTools
         {
             if (e.Event.Context == ContextId)
             {
+                // Special case to take into account that TitleParameters arrives right after an OnWillAppear
+                if (OnTitleParametersDidChange == null)
+                {
+                    if (sender != this)
+                    {
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(1000);
+                            Connection_OnTitleParametersDidChange(this, e);
+                        });
+                    }
+                    return;
+                }
+
                 var payload = e.Event.Payload;
                 var newPayload = new TitleParametersPayload(payload.Settings, payload.Coordinates, payload.State, payload.Title, payload.TitleParameters);
                 OnTitleParametersDidChange?.Invoke(this, new SDEventReceivedEventArgs<TitleParametersDidChange>(new TitleParametersDidChange(e.Event.Action, e.Event.Context, e.Event.Device, newPayload)));
