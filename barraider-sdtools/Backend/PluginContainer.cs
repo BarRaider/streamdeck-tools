@@ -103,6 +103,10 @@ namespace BarRaider.SdTools
                             Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keydown General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
                         }
                     }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"General Error: Keydown Cache miss for {e.Event.Context}");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -134,6 +138,10 @@ namespace BarRaider.SdTools
                         {
                             Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keyup General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
                         }
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"General Error: Keyup Cache miss for {e.Event.Context}");
                     }
                 }
                 catch (Exception ex)
@@ -215,6 +223,10 @@ namespace BarRaider.SdTools
                     {
                         plugin.Destroy();
                     }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"General Error: WillDisappear Cache miss for {e.Event.Context}");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -237,6 +249,10 @@ namespace BarRaider.SdTools
                     if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value))
                     {
                         value.ReceivedSettings(JObject.FromObject(e.Event.Payload).ToObject<ReceivedSettingsPayload>());
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"General Error: ReceiveSettings Cache miss for {e.Event.Context}");
                     }
                 }
                 catch (Exception ex)
