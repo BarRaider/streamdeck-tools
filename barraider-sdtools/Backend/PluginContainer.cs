@@ -4,9 +4,12 @@ using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BarRaider.SdTools
 {
@@ -16,14 +19,13 @@ namespace BarRaider.SdTools
         private StreamDeckConnection connection;
         private readonly ManualResetEvent connectEvent = new ManualResetEvent(false);
         private readonly ManualResetEvent disconnectEvent = new ManualResetEvent(false);
-        private readonly SemaphoreSlim instancesLock = new SemaphoreSlim(1);
         private string pluginUUID = null;
         private StreamDeckInfo deviceInfo;
 
         private static readonly Dictionary<string, Type> supportedActions = new Dictionary<string, Type>();
 
         // Holds all instances of plugin
-        private static readonly Dictionary<string, ICommonPluginFunctions> instances = new Dictionary<string, ICommonPluginFunctions>();
+        private static readonly ConcurrentDictionary<string, ICommonPluginFunctions> instances = new ConcurrentDictionary<string, ICommonPluginFunctions>();
 
         public PluginContainer(PluginActionId[] supportedActionIds)
         {
@@ -78,168 +80,175 @@ namespace BarRaider.SdTools
         }
 
         // Button pressed
-        private async void Connection_OnKeyDown(object sender, SDEventReceivedEventArgs<KeyDownEvent> e)
+        private void Connection_OnKeyDown(object sender, SDEventReceivedEventArgs<KeyDownEvent> e)
         {
-            await instancesLock.WaitAsync();
-            try
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Keydown: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (instances.ContainsKey(e.Event.Context))
-                {
-                    KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
-                                                        e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
-                    if (instances[e.Event.Context] is IKeypadPlugin plugin)
+                    if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value))
                     {
-                        plugin.KeyPressed(payload);
-                    }
-                    else
-                    {
-                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keydown General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
+                        KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
+                                                            e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
+                        if (value is IKeypadPlugin plugin)
+                        {
+                            plugin.KeyPressed(payload);
+                        }
+                        else
+                        {
+                            Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keydown General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
+                        }
                     }
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keydown General Exception for {e.Event.Context}: {ex}");
+                }
+            }).ConfigureAwait(false);
         }
 
         // Button released
-        private async void Connection_OnKeyUp(object sender, SDEventReceivedEventArgs<KeyUpEvent> e)
+        private void Connection_OnKeyUp(object sender, SDEventReceivedEventArgs<KeyUpEvent> e)
         {
-            await instancesLock.WaitAsync();
-            try
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin Keyup: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (instances.ContainsKey(e.Event.Context))
-                {
-                    KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
-                                                        e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
-                    if (instances[e.Event.Context] is IKeypadPlugin plugin)
+                    if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value))
                     {
-                        plugin.KeyReleased(payload);
-                    }
-                    else
-                    {
-                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keyup General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
+                        KeyPayload payload = new KeyPayload(e.Event.Payload.Coordinates,
+                                                            e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.UserDesiredState, e.Event.Payload.IsInMultiAction);
+                        if (value is IKeypadPlugin plugin)
+                        {
+                            plugin.KeyReleased(payload);
+                        }
+                        else
+                        {
+                            Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keyup General Error: Could not convert {e.Event.Context} to IKeypadPlugin");
+                        }
                     }
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"Keyup General Exception for {e.Event.Context}: {ex}");
+                }
+            }).ConfigureAwait(false);
         }
 
         // Function runs every second, used to update UI
-        private async void RunTick()
+        private void RunTick()
         {
-            await instancesLock.WaitAsync();
             try
             {
                 foreach (KeyValuePair<string, ICommonPluginFunctions> kvp in instances.ToArray())
                 {
-                    kvp.Value.OnTick();
+                    Task.Run(() => kvp.Value.OnTick());
                 }
             }
-            finally
+            catch (Exception ex)
             {
-                instancesLock.Release();
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"RunTick General Exception: {ex}");
             }
         }
 
         // Action is loaded in the Stream Deck
-        private async void Connection_OnWillAppear(object sender, SDEventReceivedEventArgs<WillAppearEvent> e)
+        private void Connection_OnWillAppear(object sender, SDEventReceivedEventArgs<WillAppearEvent> e)
         {
             SDConnection conn = new SDConnection(connection, pluginUUID, deviceInfo, e.Event.Action, e.Event.Context, e.Event.Device);
-            await instancesLock.WaitAsync();
-            try
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin OnWillAppear: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (supportedActions.ContainsKey(e.Event.Action))
-                {
-                    try
+                    if (supportedActions.ContainsKey(e.Event.Action))
                     {
-                        if (instances.ContainsKey(e.Event.Context) && instances[e.Event.Context] != null)
+                        try
                         {
-                            Logger.Instance.LogMessage(TracingLevel.INFO, $"WillAppear called for already existing context {e.Event.Context} (might be inside a multi-action)");
-                            return;
+                            if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value) && value != null)
+                            {
+                                Logger.Instance.LogMessage(TracingLevel.INFO, $"WillAppear called for already existing context {e.Event.Context} (might be inside a multi-action)");
+                                return;
+                            }
+                            InitialPayload payload = new InitialPayload(e.Event.Payload.Coordinates,
+                                                                        e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
+                            instances[e.Event.Context] = (ICommonPluginFunctions)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
                         }
-                        InitialPayload payload = new InitialPayload(e.Event.Payload.Coordinates,
-                                                                    e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
-                        instances[e.Event.Context] = (ICommonPluginFunctions)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
+                        catch (Exception ex)
+                        {
+                            Logger.Instance.LogMessage(TracingLevel.FATAL, $"Could not create instance of {supportedActions[e.Event.Action]} with context {e.Event.Context} - This may be due to an Exception raised in the constructor, or the class does not inherit PluginBase with the same constructor {ex}");
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Logger.Instance.LogMessage(TracingLevel.FATAL, $"Could not create instance of {supportedActions[e.Event.Action]} with context {e.Event.Context} - This may be due to an Exception raised in the constructor, or the class does not inherit PluginBase with the same constructor {ex}");
+                        Logger.Instance.LogMessage(TracingLevel.WARN, $"No plugin found that matches action: {e.Event.Action}");
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Logger.Instance.LogMessage(TracingLevel.WARN, $"No plugin found that matches action: {e.Event.Action}");
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"WillAppear General Exception for {e.Event.Context}: {ex}");
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+            }).ConfigureAwait(false);
         }
 
-        private async void Connection_OnWillDisappear(object sender, SDEventReceivedEventArgs<WillDisappearEvent> e)
+        private void Connection_OnWillDisappear(object sender, SDEventReceivedEventArgs<WillDisappearEvent> e)
         {
-            await instancesLock.WaitAsync();
-            try
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin OnWillDisappear: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (instances.ContainsKey(e.Event.Context))
-                {
-                    instances[e.Event.Context].Destroy();
-                    instances.Remove(e.Event.Context);
+                    if (instances.TryRemove(e.Event.Context, out ICommonPluginFunctions plugin))
+                    {
+                        plugin.Destroy();
+                    }
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"WillDisappear General Exception for {e.Event.Context}: {ex}");
+                }
+            }).ConfigureAwait(false);
         }
 
         // Settings updated
-        private async void Connection_OnDidReceiveSettings(object sender, SDEventReceivedEventArgs<DidReceiveSettingsEvent> e)
+        private void Connection_OnDidReceiveSettings(object sender, SDEventReceivedEventArgs<DidReceiveSettingsEvent> e)
         {
-            await instancesLock.WaitAsync();
-            try
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Plugin OnDidReceiveSettings: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (instances.ContainsKey(e.Event.Context))
-                {
-                    instances[e.Event.Context].ReceivedSettings(JObject.FromObject(e.Event.Payload).ToObject<ReceivedSettingsPayload>());
+                    if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value))
+                    {
+                        value.ReceivedSettings(JObject.FromObject(e.Event.Payload).ToObject<ReceivedSettingsPayload>());
+                    }
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"DidReceiveSettings General Exception for {e.Event.Context}: {ex}");
+                }
+            }).ConfigureAwait(false);
         }
 
         // Global settings updated
-        private async void Connection_OnDidReceiveGlobalSettings(object sender, SDEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
+        private void Connection_OnDidReceiveGlobalSettings(object sender, SDEventReceivedEventArgs<DidReceiveGlobalSettingsEvent> e)
         {
-            await instancesLock.WaitAsync();
             try
             {
 #if DEBUG
@@ -247,99 +256,106 @@ namespace BarRaider.SdTools
 #endif
 
                 var globalSettings = JObject.FromObject(e.Event.Payload).ToObject<ReceivedGlobalSettingsPayload>();
-                foreach (string key in instances.Keys)
+                foreach (KeyValuePair<string, ICommonPluginFunctions> kvp in instances.ToArray())
                 {
-                    instances[key].ReceivedGlobalSettings(globalSettings);
+                    Task.Run(() => kvp.Value.ReceivedGlobalSettings(globalSettings));
                 }
             }
-            finally
+            catch (Exception ex)
             {
-                instancesLock.Release();
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"DidReceiveGlobalSettings General Exception: {ex}");
             }
         }
 
-        private async void Connection_OnTouchpadPress(object sender, SDEventReceivedEventArgs<TouchpadPress> e)
+        private void Connection_OnTouchpadPress(object sender, SDEventReceivedEventArgs<TouchpadPress> e)
         {
-            await instancesLock.WaitAsync();
-            try
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"TouchpadPress: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (instances.ContainsKey(e.Event.Context))
-                {
-                    TouchpadPressPayload payload = new TouchpadPressPayload(e.Event.Payload.Coordinates,e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.IsLongPress, e.Event.Payload.TapPosition);
-                    if (instances[e.Event.Context] is IEncoderPlugin plugin)
+                    if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value))
                     {
-                        plugin.TouchPress(payload);
-                    }
-                    else
-                    {
-                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"TouchpadPress General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                        TouchpadPressPayload payload = new TouchpadPressPayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.IsLongPress, e.Event.Payload.TapPosition);
+                        if (value is IEncoderPlugin plugin)
+                        {
+                            plugin.TouchPress(payload);
+                        }
+                        else
+                        {
+                            Logger.Instance.LogMessage(TracingLevel.ERROR, $"TouchpadPress General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                        }
                     }
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"TouchpadPress General Exception for {e.Event.Context}: {ex}");
+                }
+            }).ConfigureAwait(false);
         }
 
-        private async void Connection_OnDialPress(object sender, SDEventReceivedEventArgs<DialPressEvent> e)
+        private void Connection_OnDialPress(object sender, SDEventReceivedEventArgs<DialPressEvent> e)
         {
-            await instancesLock.WaitAsync();
-            try
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"DialPress: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (instances.ContainsKey(e.Event.Context))
-                {
-                    DialPressPayload payload = new DialPressPayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.IsDialPressed);
-                    if (instances[e.Event.Context] is IEncoderPlugin plugin)
+                    if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value))
                     {
-                        plugin.DialPress(payload);
-                    }
-                    else
-                    {
-                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialPress General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                        DialPressPayload payload = new DialPressPayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.IsDialPressed);
+                        if (value is IEncoderPlugin plugin)
+                        {
+                            plugin.DialPress(payload);
+                        }
+                        else
+                        {
+                            Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialPress General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                        }
                     }
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialPress General Exception for {e.Event.Context}: {ex}");
+                }
+            }).ConfigureAwait(false);
         }
 
-        private async void Connection_OnDialRotate(object sender, SDEventReceivedEventArgs<DialRotateEvent> e)
+        private void Connection_OnDialRotate(object sender, SDEventReceivedEventArgs<DialRotateEvent> e)
         {
-            await instancesLock.WaitAsync();
-            try
+
+            Task.Run(() =>
             {
+                try
+                {
 #if DEBUG
                 Logger.Instance.LogMessage(TracingLevel.DEBUG, $"DialRotate: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
 #endif
 
-                if (instances.ContainsKey(e.Event.Context))
-                {
-                    DialRotatePayload payload = new DialRotatePayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.Ticks, e.Event.Payload.IsDialPressed);
-                    if (instances[e.Event.Context] is IEncoderPlugin plugin)
+                    if (instances.TryGetValue(e.Event.Context, out ICommonPluginFunctions value))
                     {
-                        plugin.DialRotate(payload);
-                    }
-                    else
-                    {
-                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialRotate General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                        DialRotatePayload payload = new DialRotatePayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.Ticks, e.Event.Payload.IsDialPressed);
+                        if (value is IEncoderPlugin plugin)
+                        {
+                            plugin.DialRotate(payload);
+                        }
+                        else
+                        {
+                            Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialRotate General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                        }
                     }
                 }
-            }
-            finally
-            {
-                instancesLock.Release();
-            }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialRotate General Exception for {e.Event.Context}: {ex}");
+                }
+            }).ConfigureAwait(false);
         }
 
 
