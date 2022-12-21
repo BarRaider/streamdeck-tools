@@ -156,7 +156,7 @@ namespace BarRaider.SdTools.Wrappers
                             FontStyle = FontStyle.Bold | FontStyle.Italic;
                             break;
                         default:
-                            Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} Cannot parse Font Style: {fontStyle}");
+                            Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Cannot parse Font Style: {fontStyle}");
                             break;
                     }
                 }
