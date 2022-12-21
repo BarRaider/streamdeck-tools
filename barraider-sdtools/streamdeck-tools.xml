@@ -2189,6 +2189,14 @@
             <param name="image"></param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.ToBase64(System.Drawing.Image,System.Boolean)">
+            <summary>
+            Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+            </summary>
+            <param name="image"></param>
+            <param name="addHeaderPrefix"></param>
+            <returns></returns>
+        </member>
         <member name="M:BarRaider.SdTools.ExtensionMethods.DrawAndMeasureString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,System.Drawing.PointF)">
             <summary>
             Draws a string on a Graphics object and returns the ending Y position of the string
@@ -2591,6 +2599,15 @@
             <param name="toSettings"></param>
             <param name="fromJObject"></param>
             <returns>Number of properties updated</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.RangeToPercentage(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Takes a custom range and recalculates the value on a scale from 0 to 100
+            </summary>
+            <param name="value"></param>
+            <param name="originalMin"></param>
+            <param name="originalMax"></param>
+            <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.Tools.AutoLoadPluginActions">
             <summary>
