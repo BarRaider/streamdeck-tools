@@ -79,6 +79,17 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="addHeaderPrefix"></param>
+        /// <returns></returns>
+        public static string ToBase64(this Image image, bool addHeaderPrefix)
+        {
+            return Tools.ImageToBase64(image, addHeaderPrefix);
+        }
+
+        /// <summary>
         /// Draws a string on a Graphics object and returns the ending Y position of the string
         /// </summary>
         /// <param name="graphics"></param>

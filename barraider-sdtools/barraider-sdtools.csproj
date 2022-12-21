@@ -18,14 +18,13 @@
 		<PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
 		<PackageId>StreamDeck-Tools</PackageId>
 		<PackageIconUrl></PackageIconUrl>
-		<AssemblyVersion>3.9.0.0</AssemblyVersion>
-		<FileVersion>3.9.0.0</FileVersion>
-		<Version>5.9.0-Beta1</Version>
-		<PackageReleaseNotes>
-			4.0 - 1. Merged streamdeck-client-csharp package into library to allow better logging of errors
-			2. Increased timeout of connection to Stream Deck due to the Stream Deck taking longer than before to reply on load
-			3. Added error catching to prevent 3rd party plugin exception to impact communication
-		</PackageReleaseNotes>
+		<AssemblyVersion>5.9.10</AssemblyVersion>
+		<FileVersion>5.9.1.0</FileVersion>
+		<Version>5.9.1-Beta1</Version>
+		<PackageReleaseNotes>6.0 - 1. Added support to SD+ Dials SDK
+2. Merged streamdeck-client-csharp package into library to allow better logging of errors
+3. Increased timeout of connection to Stream Deck due to the Stream Deck taking longer than before to reply on load
+4. Added error catching to prevent 3rd party plugin exceptions impacting communication</PackageReleaseNotes>
 		<RootNamespace>BarRaider.SdTools</RootNamespace>
 		<AssemblyName>StreamDeckTools</AssemblyName>
 		<PackageIcon>BRLogo_460.png</PackageIcon>
