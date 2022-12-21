@@ -452,6 +452,27 @@ namespace BarRaider.SdTools
 
         #endregion
 
+        #region Dials Related
+
+        /// <summary>
+        /// Takes a custom range and recalculates the value on a scale from 0 to 100
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="originalMin"></param>
+        /// <param name="originalMax"></param>
+        /// <returns></returns>
+        public static int RangeToPercentage(int value, int originalMin, int originalMax)
+        {
+            if (originalMax - originalMin == 0) // Prevent division by zero
+            {
+                return 0;
+            }
+
+            return ((value - originalMin) * 100) / (originalMax - originalMin);
+        }
+
+        #endregion
+
         #region Plugin Helper Classes
 
         /// <summary>
