@@ -228,7 +228,7 @@ namespace BarRaider.SdTools
         /// <param name="rightPaddingPixels"></param>
         /// <param name="imageWidthPixels"></param>
         /// <returns></returns>
-        public static string WrapStringToFitImage(string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
+        public static string WrapStringToFitImage(string str, TitleParameters titleParameters, int leftPaddingPixels = 5, int rightPaddingPixels = 5, int imageWidthPixels = 72)
         {
             try
             {
@@ -238,7 +238,7 @@ namespace BarRaider.SdTools
                 }
 
                 int padding = leftPaddingPixels + rightPaddingPixels;
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
+                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixels, titleParameters.FontStyle, GraphicsUnit.Pixel);
                 StringBuilder finalString = new StringBuilder();
                 StringBuilder currentLine = new StringBuilder();
                 SizeF currentLineSize;
