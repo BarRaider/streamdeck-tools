@@ -199,6 +199,13 @@ namespace BarRaider.SdTools
         Task SetFeedbackAsync(string layoutItemKey, string value);
 
         /// <summary>
+        /// Sets the values of touchpad layouts items using a preset JObject
+        /// </summary>
+        /// <param name="feedbackPayload"></param>
+        /// <returns></returns>
+        Task SetFeedbackAsync(JObject feedbackPayload);
+
+        /// <summary>
         /// Changes the current Stream Deck+ touch display layout
         /// </summary>
         /// <returns></returns>

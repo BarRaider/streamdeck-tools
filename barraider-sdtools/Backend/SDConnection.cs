@@ -10,6 +10,7 @@ using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Communication;
 using BarRaider.SdTools.Communication.SDEvents;
 using System.Collections.Generic;
+using NLog.Layouts;
 
 namespace BarRaider.SdTools
 {
@@ -387,6 +388,16 @@ namespace BarRaider.SdTools
         {
             await StreamDeckConnection.SetFeedbackAsync(new Dictionary<string, string>() { { layoutItemKey, value } }, ContextId);
         }
+
+        /// <summary>
+        /// Sets the value of a single touchpad layout item
+        /// </summary>
+        /// <returns></returns>
+        public async Task SetFeedbackAsync(JObject feedbackPayload)
+        {
+            await StreamDeckConnection.SetFeedbackAsync(feedbackPayload, ContextId);
+        }
+
 
         /// <summary>
         /// Changes the current Stream Deck+ touch display layout
