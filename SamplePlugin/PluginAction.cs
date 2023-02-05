@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SamplePlugin
 {
     [PluginActionId("com.test.sdtools.sampleplugin")]
-    public class PluginAction : PluginBase
+    public class PluginAction : KeypadBase
     {
         private class PluginSettings
         {
