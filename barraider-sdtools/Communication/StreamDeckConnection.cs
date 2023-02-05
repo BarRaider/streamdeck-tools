@@ -181,15 +181,23 @@ namespace BarRaider.SdTools.Communication
 
         internal Task SetImageAsync(Image image, string context, SDKTarget target, int? state)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
+            try
             {
-                image.Save(memoryStream, ImageFormat.Png);
-                byte[] imageBytes = memoryStream.ToArray();
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    image.Save(memoryStream, ImageFormat.Png);
+                    byte[] imageBytes = memoryStream.ToArray();
 
-                // Convert byte[] to Base64 String
-                string base64String = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
-                return SetImageAsync(base64String, context, target, state);
+                    // Convert byte[] to Base64 String
+                    string base64String = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
+                    return SetImageAsync(base64String, context, target, state);
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SetImageAsync Exception: {ex}");
+            }
+            return null;
         }
 
         internal Task SetImageAsync(string base64Image, string context, SDKTarget target, int? state)
@@ -251,14 +259,19 @@ namespace BarRaider.SdTools.Communication
             return SendAsync(new OpenUrlMessage(uri));
         }
 
-        internal Task SetFeedbackAsync(Dictionary<string,string> dictKeyValues, string context)
+        internal Task SetFeedbackAsync(Dictionary<string, string> dictKeyValues, string context)
         {
             return SendAsync(new SetFeedbackMessage(dictKeyValues, context));
         }
 
+        internal Task SetFeedbackAsync(JObject feedbackPayload, string context)
+        {
+            return SendAsync(new SetFeedbackMessageEx(feedbackPayload, context));
+        }
+
         internal Task SetFeedbackLayoutAsync(string layout, string context)
         {
-            return SendAsync(new SetFeedbackLayoutMessage(layout,context));
+            return SendAsync(new SetFeedbackLayoutMessage(layout, context));
         }
 
         #endregion
