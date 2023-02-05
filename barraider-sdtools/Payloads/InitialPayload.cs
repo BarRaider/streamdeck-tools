@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using BarRaider.SdTools.Payloads;
 
 namespace BarRaider.SdTools
 {
@@ -36,6 +34,12 @@ namespace BarRaider.SdTools
         public bool IsInMultiAction { get; private set; }
 
         /// <summary>
+        /// The controller of the current action. Values include "Keypad" and "Encoder".
+        /// </summary>
+        [JsonProperty("controller")]
+        public string Controller { get; private set; }
+
+        /// <summary>
         /// Information regarding the Stream Deck hardware device
         /// </summary>
         [JsonProperty("deviceInfo", Required = Required.AllowNull)]
@@ -49,12 +53,13 @@ namespace BarRaider.SdTools
         /// <param name="state"></param>
         /// <param name="isInMultiAction"></param>
         /// <param name="deviceInfo"></param>
-        public InitialPayload(KeyCoordinates coordinates, JObject settings, uint state, bool isInMultiAction, StreamDeckInfo deviceInfo)
+        public InitialPayload(AppearancePayload appearancePayload, StreamDeckInfo deviceInfo)
         {
-            Coordinates = coordinates;
-            Settings = settings;
-            State = state;
-            IsInMultiAction = isInMultiAction;
+            Coordinates = appearancePayload.Coordinates;
+            Settings = appearancePayload.Settings;
+            State = appearancePayload.State;
+            IsInMultiAction = appearancePayload.IsInMultiAction;
+            Controller = appearancePayload.Controller;
             DeviceInfo = deviceInfo;
         }
     }

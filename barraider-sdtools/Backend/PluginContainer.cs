@@ -180,8 +180,7 @@ namespace BarRaider.SdTools
                                 Logger.Instance.LogMessage(TracingLevel.INFO, $"WillAppear called for already existing context {e.Event.Context} (might be inside a multi-action)");
                                 return;
                             }
-                            InitialPayload payload = new InitialPayload(e.Event.Payload.Coordinates,
-                                                                        e.Event.Payload.Settings, e.Event.Payload.State, e.Event.Payload.IsInMultiAction, deviceInfo);
+                            InitialPayload payload = new InitialPayload(e.Event.Payload, deviceInfo);
                             instances[e.Event.Context] = (ICommonPluginFunctions)Activator.CreateInstance(supportedActions[e.Event.Action], conn, payload);
                         }
                         catch (Exception ex)
