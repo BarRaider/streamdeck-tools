@@ -355,6 +355,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackAsync(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Sets the values of touchpad layouts items using a preset JObject
+            </summary>
+            <param name="feedbackPayload"></param>
+            <returns></returns>
+        </member>
         <member name="M:BarRaider.SdTools.ISDConnection.SetFeedbackLayoutAsync(System.String)">
             <summary>
             Changes the current Stream Deck+ touch display layout
@@ -825,6 +832,12 @@
             <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackAsync(System.String,System.String)">
+            <summary>
+            Sets the value of a single touchpad layout item
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SetFeedbackAsync(Newtonsoft.Json.Linq.JObject)">
             <summary>
             Sets the value of a single touchpad layout item
             </summary>
@@ -1885,12 +1898,17 @@
             Is it in a Multiaction
             </summary>
         </member>
+        <member name="P:BarRaider.SdTools.InitialPayload.Controller">
+            <summary>
+            The controller of the current action. Values include "Keypad" and "Encoder".
+            </summary>
+        </member>
         <member name="P:BarRaider.SdTools.InitialPayload.DeviceInfo">
             <summary>
             Information regarding the Stream Deck hardware device
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.InitialPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.UInt32,System.Boolean,BarRaider.SdTools.StreamDeckInfo)">
+        <member name="M:BarRaider.SdTools.InitialPayload.#ctor(BarRaider.SdTools.Payloads.AppearancePayload,BarRaider.SdTools.StreamDeckInfo)">
             <summary>
             Constructor
             </summary>
