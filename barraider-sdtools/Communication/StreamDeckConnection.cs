@@ -164,7 +164,15 @@ namespace BarRaider.SdTools.Communication
 
         internal Task SendAsync(IMessage message)
         {
-            return SendAsync(JsonConvert.SerializeObject(message));
+            try
+            {
+                return SendAsync(JsonConvert.SerializeObject(message));
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools SendAsync Exception: {ex}");
+            }
+            return null;
         }
 
         #region Requests
