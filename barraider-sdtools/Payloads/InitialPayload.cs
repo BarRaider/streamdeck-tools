@@ -48,10 +48,7 @@ namespace BarRaider.SdTools
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="coordinates"></param>
-        /// <param name="settings"></param>
-        /// <param name="state"></param>
-        /// <param name="isInMultiAction"></param>
+        /// <param name="appearancePayload"></param>
         /// <param name="deviceInfo"></param>
         public InitialPayload(AppearancePayload appearancePayload, StreamDeckInfo deviceInfo)
         {
