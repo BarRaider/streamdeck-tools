@@ -7,7 +7,7 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 
 # Stream Deck+ Support  
-Docs are still not ready, for support check our discord (link below). Read release information for usage.
+Instead of `PluginBase`, Derive from either `KeypadBase` (if you don't support dials), `EncoderBase` (for only dials), `KeyAndEncoderBase` (for both keys and dials)
 
 
 # Getting Started
@@ -33,6 +33,13 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 - Large set of helper functions to simplify creating images and sending them to the Stream Deck.
 
 # Change Log
+
+### Version 6.0
+1. Merged streamdeck-client-csharp package into library to allow better logging of errors
+2. Added support for SD+ SDK
+3. Increased timeout of connection to Stream Deck due to the Stream Deck taking longer than before to reply on load
+4. Added error catching to prevent 3rd party plugin exception to impact communication
+
 
 ### Version 3.2 is out!
 - Created new `ISDConnection` interface which is now implemented by SDConnection and used by PluginAction.
