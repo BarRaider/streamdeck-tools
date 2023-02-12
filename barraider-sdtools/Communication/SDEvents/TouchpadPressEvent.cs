@@ -9,7 +9,7 @@ namespace BarRaider.SdTools.Communication.SDEvents
     /// <summary>
     /// Payload for touchpad press
     /// </summary>
-    public class TouchpadPress : BaseEvent
+    public class TouchpadPressEvent : BaseEvent
     {
         /// <summary>
         /// Action Name

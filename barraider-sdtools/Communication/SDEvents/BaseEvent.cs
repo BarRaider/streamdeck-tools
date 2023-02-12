@@ -64,7 +64,7 @@ namespace BarRaider.SdTools.Communication.SDEvents
 
             { EventTypes.DialRotate, typeof(DialRotateEvent) },
             { EventTypes.DialPress, typeof(DialPressEvent) },
-            { EventTypes.TouchpadPress, typeof(TouchpadPress) },
+            { EventTypes.TouchpadPress, typeof(TouchpadPressEvent) },
         };
 
         /// <summary>

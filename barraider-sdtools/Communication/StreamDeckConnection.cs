@@ -137,7 +137,7 @@ namespace BarRaider.SdTools.Communication
         /// <summary>
         /// Raised when the tochpad is pressed
         /// </summary>
-        public event EventHandler<SDEventReceivedEventArgs<TouchpadPress>> OnTouchpadPress;
+        public event EventHandler<SDEventReceivedEventArgs<TouchpadPressEvent>> OnTouchpadPress;
 
         #endregion
 
@@ -395,7 +395,7 @@ namespace BarRaider.SdTools.Communication
                                         case EventTypes.SendToPlugin: OnSendToPlugin?.Invoke(this, new SDEventReceivedEventArgs<SendToPluginEvent>(evt as SendToPluginEvent)); break;
                                         case EventTypes.DialRotate: OnDialRotate?.Invoke(this, new SDEventReceivedEventArgs<DialRotateEvent>(evt as DialRotateEvent)); break;
                                         case EventTypes.DialPress: OnDialPress?.Invoke(this, new SDEventReceivedEventArgs<DialPressEvent>(evt as DialPressEvent)); break;
-                                        case EventTypes.TouchpadPress: OnTouchpadPress?.Invoke(this, new SDEventReceivedEventArgs<TouchpadPress>(evt as TouchpadPress)); break;
+                                        case EventTypes.TouchpadPress: OnTouchpadPress?.Invoke(this, new SDEventReceivedEventArgs<TouchpadPressEvent>(evt as TouchpadPressEvent)); break;
                                         default:
                                             Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Unsupported Stream Deck event: {strBuffer}");
                                             break;

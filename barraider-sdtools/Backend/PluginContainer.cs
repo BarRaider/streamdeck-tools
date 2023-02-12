@@ -257,7 +257,7 @@ namespace BarRaider.SdTools
             }
         }
 
-        private async void Connection_OnTouchpadPress(object sender, SDEventReceivedEventArgs<TouchpadPress> e)
+        private async void Connection_OnTouchpadPress(object sender, SDEventReceivedEventArgs<TouchpadPressEvent> e)
         {
             await instancesLock.WaitAsync();
             try
