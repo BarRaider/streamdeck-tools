@@ -5,7 +5,7 @@ cd /d %~dp0
 cd %1
 
 REM *** MAKE SURE THE FOLLOWING VARIABLES ARE CORRECT ***
-REM (Distribution tool be downloaded from: https://developer.elgato.com/documentation/stream-deck/sdk/exporting-your-plugin/ )
+REM (Distribution tool be downloaded from: https://developer.elgato.com/documentation/stream-deck/sdk/packaging/ )
 SET OUTPUT_DIR="C:\TEMP"
 SET DISTRIBUTION_TOOL="e:\Projects\DotNet\Stream Deck Distribution\DistributionTool.exe"
 SET STREAM_DECK_FILE="D:\Program Files\Elgato\StreamDeck\StreamDeck.exe"
