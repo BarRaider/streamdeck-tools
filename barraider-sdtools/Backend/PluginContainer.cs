@@ -47,7 +47,8 @@ namespace BarRaider.SdTools
             connection.OnWillAppear += Connection_OnWillAppear;
             connection.OnWillDisappear += Connection_OnWillDisappear;
             connection.OnDialRotate += Connection_OnDialRotate;
-            connection.OnDialPress += Connection_OnDialPress;
+            connection.OnDialDown += Connection_OnDialDown;
+            connection.OnDialUp += Connection_OnDialUp;
             connection.OnTouchpadPress += Connection_OnTouchpadPress;
 
             // Settings changed
@@ -285,7 +286,9 @@ namespace BarRaider.SdTools
             }
         }
 
-        private async void Connection_OnDialPress(object sender, SDEventReceivedEventArgs<DialPressEvent> e)
+        // Dial Up
+
+        private async void Connection_OnDialUp(object sender, SDEventReceivedEventArgs<DialUpEvent> e)
         {
             await instancesLock.WaitAsync();
             try
@@ -296,14 +299,43 @@ namespace BarRaider.SdTools
 
                 if (instances.ContainsKey(e.Event.Context))
                 {
-                    DialPressPayload payload = new DialPressPayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller, e.Event.Payload.IsDialPressed);
+                    DialPayload payload = new DialPayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller);
                     if (instances[e.Event.Context] is IEncoderPlugin plugin)
                     {
-                        plugin.DialPress(payload);
+                        plugin.DialUp(payload);
                     }
                     else
                     {
-                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialPress General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialDown General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
+                    }
+                }
+            }
+            finally
+            {
+                instancesLock.Release();
+            }
+        }
+
+        // Dial Down
+        private async void Connection_OnDialDown(object sender, SDEventReceivedEventArgs<DialDownEvent> e)
+        {
+            await instancesLock.WaitAsync();
+            try
+            {
+#if DEBUG
+                Logger.Instance.LogMessage(TracingLevel.DEBUG, $"DialPress: Context: {e.Event.Context} Action: {e.Event.Action} Payload: {e.Event.Payload?.ToStringEx()}");
+#endif
+
+                if (instances.ContainsKey(e.Event.Context))
+                {
+                    DialPayload payload = new DialPayload(e.Event.Payload.Coordinates, e.Event.Payload.Settings, e.Event.Payload.Controller);
+                    if (instances[e.Event.Context] is IEncoderPlugin plugin)
+                    {
+                        plugin.DialDown(payload);
+                    }
+                    else
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.ERROR, $"DialDown General Error: Could not convert {e.Event.Context} to IEncoderPlugin");
                     }
                 }
             }

@@ -19,9 +19,14 @@ namespace BarRaider.SdTools
         public abstract void DialRotate(DialRotatePayload payload);
 
         /// <summary>
-        /// Called when the Dial is pressed or released
+        /// Called when the Dial is pressed
         /// </summary>
-        public abstract void DialPress(DialPressPayload payload);
+        public abstract void DialDown(DialPayload payload);
+
+        /// <summary>
+        /// Called when the Dial is released
+        /// </summary>
+        public abstract void DialUp(DialPayload payload);
 
         /// <summary>
         /// Called when the touchpad (above the dials) is pressed

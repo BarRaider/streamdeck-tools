@@ -52,13 +52,13 @@ namespace BarRaider.SdTools
             return $"Controller: {drp.Controller} Ticks: {drp.Ticks} Coordinates: ({drp.Coordinates?.Row},{drp.Coordinates?.Column}) Settings: {drp.Settings}";
         }
 
-        internal static string ToStringEx(this DialPressPayload dpp)
+        internal static string ToStringEx(this DialPayload dpp)
         {
             if (dpp == null)
             {
                 return "DialPressPayload is null!";
             }
-            return $"Controller: {dpp.Controller} IsDialPressed: {dpp.IsDialPressed} Coordinates: ({dpp.Coordinates?.Row},{dpp.Coordinates?.Column}) Settings: {dpp.Settings}";
+            return $"Controller: {dpp.Controller} Coordinates: ({dpp.Coordinates?.Row},{dpp.Coordinates?.Column}) Settings: {dpp.Settings}";
         }
 
         internal static string ToStringEx(this TouchpadPressPayload tpp)

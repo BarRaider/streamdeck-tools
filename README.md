@@ -9,7 +9,6 @@
 # Stream Deck+ Support  
 Instead of `PluginBase`, Derive from either `KeypadBase` (if you don't support dials), `EncoderBase` (for only dials), `KeyAndEncoderBase` (for both keys and dials)
 
-
 # Getting Started
 Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) packed with usage instructions, examples and more.
 
@@ -33,6 +32,10 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 - Large set of helper functions to simplify creating images and sending them to the Stream Deck.
 
 # Change Log
+
+### Version 6.1
+- Support for new `DialDown` and `DialUp` events. 
+- Removed support for deprecated `DialPress` event
 
 ### Version 6.0
 1. Merged streamdeck-client-csharp package into library to allow better logging of errors

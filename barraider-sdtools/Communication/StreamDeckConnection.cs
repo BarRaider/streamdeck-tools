@@ -130,9 +130,14 @@ namespace BarRaider.SdTools.Communication
         public event EventHandler<SDEventReceivedEventArgs<DialRotateEvent>> OnDialRotate;
 
         /// <summary>
-        /// Raised when a dial is pressed or unpressed
+        /// Raised when a dial is down
         /// </summary>
-        public event EventHandler<SDEventReceivedEventArgs<DialPressEvent>> OnDialPress;
+        public event EventHandler<SDEventReceivedEventArgs<DialDownEvent>> OnDialDown;
+
+        /// <summary>
+        /// Raised when a dial is up
+        /// </summary>
+        public event EventHandler<SDEventReceivedEventArgs<DialUpEvent>> OnDialUp;
 
         /// <summary>
         /// Raised when the tochpad is pressed
@@ -394,7 +399,9 @@ namespace BarRaider.SdTools.Communication
                                         case EventTypes.PropertyInspectorDidDisappear: OnPropertyInspectorDidDisappear?.Invoke(this, new SDEventReceivedEventArgs<PropertyInspectorDidDisappearEvent>(evt as PropertyInspectorDidDisappearEvent)); break;
                                         case EventTypes.SendToPlugin: OnSendToPlugin?.Invoke(this, new SDEventReceivedEventArgs<SendToPluginEvent>(evt as SendToPluginEvent)); break;
                                         case EventTypes.DialRotate: OnDialRotate?.Invoke(this, new SDEventReceivedEventArgs<DialRotateEvent>(evt as DialRotateEvent)); break;
-                                        case EventTypes.DialPress: OnDialPress?.Invoke(this, new SDEventReceivedEventArgs<DialPressEvent>(evt as DialPressEvent)); break;
+                                        case EventTypes.DialDown: OnDialDown?.Invoke(this, new SDEventReceivedEventArgs<DialDownEvent>(evt as DialDownEvent)); break;
+                                        case EventTypes.DialUp: OnDialUp?.Invoke(this, new SDEventReceivedEventArgs<DialUpEvent>(evt as DialUpEvent)); break;
+                                        case EventTypes.DialPress: /* Ignoring deprecated Stream Deck event;*/ break;
                                         case EventTypes.TouchpadPress: OnTouchpadPress?.Invoke(this, new SDEventReceivedEventArgs<TouchpadPressEvent>(evt as TouchpadPressEvent)); break;
                                         default:
                                             Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Unsupported Stream Deck event: {strBuffer}");

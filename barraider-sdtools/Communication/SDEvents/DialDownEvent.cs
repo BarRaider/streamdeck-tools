@@ -7,9 +7,9 @@ using System.Text;
 namespace BarRaider.SdTools.Communication.SDEvents
 {
     /// <summary>
-    /// Payload for Dial press/unpress event
+    /// Payload for Dial down event
     /// </summary>
-    public class DialPressEvent : BaseEvent
+    public class DialDownEvent : BaseEvent
     {
         /// <summary>
         /// Action Name
@@ -30,9 +30,9 @@ namespace BarRaider.SdTools.Communication.SDEvents
         public string Device { get; private set; }
 
         /// <summary>
-        /// Information on dial rotation
+        /// Information on dial status
         /// </summary>
         [JsonProperty("payload")]
-        public DialPressPayload Payload { get; private set; }
+        public DialPayload Payload { get; private set; }
     }
 }

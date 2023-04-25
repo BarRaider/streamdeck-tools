@@ -16,14 +16,10 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl></PackageIconUrl>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <AssemblyVersion>6.1.0.0</AssemblyVersion>
     <FileVersion>6.0.0.0</FileVersion>
-    <Version>6.0</Version>
-    <PackageReleaseNotes>6.0 - 1. Merged streamdeck-client-csharp package into library to allow better logging of errors
-	2. Added support for SD+ SDK
-3. Increased timeout of connection to Stream Deck due to the Stream Deck taking longer than before to reply on load
-4. Added error catching to prevent 3rd party plugin exception to impact communication
-</PackageReleaseNotes>
+    <Version>6.1.0</Version>
+    <PackageReleaseNotes>6.1.0 - Support for new DialDown and DialUp events. Removed support for deprecated DialPress event</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>

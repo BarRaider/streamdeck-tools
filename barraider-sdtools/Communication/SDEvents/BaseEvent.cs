@@ -28,6 +28,8 @@ namespace BarRaider.SdTools.Communication.SDEvents
         public const string SendToPlugin = "sendToPlugin";
         public const string DialRotate = "dialRotate";
         public const string DialPress = "dialPress";
+        public const string DialDown = "dialDown";
+        public const string DialUp = "dialUp";
         public const string TouchpadPress = "touchTap";
     }
 
@@ -63,7 +65,8 @@ namespace BarRaider.SdTools.Communication.SDEvents
             { EventTypes.SendToPlugin, typeof(SendToPluginEvent) },
 
             { EventTypes.DialRotate, typeof(DialRotateEvent) },
-            { EventTypes.DialPress, typeof(DialPressEvent) },
+            { EventTypes.DialDown, typeof(DialDownEvent) },
+            { EventTypes.DialUp, typeof(DialUpEvent) },
             { EventTypes.TouchpadPress, typeof(TouchpadPressEvent) },
         };
 

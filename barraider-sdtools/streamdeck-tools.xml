@@ -40,9 +40,14 @@
             Called when the dial is rotated
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.EncoderBase.DialPress(BarRaider.SdTools.Payloads.DialPressPayload)">
+        <member name="M:BarRaider.SdTools.EncoderBase.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
-            Called when the Dial is pressed or released
+            Called when the Dial is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.EncoderBase.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
+            <summary>
+            Called when the Dial is released
             </summary>
         </member>
         <member name="M:BarRaider.SdTools.EncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
@@ -140,9 +145,14 @@
             Called when the dial is rotated
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialPress(BarRaider.SdTools.Payloads.DialPressPayload)">
+        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
-            Called when the Dial is pressed or released
+            Called when the Dial is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.IEncoderPlugin.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
+            <summary>
+            Called when the Dial is released
             </summary>
         </member>
         <member name="M:BarRaider.SdTools.IEncoderPlugin.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
@@ -396,9 +406,14 @@
             Called when the dial is rotated
             </summary>
         </member>
-        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialPress(BarRaider.SdTools.Payloads.DialPressPayload)">
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialDown(BarRaider.SdTools.Payloads.DialPayload)">
             <summary>
-            Called when the Dial is pressed or released
+            Called when the Dial is pressed
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.KeyAndEncoderBase.DialUp(BarRaider.SdTools.Payloads.DialPayload)">
+            <summary>
+            Called when the Dial is released
             </summary>
         </member>
         <member name="M:BarRaider.SdTools.KeyAndEncoderBase.TouchPress(BarRaider.SdTools.Payloads.TouchpadPressPayload)">
@@ -946,29 +961,29 @@
             UUID of device that was disconnected
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.Communication.SDEvents.DialPressEvent">
+        <member name="T:BarRaider.SdTools.Communication.SDEvents.DialDownEvent">
             <summary>
-            Payload for Dial press/unpress event
+            Payload for Dial down event
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Action">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialDownEvent.Action">
             <summary>
             Action Name
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Context">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialDownEvent.Context">
             <summary>
             Unique Action UUID
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Device">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialDownEvent.Device">
             <summary>
             Device UUID key was pressed on
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialPressEvent.Payload">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialDownEvent.Payload">
             <summary>
-            Information on dial rotation
+            Information on dial status
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.Communication.SDEvents.DialRotateEvent">
@@ -994,6 +1009,31 @@
         <member name="P:BarRaider.SdTools.Communication.SDEvents.DialRotateEvent.Payload">
             <summary>
             Information on dial rotation
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Communication.SDEvents.DialUpEvent">
+            <summary>
+            Payload for Dial up event
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialUpEvent.Action">
+            <summary>
+            Action Name
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialUpEvent.Context">
+            <summary>
+            Unique Action UUID
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialUpEvent.Device">
+            <summary>
+            Device UUID key was pressed on
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.DialUpEvent.Payload">
+            <summary>
+            Information on dial status
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.Communication.SDEvents.DidReceiveGlobalSettingsEvent">
@@ -1171,27 +1211,27 @@
             Title settings
             </summary>
         </member>
-        <member name="T:BarRaider.SdTools.Communication.SDEvents.TouchpadPress">
+        <member name="T:BarRaider.SdTools.Communication.SDEvents.TouchpadPressEvent">
             <summary>
             Payload for touchpad press
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Action">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPressEvent.Action">
             <summary>
             Action Name
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Context">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPressEvent.Context">
             <summary>
             Unique Action UUID
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Device">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPressEvent.Device">
             <summary>
             Device UUID key was pressed on
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPress.Payload">
+        <member name="P:BarRaider.SdTools.Communication.SDEvents.TouchpadPressEvent.Payload">
             <summary>
             Information on touchpad press
             </summary>
@@ -1371,9 +1411,14 @@
             Raised when a dial is rotated
             </summary>
         </member>
-        <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnDialPress">
+        <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnDialDown">
             <summary>
-            Raised when a dial is pressed or unpressed
+            Raised when a dial is down
+            </summary>
+        </member>
+        <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnDialUp">
+            <summary>
+            Raised when a dial is up
             </summary>
         </member>
         <member name="E:BarRaider.SdTools.Communication.StreamDeckConnection.OnTouchpadPress">
@@ -1624,41 +1669,35 @@
             </summary>
             <param name="application"></param>
         </member>
-        <member name="T:BarRaider.SdTools.Payloads.DialPressPayload">
+        <member name="T:BarRaider.SdTools.Payloads.DialPayload">
             <summary>
-            Payload received when a dial is pressed or unpressed
+            Payload received when a dial is down or up
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.Controller">
+        <member name="P:BarRaider.SdTools.Payloads.DialPayload.Controller">
             <summary>
             Controller which issued the event
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.Settings">
+        <member name="P:BarRaider.SdTools.Payloads.DialPayload.Settings">
             <summary>
             Current event settings
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.Coordinates">
+        <member name="P:BarRaider.SdTools.Payloads.DialPayload.Coordinates">
             <summary>
             Coordinates of key on the stream deck
             </summary>
         </member>
-        <member name="P:BarRaider.SdTools.Payloads.DialPressPayload.IsDialPressed">
-            <summary>
-            Boolean whether the dial is currently pressed or not
-            </summary>
-        </member>
-        <member name="M:BarRaider.SdTools.Payloads.DialPressPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String,System.Boolean)">
+        <member name="M:BarRaider.SdTools.Payloads.DialPayload.#ctor(BarRaider.SdTools.KeyCoordinates,Newtonsoft.Json.Linq.JObject,System.String)">
             <summary>
             Constructor
             </summary>
             <param name="coordinates"></param>
             <param name="settings"></param>
             <param name="controller"></param>
-            <param name="isDialPressed"></param>
         </member>
-        <member name="M:BarRaider.SdTools.Payloads.DialPressPayload.#ctor">
+        <member name="M:BarRaider.SdTools.Payloads.DialPayload.#ctor">
             <summary>
             Default constructor for serialization
             </summary>
