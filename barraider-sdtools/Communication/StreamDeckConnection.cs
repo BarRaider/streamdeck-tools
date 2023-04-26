@@ -375,7 +375,7 @@ namespace BarRaider.SdTools.Communication
                                 BaseEvent evt = BaseEvent.Parse(strBuffer);
                                 if (evt == null)
                                 {
-                                    Logger.Instance.LogMessage(TracingLevel.FATAL, $"{this.GetType()} Unknown event received from Stream Deck: {strBuffer}");
+                                    Logger.Instance.LogMessage(TracingLevel.WARN, $"{this.GetType()} Unknown event received from Stream Deck: {strBuffer}");
                                     continue;
                                 }
 

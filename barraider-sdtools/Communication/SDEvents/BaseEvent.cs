@@ -68,6 +68,7 @@ namespace BarRaider.SdTools.Communication.SDEvents
             { EventTypes.DialDown, typeof(DialDownEvent) },
             { EventTypes.DialUp, typeof(DialUpEvent) },
             { EventTypes.TouchpadPress, typeof(TouchpadPressEvent) },
+            { EventTypes.DialPress, typeof(DialDownEvent) }, // Deprecated: Should be removed when event stops getting sent by SD
         };
 
         /// <summary>
