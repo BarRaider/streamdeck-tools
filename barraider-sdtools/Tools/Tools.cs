@@ -475,6 +475,19 @@ namespace BarRaider.SdTools
 
         #region Plugin Helper Classes
 
+        internal static string GetExeName()
+        {
+            try
+            {
+                return System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.WARN, $"GetExeName failed {ex}");
+            }
+            return String.Empty;
+        }
+
         /// <summary>
         /// Uses the PluginActionId attribute on the various classes derived from PluginBase to find all the actions supported in this assembly
         /// </summary>
