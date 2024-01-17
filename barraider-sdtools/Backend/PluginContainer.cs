@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BarRaider.SdTools
 {
@@ -17,16 +18,20 @@ namespace BarRaider.SdTools
         private readonly ManualResetEvent connectEvent = new ManualResetEvent(false);
         private readonly ManualResetEvent disconnectEvent = new ManualResetEvent(false);
         private readonly SemaphoreSlim instancesLock = new SemaphoreSlim(1);
+        private readonly IUpdateHandler updateHandler;
         private string pluginUUID = null;
         private StreamDeckInfo deviceInfo;
+        private PluginUpdateInfo lastUpdateInfo = null;
+
 
         private static readonly Dictionary<string, Type> supportedActions = new Dictionary<string, Type>();
 
         // Holds all instances of plugin
         private static readonly Dictionary<string, ICommonPluginFunctions> instances = new Dictionary<string, ICommonPluginFunctions>();
 
-        public PluginContainer(PluginActionId[] supportedActionIds)
+        public PluginContainer(PluginActionId[] supportedActionIds, IUpdateHandler updateHandler)
         {
+            this.updateHandler = updateHandler;
             foreach (PluginActionId action in supportedActionIds)
             {
                 supportedActions[action.ActionId] = action.PluginBaseType;
@@ -38,6 +43,7 @@ namespace BarRaider.SdTools
             pluginUUID = options.PluginUUID;
             deviceInfo = options.DeviceInfo;
             connection = new StreamDeckConnection(options.Port, options.PluginUUID, options.RegisterEvent);
+
 
             // Register for events
             connection.OnConnected += Connection_OnConnected;
@@ -54,6 +60,14 @@ namespace BarRaider.SdTools
             // Settings changed
             connection.OnDidReceiveSettings += Connection_OnDidReceiveSettings;
             connection.OnDidReceiveGlobalSettings += Connection_OnDidReceiveGlobalSettings;
+
+            // Plugin Version Updates
+            if (updateHandler != null)
+            {
+                updateHandler.OnUpdateStatusChanged += UpdateHandler_OnUpdateStatusChanged;
+                updateHandler.SetPluginConfiguration(Tools.GetExeName(), deviceInfo.Plugin.Version);
+                Task.Run(() => updateHandler.CheckForUpdate());
+            }
 
             // Start the connection
             connection.Run();
@@ -81,6 +95,15 @@ namespace BarRaider.SdTools
         // Button pressed
         private async void Connection_OnKeyDown(object sender, SDEventReceivedEventArgs<KeyDownEvent> e)
         {
+            if (updateHandler?.IsBlockingUpdate ?? false)
+            {
+                if (!String.IsNullOrEmpty(lastUpdateInfo?.UpdateURL))
+                {
+                    await connection.OpenUrlAsync(lastUpdateInfo.UpdateURL);
+                }
+                return;
+            }
+
             await instancesLock.WaitAsync();
             try
             {
@@ -111,6 +134,11 @@ namespace BarRaider.SdTools
         // Button released
         private async void Connection_OnKeyUp(object sender, SDEventReceivedEventArgs<KeyUpEvent> e)
         {
+            if (updateHandler?.IsBlockingUpdate ?? false)
+            {
+                return;
+            }
+
             await instancesLock.WaitAsync();
             try
             {
@@ -141,6 +169,11 @@ namespace BarRaider.SdTools
         // Function runs every second, used to update UI
         private async void RunTick()
         {
+            if (updateHandler?.IsBlockingUpdate ?? false)
+            {
+                return;
+            }
+
             await instancesLock.WaitAsync();
             try
             {
@@ -251,6 +284,8 @@ namespace BarRaider.SdTools
                 {
                     instances[key].ReceivedGlobalSettings(globalSettings);
                 }
+
+                updateHandler?.SetGlobalSettings(globalSettings);
             }
             finally
             {
@@ -260,6 +295,15 @@ namespace BarRaider.SdTools
 
         private async void Connection_OnTouchpadPress(object sender, SDEventReceivedEventArgs<TouchpadPressEvent> e)
         {
+            if (updateHandler?.IsBlockingUpdate ?? false)
+            {
+                if (!String.IsNullOrEmpty(lastUpdateInfo?.UpdateURL))
+                {
+                    await connection.OpenUrlAsync(lastUpdateInfo.UpdateURL);
+                }
+                return;
+            }
+
             await instancesLock.WaitAsync();
             try
             {
@@ -290,6 +334,11 @@ namespace BarRaider.SdTools
 
         private async void Connection_OnDialUp(object sender, SDEventReceivedEventArgs<DialUpEvent> e)
         {
+            if (updateHandler?.IsBlockingUpdate ?? false)
+            {
+                return;
+            }
+
             await instancesLock.WaitAsync();
             try
             {
@@ -319,6 +368,15 @@ namespace BarRaider.SdTools
         // Dial Down
         private async void Connection_OnDialDown(object sender, SDEventReceivedEventArgs<DialDownEvent> e)
         {
+            if (updateHandler?.IsBlockingUpdate ?? false)
+            {
+                if (!String.IsNullOrEmpty(lastUpdateInfo?.UpdateURL))
+                {
+                    await connection.OpenUrlAsync(lastUpdateInfo.UpdateURL);
+                }
+                return;
+            }
+
             await instancesLock.WaitAsync();
             try
             {
@@ -347,6 +405,11 @@ namespace BarRaider.SdTools
 
         private async void Connection_OnDialRotate(object sender, SDEventReceivedEventArgs<DialRotateEvent> e)
         {
+            if (updateHandler?.IsBlockingUpdate ?? false)
+            {
+                return;
+            }
+
             await instancesLock.WaitAsync();
             try
             {
@@ -373,7 +436,32 @@ namespace BarRaider.SdTools
             }
         }
 
+        private async void UpdateHandler_OnUpdateStatusChanged(object sender, PluginUpdateInfo e)
+        {
+            lastUpdateInfo = e;
+            if (!String.IsNullOrEmpty(e.UpdateURL))
+            {
+                await connection.OpenUrlAsync(e.UpdateURL);
+            }
 
+            if (!String.IsNullOrEmpty(e.UpdateImage))
+            {
+                await Task.Run(async () =>
+                {
+                    foreach (string contextId in instances.Keys.ToList())
+                    {
+                        await connection.SetImageAsync(e.UpdateImage, contextId, SDKTarget.HardwareAndSoftware, null);
+                        await connection.SetTitleAsync(null, contextId, SDKTarget.HardwareAndSoftware, null);
+                    }
+                });
+            }
+
+            if (e.Status == PluginUpdateStatus.CriticalUpgrade)
+            {
+                Logger.Instance.LogMessage(TracingLevel.FATAL, $"Critical update needed");
+                Environment.Exit(0);
+            }
+        }
 
         private void Connection_OnConnected(object sender, EventArgs e)
         {

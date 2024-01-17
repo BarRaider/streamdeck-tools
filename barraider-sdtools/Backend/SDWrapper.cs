@@ -26,15 +26,16 @@ namespace BarRaider.SdTools
         /// * https://github.com/SaviorXTanren/mixer-mixitup/
         /// *************************************************************************/
 
-        
+
         /// <summary>
         /// Library's main initialization point. 
         /// Pass the args from your Main function. We'll handle the rest
         /// </summary>
         /// <param name="args"></param>
-        public static void Run(string[] args)
+        /// <param name="updateHandler"></param>
+        public static void Run(string[] args, IUpdateHandler updateHandler = null)
         {
-            Run(args, Tools.AutoLoadPluginActions());
+            Run(args, Tools.AutoLoadPluginActions(), updateHandler);
         }
 
         /// <summary>
@@ -43,9 +44,10 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="args"></param>
         /// <param name="supportedActionIds"></param>
-        private static void Run(string[] args, PluginActionId[] supportedActionIds)
+        /// /// <param name="updateHandler"></param>
+        private static void Run(string[] args, PluginActionId[] supportedActionIds, IUpdateHandler updateHandler)
         {
-            Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin [{GetExeName()}] Loading - {supportedActionIds.Length} Actions Found");
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin [{Tools.GetExeName()}] Loading - {supportedActionIds.Length} Actions Found");
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
 #if DEBUG
@@ -71,32 +73,19 @@ namespace BarRaider.SdTools
             });
 
             ParserResult<StreamDeckOptions> options = parser.ParseArguments<StreamDeckOptions>(args);
-            options.WithParsed<StreamDeckOptions>(o => RunPlugin(o, supportedActionIds));
+            options.WithParsed<StreamDeckOptions>(o => RunPlugin(o, supportedActionIds, updateHandler));
         }
 
 
-        private static void RunPlugin(StreamDeckOptions options, PluginActionId[] supportedActionIds)
+        private static void RunPlugin(StreamDeckOptions options, PluginActionId[] supportedActionIds, IUpdateHandler updateHandler)
         {
-            container = new PluginContainer(supportedActionIds);
+            container = new PluginContainer(supportedActionIds, updateHandler);
             container.Run(options);
         }
 
         private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs e)
         {
             Logger.Instance.LogMessage(TracingLevel.FATAL, $"Unhandled Exception: {e.ExceptionObject}");
-        }
-
-        private static string GetExeName()
-        {
-            try
-            {
-                return System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.LogMessage(TracingLevel.WARN, $"GetExeName failed {ex}");
-            }
-            return String.Empty;
         }
     }
 }
