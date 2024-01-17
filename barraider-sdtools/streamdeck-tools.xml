@@ -875,7 +875,7 @@
             * 3. Pass the type of the class to the main function
              </summary>
         </member>
-        <member name="M:BarRaider.SdTools.SDWrapper.Run(System.String[])">
+        <member name="M:BarRaider.SdTools.SDWrapper.Run(System.String[],BarRaider.SdTools.IUpdateHandler)">
             /************************************************************************
             * Initial configuration from TyrenDe's streamdeck-client-csharp example:
             * https://github.com/TyrenDe/streamdeck-client-csharp
@@ -887,14 +887,16 @@
             Pass the args from your Main function. We'll handle the rest
             </summary>
             <param name="args"></param>
+            <param name="updateHandler"></param>
         </member>
-        <member name="M:BarRaider.SdTools.SDWrapper.Run(System.String[],BarRaider.SdTools.PluginActionId[])">
+        <member name="M:BarRaider.SdTools.SDWrapper.Run(System.String[],BarRaider.SdTools.PluginActionId[],BarRaider.SdTools.IUpdateHandler)">
             <summary>
             Library's main initialization point. 
             Pass the args from your Main function and a list of supported PluginActionIds, the framework will handle the rest.
             </summary>
             <param name="args"></param>
             <param name="supportedActionIds"></param>
+            /// <param name="updateHandler"></param>
         </member>
         <member name="T:BarRaider.SdTools.Communication.Messages.EmptyPayload">
             <summary>
@@ -2446,6 +2448,35 @@
             <param name="imageWidthPixels"></param>
             <returns></returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "T:BarRaider.SdTools.IUpdateHandler" -->
+        <member name="E:BarRaider.SdTools.IUpdateHandler.OnUpdateStatusChanged">
+            <summary>
+            Event received by the infrastructure after an upgrade check
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.IUpdateHandler.IsBlockingUpdate">
+            <summary>
+            Is the current update a blocking one
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.IUpdateHandler.SetPluginConfiguration(System.String,System.String)">
+            <summary>
+            Sets the information about the plugin
+            </summary>
+            <param name="pluginName"></param>
+            <param name="pluginVersion"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.IUpdateHandler.SetGlobalSettings(System.Object)">
+            <summary>
+            Sets the plugin global settings
+            </summary>
+            <param name="settings"></param>
+        </member>
+        <member name="M:BarRaider.SdTools.IUpdateHandler.CheckForUpdate">
+            <summary>
+            Checks for update
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.TracingLevel">
             <summary>
             Tracing levels used for Logger
@@ -2492,6 +2523,69 @@
             </summary>
             <param name="Level"></param>
             <param name="Message"></param>
+        </member>
+        <member name="T:BarRaider.SdTools.PluginUpdateStatus">
+            <summary>
+            Status of update request
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.PluginUpdateStatus.Unknown">
+            <summary>
+            Unknown reply
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.PluginUpdateStatus.UpToDate">
+            <summary>
+            Plugin is up to date
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.PluginUpdateStatus.MinorUpgrade">
+            <summary>
+            Minor version update available
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.PluginUpdateStatus.MajorUpgrade">
+            <summary>
+            Major version update available
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.PluginUpdateStatus.CriticalUpgrade">
+            <summary>
+            Critical update needed
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.PluginUpdateInfo">
+            <summary>
+            Response to an update request
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.PluginUpdateInfo.Status">
+            <summary>
+            Status
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.PluginUpdateInfo.UpdateURL">
+            <summary>
+            Update URL
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.PluginUpdateInfo.UpdateImage">
+            <summary>
+            Update URL
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginUpdateInfo.#ctor">
+            <summary>
+            Default Constructor
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.PluginUpdateInfo.#ctor(BarRaider.SdTools.PluginUpdateStatus,System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="status"></param>
+            <param name="updateURL"></param>
+            /// <param name="updateImage"></param>
         </member>
         <member name="T:BarRaider.SdTools.RandomGenerator">
             <summary>
