@@ -175,7 +175,7 @@ namespace BarRaider.SdTools.Communication
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools SendAsync Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} SDTools SendAsync Exception: {ex}");
             }
             return null;
         }
@@ -208,7 +208,7 @@ namespace BarRaider.SdTools.Communication
             }
             catch (Exception ex)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SetImageAsync Exception: {ex}");
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} SetImageAsync Exception: {ex}");
             }
             return null;
         }
@@ -335,6 +335,10 @@ namespace BarRaider.SdTools.Communication
                 OnConnected?.Invoke(this, new EventArgs());
                 await ReceiveAsync();
             }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.FATAL, $"{this.GetType()} ReceiveAsync Exception: {ex}");
+            }
             finally
             {
                 Logger.Instance.LogMessage(TracingLevel.INFO, $"{this.GetType()} RunAsync completed, shutting down");
@@ -359,6 +363,8 @@ namespace BarRaider.SdTools.Communication
                         if (result.MessageType == WebSocketMessageType.Close ||
                             (result.CloseStatus != null && result.CloseStatus.HasValue && result.CloseStatus.Value != WebSocketCloseStatus.Empty))
                         {
+                            string closeStatus = (result.CloseStatus == null) ? "None" : (result.CloseStatus.HasValue) ? result.CloseStatus.Value.ToString() : "None";
+                            Logger.Instance.LogMessage(TracingLevel.INFO, $"{this.GetType()} Received websocket close message. MessageType: {result.MessageType} CloseStatus: {closeStatus}");
                             return result.CloseStatus.GetValueOrDefault();
                         }
                         else if (result.MessageType == WebSocketMessageType.Text)
@@ -423,6 +429,7 @@ namespace BarRaider.SdTools.Communication
                 Logger.Instance.LogMessage(TracingLevel.FATAL, $"{this.GetType()} ReceiveAsync Exception: {ex}");
             }
 
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"{this.GetType()} ReceiveAsync ended with CancelToken: {cancelTokenSource.IsCancellationRequested} Websocket: {(webSocket == null ? "null" : "valid")}");
             return WebSocketCloseStatus.NormalClosure;
         }
 
