@@ -33,6 +33,9 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 
 # Change Log
 
+### Version 6.2
+- Support for .NET 8.0
+
 ### Version 6.1
 - Support for new `DialDown` and `DialUp` events. 
 - Removed support for deprecated `DialPress` event

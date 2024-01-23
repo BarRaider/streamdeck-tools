@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>BarRaider</Authors>
     <Product>Stream Deck Tools by BarRaider</Product>
@@ -9,17 +9,17 @@ This library encapsulates all the overhead of setting up the framework, so that 
 [Samples for using the library are provided here: https://github.com/BarRaider/streamdeck-tools]  
 Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More info and working samples here: https://github.com/BarRaider/streamdeck-tools .  
 Feel free to contact me for more information: https://barraider.com</Description>
-    <Copyright>Copyright © BarRaider 2023</Copyright>
+    <Copyright>Copyright © BarRaider 2024</Copyright>
     <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/BarRaider/streamdeck-tools</RepositoryUrl>
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl></PackageIconUrl>
-    <AssemblyVersion>6.1.4.0</AssemblyVersion>
-    <FileVersion>6.1.4.0</FileVersion>
-    <Version>6.1.4</Version>
-    <PackageReleaseNotes>6.1.4</PackageReleaseNotes>
+    <AssemblyVersion>6.2</AssemblyVersion>
+    <FileVersion>6.2</FileVersion>
+    <Version>6.2</Version>
+    <PackageReleaseNotes>6.2 - Added support for .NET 8.0</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>
@@ -38,9 +38,9 @@ Feel free to contact me for more information: https://barraider.com</Description
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="NLog" Version="5.1.1" />
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
