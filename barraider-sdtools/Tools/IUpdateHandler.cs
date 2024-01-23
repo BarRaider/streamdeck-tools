@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BarRaider.SdTools
 {
-    // <summary>
+    /// <summary>
     /// Interface for a plugin update handler
     /// </summary>
     public interface IUpdateHandler : IDisposable

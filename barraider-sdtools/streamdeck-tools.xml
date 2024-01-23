@@ -2448,7 +2448,11 @@
             <param name="imageWidthPixels"></param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:BarRaider.SdTools.IUpdateHandler" -->
+        <member name="T:BarRaider.SdTools.IUpdateHandler">
+            <summary>
+            Interface for a plugin update handler
+            </summary>
+        </member>
         <member name="E:BarRaider.SdTools.IUpdateHandler.OnUpdateStatusChanged">
             <summary>
             Event received by the infrastructure after an upgrade check

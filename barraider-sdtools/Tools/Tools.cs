@@ -373,7 +373,7 @@ namespace BarRaider.SdTools
         {
             try
             {
-                using (SHA512CryptoServiceProvider sha512 = new SHA512CryptoServiceProvider())
+                using (SHA512 sha512 = SHA512.Create())
                 {
                     byte[] hash = sha512.ComputeHash(byteStream);
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
