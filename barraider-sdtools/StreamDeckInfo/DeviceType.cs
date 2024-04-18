@@ -50,9 +50,9 @@ namespace BarRaider.SdTools
         StreamDeckPlus = 7,
 
         /// <summary>
-        /// Scuf Gamepad.
+        /// Scuf Controller.
         /// </summary>
-        ScufGamepad = 8,
+        ScufController = 8,
 
         /// <summary>
         /// Stream Deck Neo.
