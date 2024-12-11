@@ -48,5 +48,15 @@ namespace BarRaider.SdTools
         /// Stream Deck+
         /// </summary>
         StreamDeckPlus = 7,
+
+        /// <summary>
+        /// SCUF Controller.
+        /// </summary>
+        SCUFController = 8,
+
+        /// <summary>
+        /// Stream Deck Neo.
+        /// </summary>
+        StreamDeckNeo = 9
     }
 }
