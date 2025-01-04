@@ -33,6 +33,9 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 
 # Change Log
 
+### Version 6.3
+- Support for new Stream Deck types
+
 ### Version 6.2
 - Support for .NET 8.0
 

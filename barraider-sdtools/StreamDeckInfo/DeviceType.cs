@@ -40,7 +40,7 @@ namespace BarRaider.SdTools
         StreamDeckPedal = 5,
 
         /// <summary>
-        /// Corsair CUE SDK (?)
+        /// Corsair CUE SDK
         /// </summary>
         CorsairCueSDK = 6,
 

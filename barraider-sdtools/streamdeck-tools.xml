@@ -2068,12 +2068,22 @@
         </member>
         <member name="F:BarRaider.SdTools.DeviceType.CorsairCueSDK">
             <summary>
-            Corsair CUE SDK (?)
+            Corsair CUE SDK
             </summary>
         </member>
         <member name="F:BarRaider.SdTools.DeviceType.StreamDeckPlus">
             <summary>
             Stream Deck+
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.DeviceType.SCUFController">
+            <summary>
+            SCUF Controller.
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckNeo">
+            <summary>
+            Stream Deck Neo.
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.StreamDeckApplicationInfo">
