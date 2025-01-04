@@ -10,19 +10,20 @@ This library encapsulates all the overhead of setting up the framework, so that 
 Using this library, you only need to derive from the abstract PluginBase class and add one line of code in your program.cs to have a working plugin. More info and working samples here: https://github.com/BarRaider/streamdeck-tools .  
 Feel free to contact me for more information: https://barraider.com</Description>
     <Copyright>Copyright © BarRaider 2025</Copyright>
-    <PackageLicenseUrl>https://github.com/BarRaider/streamdeck-tools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/BarRaider/streamdeck-tools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/BarRaider/streamdeck-tools</RepositoryUrl>
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl></PackageIconUrl>
-    <AssemblyVersion>6.3</AssemblyVersion>
-    <FileVersion>6.3</FileVersion>
-    <Version>6.3</Version>
-    <PackageReleaseNotes>6.3 - Support for new Stream Deck types</PackageReleaseNotes>
+    <AssemblyVersion>6.3.1</AssemblyVersion>
+    <FileVersion>6.3.1</FileVersion>
+    <Version>6.3.1</Version>
+    <PackageReleaseNotes>6.3.1 - Support for new Stream Deck types</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
     <DocumentationFile></DocumentationFile>
@@ -47,16 +48,23 @@ Feel free to contact me for more information: https://barraider.com</Description
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog" Version="5.2.8" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
+    <PackageReference Include="NLog" Version="5.3.4" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="BRLogo_460.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+	<None Include="README.md" Pack="true" PackagePath="\">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
 </Project>
