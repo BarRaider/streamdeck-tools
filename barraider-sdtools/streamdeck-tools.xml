@@ -2283,7 +2283,14 @@
         </member>
         <member name="M:BarRaider.SdTools.ExtensionMethods.ToByteArray(System.Drawing.Image)">
             <summary>
-            Converts an Image into a Byte Array
+            Converts an Image into a BMP Byte Array.
+            </summary>
+            <param name="image"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.ExtensionMethods.ToPngByteArray(System.Drawing.Image)">
+            <summary>
+            Converts an Image into a PNG Byte Array using the internal codec abstraction.
             </summary>
             <param name="image"></param>
             <returns></returns>
