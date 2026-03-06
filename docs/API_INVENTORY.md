@@ -10,12 +10,12 @@ Each entry is classified as: **ADAPTED**, **KEPT** (System.Drawing retained, fut
 | Classification | Count | Description |
 | --- | --- | --- |
 | ADAPTED | 8 | Routed through internal codec abstraction (Phase 1 + 2) |
-| KEPT | 10 | System.Drawing types retained in signatures; will be marked [Obsolete] in a future release |
-| HIGH-RISK | 10 | Deep entanglement with System.Drawing types in public signatures |
+| KEPT | 9 | System.Drawing types retained in signatures; will be marked [Obsolete] in a future release |
+| HIGH-RISK | 12 | Deep entanglement with System.Drawing types in public signatures |
 
 **Files with System.Drawing exposure:**
 - `Tools/Tools.cs` (5 APIs)
-- `Tools/GraphicsTools.cs` (6 APIs)
+- `Tools/GraphicsTools.cs` (7 APIs)
 - `Tools/ExtensionMethods.cs` (10 APIs)
 - `Backend/SDConnection.cs` (1 API)
 - `Backend/ISDConnection.cs` (1 API)
@@ -84,28 +84,28 @@ Each entry is classified as: **ADAPTED**, **KEPT** (System.Drawing retained, fut
 
 | # | API | Signature | System.Drawing types | Notes |
 | --- | --- | --- | --- | --- |
-| 17 | `GraphicsTools.ColorFromHex` | `public static Color ColorFromHex(string hexColor)` | `Color` (return) | Uses `ColorTranslator.FromHtml`. |
-| 18 | `GraphicsTools.GenerateColorShades` | `public static Color GenerateColorShades(string initialColor, int currentShade, int totalAmountOfShades)` | `Color` (return) | Uses `Color.FromArgb`. |
+| 18 | `GraphicsTools.ColorFromHex` | `public static Color ColorFromHex(string hexColor)` | `Color` (return) | Uses `ColorTranslator.FromHtml`. |
+| 19 | `GraphicsTools.GenerateColorShades` | `public static Color GenerateColorShades(string initialColor, int currentShade, int totalAmountOfShades)` | `Color` (return) | Uses `Color.FromArgb`. |
 
 ### ExtensionMethods.cs
 
 | # | API | Signature | System.Drawing types | Notes |
 | --- | --- | --- | --- | --- |
-| 19 | `Color.ToHex` | `public static string ToHex(this Color color)` | `Color` (this) | Extension on `Color`. |
-| 20 | `Brush.ToHex` | `public static string ToHex(this Brush brush)` | `Brush` (this), `SolidBrush` | Extension on `Brush`. |
-| 21 | `Graphics.DrawAndMeasureString` | `public static float DrawAndMeasureString(this Graphics graphics, string text, Font font, Brush brush, PointF position)` | `Graphics`, `Font`, `Brush`, `PointF` | Extension on `Graphics`. |
-| 22 | `Graphics.GetTextCenter` | `public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, out bool textFitsImage, int minIndentation)` | `Graphics`, `Font` | Extension on `Graphics`. Two overloads. |
-| 23 | `Graphics.GetFontSizeWhereTextFitsImage` | `public static float GetFontSizeWhereTextFitsImage(this Graphics graphics, string text, int imageWidth, Font font, int minimalFontSize)` | `Graphics`, `Font` | Extension on `Graphics`. |
-| 24 | `Graphics.AddTextPath` | `public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, Color strokeColor, float strokeThickness, int pixelsAlignment)` | `Graphics`, `Color`, `TitleParameters` | Extension on `Graphics`. Two overloads. Uses `GraphicsPath`, `Pen`, `SolidBrush`. |
+| 20 | `Color.ToHex` | `public static string ToHex(this Color color)` | `Color` (this) | Extension on `Color`. |
+| 21 | `Brush.ToHex` | `public static string ToHex(this Brush brush)` | `Brush` (this), `SolidBrush` | Extension on `Brush`. |
+| 22 | `Graphics.DrawAndMeasureString` | `public static float DrawAndMeasureString(this Graphics graphics, string text, Font font, Brush brush, PointF position)` | `Graphics`, `Font`, `Brush`, `PointF` | Extension on `Graphics`. |
+| 23 | `Graphics.GetTextCenter` | `public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, out bool textFitsImage, int minIndentation)` | `Graphics`, `Font` | Extension on `Graphics`. Two overloads. |
+| 24 | `Graphics.GetFontSizeWhereTextFitsImage` | `public static float GetFontSizeWhereTextFitsImage(this Graphics graphics, string text, int imageWidth, Font font, int minimalFontSize)` | `Graphics`, `Font` | Extension on `Graphics`. |
+| 25 | `Graphics.AddTextPath` | `public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, Color strokeColor, float strokeThickness, int pixelsAlignment)` | `Graphics`, `Color`, `TitleParameters` | Extension on `Graphics`. Two overloads. Uses `GraphicsPath`, `Pen`, `SolidBrush`. |
 
 ### TitleParameters.cs (Wrappers)
 
 | # | API | Type | Notes |
 | --- | --- | --- | --- |
-| 25 | `TitleParameters.TitleColor` | `Color` property | Public property, deserialized from JSON. |
-| 26 | `TitleParameters.FontFamily` | `FontFamily` property | Public property, deserialized from JSON. |
-| 27 | `TitleParameters.FontStyle` | `FontStyle` property (enum) | Public property, deserialized from JSON. |
-| 28 | `TitleParameters(FontFamily, FontStyle, double, Color, bool, TitleVerticalAlignment)` | Constructor | Direct SD types in parameters. |
+| 26 | `TitleParameters.TitleColor` | `Color` property | Public property, deserialized from JSON. |
+| 27 | `TitleParameters.FontFamily` | `FontFamily` property | Public property, deserialized from JSON. |
+| 28 | `TitleParameters.FontStyle` | `FontStyle` property (enum) | Public property, deserialized from JSON. |
+| 29 | `TitleParameters(FontFamily, FontStyle, double, Color, bool, TitleVerticalAlignment)` | Constructor | Direct SD types in parameters. |
 
 ---
 
