@@ -46,7 +46,7 @@ namespace BarRaider.SdTools
                 return null;
             }
 
-            using (Image image = Image.FromFile(fileName))
+            using (Image image = ImageCodecProvider.Instance.DecodeFromFile(fileName))
             {
                 return ImageToBase64(image, addHeaderPrefix);
             }

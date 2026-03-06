@@ -1,4 +1,5 @@
-﻿using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Internal;
+using BarRaider.SdTools.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -65,10 +66,11 @@ namespace BarRaider.SdTools
         #region Image/Graphics
 
         /// <summary>
-        /// Converts an Image into a Byte Array
+        /// Converts an Image into a BMP Byte Array.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
+        [Obsolete("ToByteArray encodes as BMP which will not be supported in future versions. Use ToPngByteArray instead.")]
         public static byte[] ToByteArray(this Image image)
         {
             using (var ms = new MemoryStream())
@@ -76,6 +78,16 @@ namespace BarRaider.SdTools
                 image.Save(ms, ImageFormat.Bmp);
                 return ms.ToArray();
             }
+        }
+
+        /// <summary>
+        /// Converts an Image into a PNG Byte Array using the internal codec abstraction.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static byte[] ToPngByteArray(this Image image)
+        {
+            return ImageCodecProvider.Instance.EncodeToPngBytes(image);
         }
 
         /// <summary>

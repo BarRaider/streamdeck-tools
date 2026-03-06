@@ -9,5 +9,6 @@ namespace BarRaider.SdTools.Internal
     {
         byte[] EncodeToPngBytes(Image image);
         Image DecodeFromBytes(byte[] imageBytes);
+        Image DecodeFromFile(string filePath);
     }
 }

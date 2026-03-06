@@ -48,5 +48,18 @@ namespace BarRaider.SdTools.Internal
                 throw;
             }
         }
+
+        public Image DecodeFromFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return null;
+            }
+
+            using (Image original = Image.FromFile(filePath))
+            {
+                return new Bitmap(original);
+            }
+        }
     }
 }
