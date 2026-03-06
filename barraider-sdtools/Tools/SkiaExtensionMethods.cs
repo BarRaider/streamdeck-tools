@@ -218,6 +218,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="str">The string to split.</param>
         /// <param name="titleParameters">Title parameters for font information.</param>
+        /// <param name="font">The SKFont used for text measurement.</param>
         /// <param name="leftPaddingPixels">Left padding in pixels.</param>
         /// <param name="rightPaddingPixels">Right padding in pixels.</param>
         /// <param name="imageWidthPixels">Width of the key image in pixels.</param>
