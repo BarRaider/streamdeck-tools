@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Drawing;
@@ -254,11 +254,12 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public async Task SetImageAsync(Image image, int? state = null, bool forceSendToStreamdeck = false)
         {
-            string hash = Tools.ImageToSHA512(image);
+            string base64Image = Tools.ImageToBase64(image, true);
+            string hash = Tools.StringToSHA512(base64Image);
             if (forceSendToStreamdeck || hash != previousImageHash)
             {
                 previousImageHash = hash;
-                await StreamDeckConnection.SetImageAsync(image, ContextId, SDKTarget.HardwareAndSoftware, state);
+                await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
             }
         }
 
