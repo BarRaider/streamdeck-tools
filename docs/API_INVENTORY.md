@@ -1,7 +1,7 @@
 # System.Drawing Public API Inventory
 
 Complete inventory of every public API in `barraider-sdtools` that exposes `System.Drawing` types.
-Each entry is classified as: **ADAPTED** (Phase 1), **NEEDS ADAPTER**, or **HIGH-RISK**.
+Each entry is classified as: **ADAPTED**, **KEPT** (System.Drawing retained, future [Obsolete]), or **HIGH-RISK**.
 
 ---
 
@@ -9,8 +9,8 @@ Each entry is classified as: **ADAPTED** (Phase 1), **NEEDS ADAPTER**, or **HIGH
 
 | Classification | Count | Description |
 | --- | --- | --- |
-| ADAPTED | 5 | Already routed through internal codec abstraction in Phase 1 |
-| NEEDS ADAPTER | 15 | Can be wrapped/adapted without breaking existing callers |
+| ADAPTED | 8 | Routed through internal codec abstraction (Phase 1 + 2) |
+| KEPT | 10 | System.Drawing types retained in signatures; will be marked [Obsolete] in a future release |
 | HIGH-RISK | 10 | Deep entanglement with System.Drawing types in public signatures |
 
 **Files with System.Drawing exposure:**
@@ -23,7 +23,7 @@ Each entry is classified as: **ADAPTED** (Phase 1), **NEEDS ADAPTER**, or **HIGH
 
 ---
 
-## ADAPTED (Phase 1 -- complete)
+## ADAPTED (Phase 1 + Phase 2 -- complete)
 
 ### Tools.cs
 
@@ -32,43 +32,49 @@ Each entry is classified as: **ADAPTED** (Phase 1), **NEEDS ADAPTER**, or **HIGH
 | 1 | `Tools.ImageToBase64` | `public static string ImageToBase64(Image image, bool addHeaderPrefix)` | `Image` (param) | Routes through `ImageCodecProvider.Instance.EncodeToPngBytes` |
 | 2 | `Tools.Base64StringToImage` | `public static Image Base64StringToImage(string base64String)` | `Image` (return) | Routes through `ImageCodecProvider.Instance.DecodeFromBytes` |
 | 3 | `Tools.ImageToSHA512` | `public static string ImageToSHA512(Image image)` | `Image` (param) | Routes through `ImageCodecProvider.Instance.EncodeToPngBytes` |
+| 4 | `Tools.FileToBase64` | `public static string FileToBase64(string fileName, bool addHeaderPrefix)` | `Image` (internal only) | Routes through `ImageCodecProvider.Instance.DecodeFromFile`. No public SD exposure. |
 
 ### SDConnection.cs / ISDConnection.cs
 
 | # | API | Signature | System.Drawing types | Notes |
 | --- | --- | --- | --- | --- |
-| 4 | `SDConnection.SetImageAsync` | `public async Task SetImageAsync(Image image, int? state, bool forceSendToStreamdeck)` | `Image` (param) | Converts to base64 via `Tools.ImageToBase64`, then calls string overload |
-| 5 | `ISDConnection.SetImageAsync` | `Task SetImageAsync(Image image, int? state, bool forceSendToStreamdeck)` | `Image` (param) | Interface declaration matching #4 |
-
----
-
-## NEEDS ADAPTER (moderate complexity)
-
-### Tools.cs
-
-| # | API | Signature | System.Drawing types | Notes |
-| --- | --- | --- | --- | --- |
-| 6 | `Tools.FileToBase64` | `public static string FileToBase64(string fileName, bool addHeaderPrefix)` | `Image` (internal only) | Uses `Image.FromFile` internally. Return type is `string` -- no public SD exposure. Low effort to adapt. |
-| 7 | `Tools.GenerateKeyImage` | `public static Bitmap GenerateKeyImage(DeviceType streamDeckType, out Graphics graphics)` | `Bitmap` (return), `Graphics` (out) | Core drawing entry point for plugins. |
-| 8 | `Tools.GenerateGenericKeyImage` | `public static Bitmap GenerateGenericKeyImage(out Graphics graphics)` | `Bitmap` (return), `Graphics` (out) | Delegates to #7. |
-
-### GraphicsTools.cs
-
-| # | API | Signature | System.Drawing types | Notes |
-| --- | --- | --- | --- | --- |
-| 9 | `GraphicsTools.ResizeImage` | `public static Image ResizeImage(Image original, int newWidth, int newHeight)` | `Image` (param + return) | Uses `Bitmap`, `Graphics`, `InterpolationMode` internally. |
-| 10 | `GraphicsTools.ExtractRectangle` | `public static Bitmap ExtractRectangle(Image image, int startX, int startY, int width, int height)` | `Image` (param), `Bitmap` (return) | Uses `Rectangle`, `Bitmap.Clone`. |
-| 11 | `GraphicsTools.CreateOpacityImage` | `public static Image CreateOpacityImage(Image image, float opacity)` | `Image` (param + return) | Uses `Bitmap`, `Graphics`, `ColorMatrix`, `ImageAttributes`. |
-| 12 | `GraphicsTools.DrawMultiLinedText` | `public static Image[] DrawMultiLinedText(string text, int currentTextPosition, int lettersPerLine, int numberOfLines, Font font, Color backgroundColor, Color textColor, bool expandToNextImage, PointF keyDrawStartingPosition)` | `Font`, `Color` (params), `Image[]` (return), `PointF` | Heavy usage of `Graphics`, `SolidBrush`. |
-| 13 | `GraphicsTools.WrapStringToFitImage` | `public static string WrapStringToFitImage(string str, TitleParameters titleParameters, int leftPaddingPixels, int rightPaddingPixels, int imageWidthPixels)` | Uses `Font`, `Bitmap`, `Graphics` internally | Return type is `string` -- no direct SD exposure in signature, but depends on `TitleParameters` (which uses SD types). |
+| 5 | `SDConnection.SetImageAsync` | `public async Task SetImageAsync(Image image, int? state, bool forceSendToStreamdeck)` | `Image` (param) | Converts to base64 via `Tools.ImageToBase64`, then calls string overload |
+| 6 | `ISDConnection.SetImageAsync` | `Task SetImageAsync(Image image, int? state, bool forceSendToStreamdeck)` | `Image` (param) | Interface declaration matching #5 |
 
 ### ExtensionMethods.cs
 
 | # | API | Signature | System.Drawing types | Notes |
 | --- | --- | --- | --- | --- |
-| 14 | `Image.ToByteArray` | `public static byte[] ToByteArray(this Image image)` | `Image` (this) | Uses `ImageFormat.Bmp` directly. |
-| 15 | `Image.ToBase64` | `public static string ToBase64(this Image image, bool addHeaderPrefix)` | `Image` (this) | Delegates to `Tools.ImageToBase64` -- effectively already adapted. |
-| 16 | `string.SplitToFitKey` | `public static string SplitToFitKey(this string str, TitleParameters titleParameters, ...)` | Uses `Font`, `Bitmap`, `Graphics` internally | Return type is `string`, but internal SD usage. |
+| 7 | `Image.ToBase64` | `public static string ToBase64(this Image image, bool addHeaderPrefix)` | `Image` (this) | Delegates to adapted `Tools.ImageToBase64` |
+| 8 | `Image.ToPngByteArray` | `public static byte[] ToPngByteArray(this Image image)` | `Image` (this) | **NEW** -- routes through `ImageCodecProvider.Instance.EncodeToPngBytes` |
+
+---
+
+## KEPT (System.Drawing signatures retained -- future [Obsolete])
+
+### Tools.cs
+
+| # | API | Signature | System.Drawing types | Notes |
+| --- | --- | --- | --- | --- |
+| 9 | `Tools.GenerateKeyImage` | `public static Bitmap GenerateKeyImage(DeviceType streamDeckType, out Graphics graphics)` | `Bitmap` (return), `Graphics` (out) | Core drawing entry point for plugins. Kept as-is. |
+| 10 | `Tools.GenerateGenericKeyImage` | `public static Bitmap GenerateGenericKeyImage(out Graphics graphics)` | `Bitmap` (return), `Graphics` (out) | Delegates to #9. |
+
+### GraphicsTools.cs
+
+| # | API | Signature | System.Drawing types | Notes |
+| --- | --- | --- | --- | --- |
+| 11 | `GraphicsTools.ResizeImage` | `public static Image ResizeImage(Image original, int newWidth, int newHeight)` | `Image` (param + return) | Kept as-is; System.Drawing types in signature. |
+| 12 | `GraphicsTools.ExtractRectangle` | `public static Bitmap ExtractRectangle(Image image, int startX, int startY, int width, int height)` | `Image` (param), `Bitmap` (return) | Kept as-is. |
+| 13 | `GraphicsTools.CreateOpacityImage` | `public static Image CreateOpacityImage(Image image, float opacity)` | `Image` (param + return) | Kept as-is. |
+| 14 | `GraphicsTools.DrawMultiLinedText` | `public static Image[] DrawMultiLinedText(...)` | `Font`, `Color` (params), `Image[]` (return), `PointF` | Kept as-is. |
+| 15 | `GraphicsTools.WrapStringToFitImage` | `public static string WrapStringToFitImage(...)` | Uses `Font`, `Bitmap`, `Graphics` internally | Kept as-is. |
+
+### ExtensionMethods.cs
+
+| # | API | Signature | System.Drawing types | Notes |
+| --- | --- | --- | --- | --- |
+| 16 | `Image.ToByteArray` | `public static byte[] ToByteArray(this Image image)` | `Image` (this) | Marked `[Obsolete]` -- use `ToPngByteArray` instead. BMP encoding kept for backward compatibility. |
+| 17 | `string.SplitToFitKey` | `public static string SplitToFitKey(this string str, TitleParameters titleParameters, ...)` | Uses `Font`, `Bitmap`, `Graphics` internally | Kept as-is. |
 
 ---
 
@@ -111,24 +117,28 @@ Plugin Code
     +-- SDConnection.SetImageAsync(Image) ........... [ADAPTED]
     +-- Tools.ImageToBase64(Image) .................. [ADAPTED]
     +-- Tools.Base64StringToImage(string) ........... [ADAPTED]
-    +-- Tools.GenerateKeyImage(DeviceType, out Graphics) ... [NEEDS ADAPTER - returns Bitmap+Graphics]
+    +-- Tools.FileToBase64(string) .................. [ADAPTED]
+    +-- Image.ToPngByteArray() ...................... [ADAPTED - NEW]
+    +-- Image.ToByteArray() ......................... [OBSOLETE -> ToPngByteArray]
+    +-- Tools.GenerateKeyImage(DeviceType, out Graphics) ... [KEPT - returns Bitmap+Graphics]
     |       |
     |       +-- Plugin draws on Graphics, then calls SetImageAsync(Image)
     |
-    +-- GraphicsTools.ResizeImage(Image) ............ [NEEDS ADAPTER]
-    +-- GraphicsTools.CreateOpacityImage(Image) ..... [NEEDS ADAPTER]
-    +-- GraphicsTools.DrawMultiLinedText(...) ........ [NEEDS ADAPTER - Font/Color params]
+    +-- GraphicsTools.ResizeImage(Image) ............ [KEPT]
+    +-- GraphicsTools.CreateOpacityImage(Image) ..... [KEPT]
+    +-- GraphicsTools.DrawMultiLinedText(...) ........ [KEPT]
     +-- ExtensionMethods on Graphics ................ [HIGH-RISK - direct SD types]
     +-- TitleParameters (Color/FontFamily/FontStyle)  [HIGH-RISK - data class]
 ```
 
 ---
 
-## Recommended Adapter Priority
+## Future Deprecation Priority
 
-1. **`Tools.GenerateKeyImage` / `GenerateGenericKeyImage`** -- Most commonly used plugin entry point for drawing. Adapting this unblocks the majority of plugin workflows.
+When the time comes to mark KEPT APIs as `[Obsolete]` and provide parallel replacements:
+
+1. **`Tools.GenerateKeyImage` / `GenerateGenericKeyImage`** -- Most commonly used plugin entry point for drawing.
 2. **`GraphicsTools.ResizeImage` / `ExtractRectangle` / `CreateOpacityImage`** -- Image manipulation utilities, frequently used.
-3. **`Image.ToByteArray`** -- Simple encoding extension, easy to route through codec.
-4. **`GraphicsTools.DrawMultiLinedText`** -- Text rendering, depends on Font/Color.
-5. **`TitleParameters`** -- Core data class. Needs careful deprecation strategy since plugins read these properties directly.
-6. **Extension methods on `Graphics`** -- Lowest priority; these are advanced drawing helpers that tightly couple to `System.Drawing.Graphics`.
+3. **`GraphicsTools.DrawMultiLinedText`** -- Text rendering, depends on Font/Color.
+4. **`TitleParameters`** -- Core data class. Needs careful deprecation strategy since plugins read properties directly.
+5. **Extension methods on `Graphics`** -- Lowest priority; advanced drawing helpers tightly coupled to `System.Drawing.Graphics`.
