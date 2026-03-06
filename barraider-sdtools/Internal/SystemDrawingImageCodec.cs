@@ -34,9 +34,10 @@ namespace BarRaider.SdTools.Internal
             }
 
             var memoryStream = new MemoryStream(imageBytes);
+            Image original = null;
             try
             {
-                Image original = Image.FromStream(memoryStream);
+                original = Image.FromStream(memoryStream);
                 var copy = new Bitmap(original);
                 original.Dispose();
                 memoryStream.Dispose();
@@ -44,6 +45,7 @@ namespace BarRaider.SdTools.Internal
             }
             catch
             {
+                original?.Dispose();
                 memoryStream.Dispose();
                 throw;
             }
