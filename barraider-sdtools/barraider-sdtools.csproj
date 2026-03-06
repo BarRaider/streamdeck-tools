@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net48;net8.0;net9.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>BarRaider</Authors>
     <Product>Stream Deck Tools by BarRaider</Product>
@@ -18,13 +18,21 @@ Feel free to contact me for more information: https://barraider.com</Description
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <FileVersion>7.0.0.0</FileVersion>
     <Version>7.0.0-beta.1</Version>
-    <PackageReleaseNotes>7.0.0-beta.1 - Major migration: net48/net8.0/net9.0 multi-targeting, SkiaSharp cross-platform graphics, System.Drawing APIs marked [Obsolete] with SkiaSharp replacements.
+    <PackageReleaseNotes>7.0.0-beta.1 - Major migration: netstandard2.0/net48/net8.0/net9.0 multi-targeting, SkiaSharp cross-platform graphics, System.Drawing APIs marked [Obsolete] with SkiaSharp replacements.
 NOTE: This is a prerelease. See docs/MIGRATION.md for upgrade guidance.</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+    <NoWarn>1701;1702;CA1416</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>streamdeck-tools.xml</DocumentationFile>
+    <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
     <DocumentationFile></DocumentationFile>
@@ -58,7 +66,7 @@ NOTE: This is a prerelease. See docs/MIGRATION.md for upgrade guidance.</Package
     <PackageReference Include="NLog" Version="6.1.1" />
     <PackageReference Include="SkiaSharp" Version="3.119.2" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0'">
     <PackageReference Include="System.Drawing.Common" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>
