@@ -2,6 +2,7 @@ using BarRaider.SdTools.Events;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -102,6 +103,7 @@ namespace BarRaider.SdTools
         /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SetImageAsync(SKBitmap, ...) or SetImageAsync(byte[], ...) instead.")]
         Task SetImageAsync(Image image, int? state = null, bool forceSendToStreamdeck = false);
 
         /// <summary>
@@ -113,6 +115,16 @@ namespace BarRaider.SdTools
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
         Task SetImageAsync(byte[] pngImageBytes, int? state = null, bool forceSendToStreamdeck = false);
+
+        /// <summary>
+        /// Sets an image on the StreamDeck key from an SKBitmap (cross-platform, SkiaSharp).
+        /// The bitmap is PNG-encoded and sent as base64.
+        /// </summary>
+        /// <param name="image">SkiaSharp bitmap to display on the key</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+        /// <returns></returns>
+        Task SetImageAsync(SKBitmap image, int? state = null, bool forceSendToStreamdeck = false);
 
         /// <summary>
         /// Sets the default image for this state, as configured in the manifest

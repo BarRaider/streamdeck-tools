@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -85,6 +86,50 @@ namespace BarRaider.SdTools.Wrappers
         /// </summary>
         [JsonProperty("titleAlignment")]
         public TitleVerticalAlignment VerticalAlignment { get; private set; }
+
+        /// <summary>
+        /// Title color as an SKColor for cross-platform SkiaSharp rendering.
+        /// Computed from the existing TitleColor property.
+        /// </summary>
+        [JsonIgnore]
+        public SKColor TitleSKColor => new SKColor(TitleColor.R, TitleColor.G, TitleColor.B, TitleColor.A);
+
+        [JsonIgnore]
+        private SKTypeface cachedTypeface;
+
+        /// <summary>
+        /// Font as an SKTypeface for cross-platform SkiaSharp rendering.
+        /// Computed and cached from the existing FontFamily property.
+        /// The returned typeface is owned by this TitleParameters instance.
+        /// </summary>
+        [JsonIgnore]
+        public SKTypeface TitleTypeface
+        {
+            get
+            {
+                if (cachedTypeface == null)
+                {
+                    string familyName = FontFamily?.Name ?? DEFAULT_FONT_FAMILY_NAME;
+                    cachedTypeface = SKTypeface.FromFamilyName(familyName, FontStyleToSKFontStyle());
+                }
+                return cachedTypeface;
+            }
+        }
+
+        /// <summary>
+        /// Converts the System.Drawing FontStyle to an equivalent SKFontStyle.
+        /// </summary>
+        /// <returns>The corresponding SKFontStyle.</returns>
+        public SKFontStyle FontStyleToSKFontStyle()
+        {
+            bool bold = (FontStyle & System.Drawing.FontStyle.Bold) != 0;
+            bool italic = (FontStyle & System.Drawing.FontStyle.Italic) != 0;
+
+            var weight = bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal;
+            var slant = italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright;
+
+            return new SKFontStyle(weight, SKFontStyleWidth.Normal, slant);
+        }
 
         /// <summary>
         /// Constructor
