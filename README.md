@@ -12,9 +12,6 @@ Instead of `PluginBase`, Derive from either `KeypadBase` (if you don't support d
 # Getting Started
 Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) packed with usage instructions, examples and more.
 
-## Migration
-If you are upgrading from legacy `System.Drawing`-heavy usage, see the [migration guide](docs/MIGRATION.md).
-
 # Dev Discussions / Support
 **Discord:** Discuss in #developers-chat in [Bar Raiders](http://discord.barraider.com)
 
