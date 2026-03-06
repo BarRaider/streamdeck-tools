@@ -2,6 +2,7 @@ using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -122,18 +123,17 @@ namespace SamplePlugin
 
         public async override void KeyReleased(KeyPayload payload) 
         {
-            Color bgColor = GraphicsTools.ColorFromHex("#FFFFFF");
-            using (Font font = Tools.CreateFont("Arial", 20, FontStyle.Bold))
-            using (var bgBrush = new SolidBrush(bgColor))
-            using (var textBrush = new SolidBrush(GraphicsTools.ColorFromHex("#000000")))
-            using (Image image = Tools.GenerateGenericKeyImage(out Graphics graphics))
+            // Cross-platform approach using SkiaSharp (works on Windows, macOS, Linux)
+            using (SKBitmap image = SkiaTools.GenerateGenericKeyImage(out SKCanvas canvas))
             {
-                graphics.FillRectangle(bgBrush, 0, 0, image.Width, image.Height);
-                graphics.DrawString("Modern", font, textBrush, new PointF(10, 30));
-                graphics.Dispose();
-
-                byte[] pngBytes = image.ToPngByteArray();
-                await Connection.SetImageAsync(pngBytes);
+                canvas.Clear(SKColors.White);
+                using (var font = SkiaTools.CreateFont("Arial", 20, SKFontStyle.Bold))
+                using (var paint = new SKPaint { Color = SKColors.Black, IsAntialias = true })
+                {
+                    canvas.DrawText("Cross-Platform", 10, 50, font, paint);
+                }
+                canvas.Dispose();
+                await Connection.SetImageAsync(image);
             }
         }
 

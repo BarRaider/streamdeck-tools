@@ -39,6 +39,7 @@ namespace BarRaider.SdTools
         /// <param name="fileName"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing which is not cross-platform. Use SkiaTools.FileToBase64() instead.")]
         public static string FileToBase64(string fileName, bool addHeaderPrefix)
         {
             if (!File.Exists(fileName))
@@ -58,6 +59,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns>An Image, or null if the path is null/empty or the file does not exist.</returns>
+        [Obsolete("Returns System.Drawing.Image which is not cross-platform. Use SkiaTools.LoadImage() instead.")]
         public static Image LoadImage(string filePath)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
@@ -74,6 +76,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="stream"></param>
         /// <returns>An Image, or null if the stream is null.</returns>
+        [Obsolete("Returns System.Drawing.Image which is not cross-platform. Use SkiaTools.LoadImage() instead.")]
         public static Image LoadImage(Stream stream)
         {
             return ImageCodecProvider.Instance.DecodeFromStream(stream);
@@ -85,6 +88,7 @@ namespace BarRaider.SdTools
         /// <param name="image"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SkiaTools.ImageToBase64(SKBitmap, bool) instead.")]
         public static string ImageToBase64(Image image, bool addHeaderPrefix)
         {
             if (image == null)
@@ -108,6 +112,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="base64String"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing.Image which is not cross-platform. Use SkiaTools.Base64StringToImage() instead.")]
         public static Image Base64StringToImage(string base64String)
         {
             try
@@ -192,6 +197,7 @@ namespace BarRaider.SdTools
         /// <param name="streamDeckType"></param>
         /// <param name="graphics"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing types which are not cross-platform. Use SkiaTools.GenerateKeyImage() instead.")]
         public static Bitmap GenerateKeyImage(DeviceType streamDeckType, out Graphics graphics)
         {
             int height = GetKeyDefaultHeight(streamDeckType);
@@ -210,6 +216,7 @@ namespace BarRaider.SdTools
         /// <param name="sizeInPoints">Font size in points.</param>
         /// <param name="style">Font style flags. Defaults to Regular.</param>
         /// <returns>A new Font instance. The caller must dispose it when done.</returns>
+        [Obsolete("Returns System.Drawing.Font which is not cross-platform. Use SkiaTools.CreateFont() instead.")]
         public static Font CreateFont(string familyName, float sizeInPoints, FontStyle style = FontStyle.Regular)
         {
             return new Font(familyName, sizeInPoints, style, GraphicsUnit.Point);
@@ -220,6 +227,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="graphics"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing types which are not cross-platform. Use SkiaTools.GenerateGenericKeyImage() instead.")]
         public static Bitmap GenerateGenericKeyImage(out Graphics graphics)
         {
             return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, out graphics);
@@ -341,6 +349,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SkiaTools.ImageToSHA512(SKBitmap) instead.")]
         public static string ImageToSHA512(Image image)
         {
             if (image == null)
