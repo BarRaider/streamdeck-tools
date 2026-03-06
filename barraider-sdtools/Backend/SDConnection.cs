@@ -264,6 +264,31 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Sets an image on the StreamDeck key from raw PNG bytes.
+        /// Prefer this over the Image overload to avoid System.Drawing dependencies.
+        /// </summary>
+        /// <param name="pngImageBytes">PNG-encoded image bytes</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+        /// <returns></returns>
+        public async Task SetImageAsync(byte[] pngImageBytes, int? state = null, bool forceSendToStreamdeck = false)
+        {
+            if (pngImageBytes == null)
+            {
+                await SetDefaultImageAsync();
+                return;
+            }
+
+            string base64Image = "data:image/png;base64," + Convert.ToBase64String(pngImageBytes);
+            string hash = Tools.StringToSHA512(base64Image);
+            if (forceSendToStreamdeck || hash != previousImageHash)
+            {
+                previousImageHash = hash;
+                await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
+            }
+        }
+
+        /// <summary>
         /// Sets the default image for this state, as configured in the manifest
         /// </summary>
         /// <returns></returns>

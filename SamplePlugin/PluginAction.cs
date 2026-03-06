@@ -1,4 +1,4 @@
-﻿using BarRaider.SdTools;
+using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -122,14 +122,18 @@ namespace SamplePlugin
 
         public async override void KeyReleased(KeyPayload payload) 
         {
-            TitleParameters tp = new TitleParameters(new FontFamily("Arial"), FontStyle.Bold, 20, Color.White, true, TitleVerticalAlignment.Middle);
+            Color bgColor = GraphicsTools.ColorFromHex("#FFFFFF");
+            using (Font font = Tools.CreateFont("Arial", 20, FontStyle.Bold))
+            using (var bgBrush = new SolidBrush(bgColor))
+            using (var textBrush = new SolidBrush(GraphicsTools.ColorFromHex("#000000")))
             using (Image image = Tools.GenerateGenericKeyImage(out Graphics graphics))
             {
-                graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
-                graphics.AddTextPath(tp, image.Height, image.Width, "Test", Color.Black, 7);
+                graphics.FillRectangle(bgBrush, 0, 0, image.Width, image.Height);
+                graphics.DrawString("Modern", font, textBrush, new PointF(10, 30));
                 graphics.Dispose();
 
-                await Connection.SetImageAsync(image);
+                byte[] pngBytes = image.ToPngByteArray();
+                await Connection.SetImageAsync(pngBytes);
             }
         }
 
