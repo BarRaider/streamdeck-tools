@@ -281,6 +281,16 @@
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.ISDConnection.SetImageAsync(SkiaSharp.SKBitmap,System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            Sets an image on the StreamDeck key from an SKBitmap (cross-platform, SkiaSharp).
+            The bitmap is PNG-encoded and sent as base64.
+            </summary>
+            <param name="image">SkiaSharp bitmap to display on the key</param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+            <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+            <returns></returns>
+        </member>
         <member name="M:BarRaider.SdTools.ISDConnection.SetDefaultImageAsync">
             <summary>
             Sets the default image for this state, as configured in the manifest
@@ -780,6 +790,16 @@
             Prefer this over the Image overload to avoid System.Drawing dependencies.
             </summary>
             <param name="pngImageBytes">PNG-encoded image bytes</param>
+            <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+            <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+            <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SDConnection.SetImageAsync(SkiaSharp.SKBitmap,System.Nullable{System.Int32},System.Boolean)">
+            <summary>
+            Sets an image on the StreamDeck key from an SKBitmap (cross-platform, SkiaSharp).
+            The bitmap is PNG-encoded and sent as base64.
+            </summary>
+            <param name="image">SkiaSharp bitmap to display on the key</param>
             <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
             <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
             <returns></returns>
@@ -2681,6 +2701,274 @@
             <param name="maxValue"></param>
             <returns></returns>
         </member>
+        <member name="T:BarRaider.SdTools.SkiaExtensionMethods">
+            <summary>
+            SkiaSharp extension methods for SKBitmap and SKCanvas.
+            These are the cross-platform equivalents of the System.Drawing extension methods in <see cref="T:BarRaider.SdTools.ExtensionMethods"/>.
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.ToPngByteArray(SkiaSharp.SKBitmap)">
+            <summary>
+            Converts an SKBitmap to a PNG byte array.
+            </summary>
+            <param name="bitmap">The bitmap to encode.</param>
+            <returns>PNG-encoded byte array.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.ToBase64(SkiaSharp.SKBitmap,System.Boolean)">
+            <summary>
+            Converts an SKBitmap to a Base64 PNG string.
+            </summary>
+            <param name="bitmap">The bitmap to encode.</param>
+            <param name="addHeaderPrefix">Whether to prepend the data URI header.</param>
+            <returns>Base64-encoded PNG string.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.DrawAndMeasureString(SkiaSharp.SKCanvas,System.String,SkiaSharp.SKFont,SkiaSharp.SKPaint,SkiaSharp.SKPoint)">
+            <summary>
+            Draws a string on an SKCanvas and returns the ending Y position.
+            </summary>
+            <param name="canvas">The canvas to draw on.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The font for text rendering.</param>
+            <param name="paint">The paint for color/style.</param>
+            <param name="position">The position to draw at (X, Y baseline).</param>
+            <returns>The Y position below the drawn text.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.GetTextCenter(SkiaSharp.SKCanvas,System.String,System.Int32,SkiaSharp.SKFont,System.Boolean@,System.Int32)">
+            <summary>
+            Returns the center X position of a string given the image width and font.
+            </summary>
+            <param name="canvas">The canvas (used for consistency with the System.Drawing extension signature).</param>
+            <param name="text">The text to measure.</param>
+            <param name="imageWidth">The total image width.</param>
+            <param name="font">The font for measurement.</param>
+            <param name="textFitsImage">Set to true if the text fits within the image width.</param>
+            <param name="minIndentation">Minimum indentation when text overflows.</param>
+            <returns>The X coordinate to center the text.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.GetTextCenter(SkiaSharp.SKCanvas,System.String,System.Int32,SkiaSharp.SKFont,System.Int32)">
+            <summary>
+            Returns the center X position of a string given the image width and font.
+            </summary>
+            <param name="canvas">The canvas.</param>
+            <param name="text">The text to measure.</param>
+            <param name="imageWidth">The total image width.</param>
+            <param name="font">The font for measurement.</param>
+            <param name="minIndentation">Minimum indentation when text overflows.</param>
+            <returns>The X coordinate to center the text.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.GetFontSizeWhereTextFitsImage(SkiaSharp.SKCanvas,System.String,System.Int32,SkiaSharp.SKFont,System.Int32)">
+            <summary>
+            Returns the largest font size at which the text fits within the given image width.
+            </summary>
+            <param name="canvas">The canvas.</param>
+            <param name="text">The text to measure.</param>
+            <param name="imageWidth">Maximum width in pixels.</param>
+            <param name="font">The base font (used for typeface and initial size).</param>
+            <param name="minimalFontSize">The smallest acceptable font size.</param>
+            <returns>The computed font size in the same units as font.Size.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.AddTextPath(SkiaSharp.SKCanvas,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Int32)">
+            <summary>
+            Adds styled text to an SKCanvas using TitleParameters for layout.
+            Emulates the text rendering settings from the Stream Deck Property Inspector.
+            </summary>
+            <param name="canvas">The canvas to draw on.</param>
+            <param name="titleParameters">Title parameters from the Stream Deck event.</param>
+            <param name="imageHeight">Height of the key image.</param>
+            <param name="imageWidth">Width of the key image.</param>
+            <param name="text">The text to draw.</param>
+            <param name="pixelsAlignment">Alignment offset in pixels.</param>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.AddTextPath(SkiaSharp.SKCanvas,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,SkiaSharp.SKColor,System.Single,System.Int32)">
+            <summary>
+            Adds styled text to an SKCanvas using TitleParameters for layout, with stroke settings.
+            </summary>
+            <param name="canvas">The canvas to draw on.</param>
+            <param name="titleParameters">Title parameters from the Stream Deck event.</param>
+            <param name="imageHeight">Height of the key image.</param>
+            <param name="imageWidth">Width of the key image.</param>
+            <param name="text">The text to draw.</param>
+            <param name="strokeColor">Color for the text stroke.</param>
+            <param name="strokeThickness">Thickness of the text stroke.</param>
+            <param name="pixelsAlignment">Alignment offset in pixels.</param>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.SplitToFitKey(System.String,BarRaider.SdTools.Wrappers.TitleParameters,SkiaSharp.SKFont,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Adds line breaks to a string so it fits within the key image when using SetTitleAsync().
+            SkiaSharp equivalent of <see cref="M:BarRaider.SdTools.ExtensionMethods.SplitToFitKey(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)"/>.
+            </summary>
+            <param name="str">The string to split.</param>
+            <param name="titleParameters">Title parameters for font information.</param>
+            <param name="font">The SKFont used for text measurement.</param>
+            <param name="leftPaddingPixels">Left padding in pixels.</param>
+            <param name="rightPaddingPixels">Right padding in pixels.</param>
+            <param name="imageWidthPixels">Width of the key image in pixels.</param>
+            <returns>The string with line breaks inserted.</returns>
+        </member>
+        <member name="T:BarRaider.SdTools.SkiaGraphicsTools">
+            <summary>
+            Cross-platform graphics manipulation utilities using SkiaSharp.
+            These methods are the SkiaSharp equivalents of the System.Drawing methods in <see cref="T:BarRaider.SdTools.GraphicsTools"/>.
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaGraphicsTools.ColorFromHex(System.String)">
+            <summary>
+            Parse a hex color string into an SKColor.
+            </summary>
+            <param name="hexColor">Hex string such as "#FF0000" or "#80FF0000".</param>
+            <returns>The parsed SKColor.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaGraphicsTools.GenerateColorShades(System.String,System.Int32,System.Int32)">
+            <summary>
+            Generates multiple shades based on an initial color and the number of stages.
+            </summary>
+            <param name="initialColor">Initial hex color string.</param>
+            <param name="currentShade">The current shade index (0-based).</param>
+            <param name="totalAmountOfShades">Total number of shade levels.</param>
+            <returns>A darker shade of the initial color.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaGraphicsTools.ResizeImage(SkiaSharp.SKBitmap,System.Int32,System.Int32)">
+            <summary>
+            Resizes an image while maintaining aspect ratio and centering on a black background.
+            </summary>
+            <param name="original">The source bitmap.</param>
+            <param name="newWidth">Target width.</param>
+            <param name="newHeight">Target height.</param>
+            <returns>A new resized SKBitmap. Caller must dispose. Returns null if original is null.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaGraphicsTools.ExtractRectangle(SkiaSharp.SKBitmap,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Extracts a rectangular region from an image.
+            </summary>
+            <param name="bitmap">The source bitmap.</param>
+            <param name="startX">Left edge of the rectangle.</param>
+            <param name="startY">Top edge of the rectangle.</param>
+            <param name="width">Width of the rectangle.</param>
+            <param name="height">Height of the rectangle.</param>
+            <returns>A new SKBitmap with the extracted region. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaGraphicsTools.CreateOpacityImage(SkiaSharp.SKBitmap,System.Single)">
+            <summary>
+            Creates a copy of the image with modified opacity.
+            </summary>
+            <param name="bitmap">The source bitmap.</param>
+            <param name="opacity">Opacity value from 0.0 (transparent) to 1.0 (opaque).</param>
+            <returns>A new SKBitmap with the applied opacity. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaGraphicsTools.DrawMultiLinedText(System.String,System.Int32,System.Int32,System.Int32,SkiaSharp.SKFont,SkiaSharp.SKColor,SkiaSharp.SKColor,System.Boolean,SkiaSharp.SKPoint)">
+            <summary>
+            Draws multi-lined text onto key images. Generates one or more images where each has
+            text drawn based on the given parameters.
+            </summary>
+            <param name="text">The text to draw.</param>
+            <param name="currentTextPosition">Starting character position.</param>
+            <param name="lettersPerLine">Maximum characters per line.</param>
+            <param name="numberOfLines">Maximum lines per image.</param>
+            <param name="font">The SKFont for text rendering.</param>
+            <param name="backgroundColor">Background fill color.</param>
+            <param name="textColor">Text color.</param>
+            <param name="expandToNextImage">If true, overflow text creates additional images.</param>
+            <param name="keyDrawStartingPosition">Starting draw position on the key.</param>
+            <returns>Array of SKBitmaps with drawn text. Caller must dispose each bitmap.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaGraphicsTools.WrapStringToFitImage(System.String,SkiaSharp.SKFont,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Adds line breaks to a string so that it fits within the given image width
+            when rendered with the specified font.
+            </summary>
+            <param name="str">The string to wrap.</param>
+            <param name="font">The SKFont used for measurement.</param>
+            <param name="imageWidthPixels">The maximum width in pixels.</param>
+            <param name="leftPaddingPixels">Left padding in pixels.</param>
+            <param name="rightPaddingPixels">Right padding in pixels.</param>
+            <returns>The string with line breaks inserted.</returns>
+        </member>
+        <member name="T:BarRaider.SdTools.SkiaTools">
+            <summary>
+            Cross-platform image utilities using SkiaSharp. These methods are the SkiaSharp equivalents
+            of the System.Drawing methods in <see cref="T:BarRaider.SdTools.Tools"/> and work on Windows, macOS, and Linux.
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.GenerateKeyImage(BarRaider.SdTools.DeviceType,SkiaSharp.SKCanvas@)">
+            <summary>
+            Generates an empty key bitmap with the default dimensions for the given Stream Deck device type.
+            The returned SKCanvas is ready for drawing and must be disposed by the caller.
+            </summary>
+            <param name="streamDeckType">The Stream Deck device type.</param>
+            <param name="canvas">The SKCanvas for drawing on the bitmap. Caller must dispose.</param>
+            <returns>An SKBitmap sized for the device. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.GenerateGenericKeyImage(SkiaSharp.SKCanvas@)">
+            <summary>
+            Creates a key image that fits all Stream Deck models (144x144).
+            The returned SKCanvas is ready for drawing and must be disposed by the caller.
+            </summary>
+            <param name="canvas">The SKCanvas for drawing on the bitmap. Caller must dispose.</param>
+            <returns>An SKBitmap. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.ImageToBase64(SkiaSharp.SKBitmap,System.Boolean)">
+            <summary>
+            Convert an SKBitmap to a Base64 PNG string.
+            Set addHeaderPrefix to true if sending to SetImageAsync.
+            </summary>
+            <param name="bitmap">The bitmap to encode.</param>
+            <param name="addHeaderPrefix">Whether to prepend the data URI header.</param>
+            <returns>Base64-encoded PNG string, or null if bitmap is null.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.Base64StringToImage(System.String)">
+            <summary>
+            Convert a base64 image string to an SKBitmap.
+            </summary>
+            <param name="base64String">Base64-encoded image, optionally with a data URI header.</param>
+            <returns>An SKBitmap, or null on failure. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.FileToBase64(System.String,System.Boolean)">
+            <summary>
+            Convert an image file to a Base64 PNG string.
+            Set addHeaderPrefix to true if sending to SetImageAsync.
+            </summary>
+            <param name="fileName">Path to the image file.</param>
+            <param name="addHeaderPrefix">Whether to prepend the data URI header.</param>
+            <returns>Base64-encoded PNG string, or null if file doesn't exist.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.LoadImage(System.String)">
+            <summary>
+            Loads an image from a file path. Returns an independent SKBitmap that does not lock the file.
+            </summary>
+            <param name="filePath">Path to the image file.</param>
+            <returns>An SKBitmap, or null if the path is invalid or file doesn't exist. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.LoadImage(System.IO.Stream)">
+            <summary>
+            Loads an image from a stream. The caller may close the stream after this returns.
+            </summary>
+            <param name="stream">The stream containing image data.</param>
+            <returns>An SKBitmap, or null if the stream is null. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.ImageToSHA512(SkiaSharp.SKBitmap)">
+            <summary>
+            Returns a SHA512 hash of the PNG-encoded bitmap.
+            </summary>
+            <param name="bitmap">The bitmap to hash.</param>
+            <returns>Hex-encoded SHA512 hash, or null on failure.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.CreateFont(System.String,System.Single,SkiaSharp.SKFontStyle)">
+            <summary>
+            Creates an SKFont from a font family name, size in points, and optional style.
+            The caller is responsible for disposing the returned SKFont.
+            </summary>
+            <param name="familyName">Font family name (e.g. "Arial", "Verdana").</param>
+            <param name="sizeInPoints">Font size in points.</param>
+            <param name="style">SkiaSharp font style. Defaults to Normal.</param>
+            <returns>A new SKFont. Caller must dispose.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaTools.ColorFromHex(System.String)">
+            <summary>
+            Parses a hex color string (e.g. "#FF0000" or "#AAFF0000") into an SKColor.
+            </summary>
+            <param name="hexColor">Hex color string with leading '#'.</param>
+            <returns>The parsed SKColor.</returns>
+        </member>
         <member name="T:BarRaider.SdTools.Tools">
             <summary>
             Set of common utilities used by various plugins
@@ -2956,6 +3244,25 @@
             <summary>
             Alignment position of the Title text on the key
             </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.TitleSKColor">
+            <summary>
+            Title color as an SKColor for cross-platform SkiaSharp rendering.
+            Computed from the existing TitleColor property.
+            </summary>
+        </member>
+        <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.TitleTypeface">
+            <summary>
+            Font as an SKTypeface for cross-platform SkiaSharp rendering.
+            Computed and cached from the existing FontFamily property.
+            The returned typeface is owned by this TitleParameters instance.
+            </summary>
+        </member>
+        <member name="M:BarRaider.SdTools.Wrappers.TitleParameters.FontStyleToSKFontStyle">
+            <summary>
+            Converts the System.Drawing FontStyle to an equivalent SKFontStyle.
+            </summary>
+            <returns>The corresponding SKFontStyle.</returns>
         </member>
         <member name="M:BarRaider.SdTools.Wrappers.TitleParameters.#ctor(System.Drawing.FontFamily,System.Drawing.FontStyle,System.Double,System.Drawing.Color,System.Boolean,BarRaider.SdTools.Wrappers.TitleVerticalAlignment)">
             <summary>

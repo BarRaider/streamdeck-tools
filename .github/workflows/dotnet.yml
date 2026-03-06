@@ -1,28 +1,62 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# Build and validate StreamDeck-Tools across all supported TFMs and platforms.
+# net48 is Windows-only (requires .NET Framework targeting pack).
+# net8.0 and net9.0 build on Windows, macOS, and Linux.
 
 name: .NET
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "feature/**" ]
   pull_request:
     branches: [ "master" ]
 
 jobs:
-  build:
-
+  build-windows:
+    name: Windows (net48 + net8.0 + net9.0)
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: |
+          8.0.x
+          9.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Release
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --configuration Release --verbosity normal
+
+  build-macos:
+    name: macOS (net8.0 + net9.0)
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          9.0.x
+    - name: Build net8.0
+      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net8.0
+    - name: Build net9.0
+      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net9.0
+
+  build-linux:
+    name: Linux (net8.0 + net9.0)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          9.0.x
+    - name: Build net8.0
+      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net8.0
+    - name: Build net9.0
+      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net9.0
