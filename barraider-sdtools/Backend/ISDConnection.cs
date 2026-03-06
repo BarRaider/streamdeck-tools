@@ -1,4 +1,4 @@
-﻿using BarRaider.SdTools.Events;
+using BarRaider.SdTools.Events;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -103,6 +103,16 @@ namespace BarRaider.SdTools
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
         Task SetImageAsync(Image image, int? state = null, bool forceSendToStreamdeck = false);
+
+        /// <summary>
+        /// Sets an image on the StreamDeck key from raw PNG bytes.
+        /// Prefer this over the Image overload to avoid System.Drawing dependencies.
+        /// </summary>
+        /// <param name="pngImageBytes">PNG-encoded image bytes</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+        /// <returns></returns>
+        Task SetImageAsync(byte[] pngImageBytes, int? state = null, bool forceSendToStreamdeck = false);
 
         /// <summary>
         /// Sets the default image for this state, as configured in the manifest
