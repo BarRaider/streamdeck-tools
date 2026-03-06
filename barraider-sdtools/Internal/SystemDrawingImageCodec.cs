@@ -61,5 +61,26 @@ namespace BarRaider.SdTools.Internal
                 return new Bitmap(original);
             }
         }
+
+        public Image DecodeFromStream(Stream stream)
+        {
+            if (stream == null)
+            {
+                return null;
+            }
+
+            Image original = Image.FromStream(stream);
+            try
+            {
+                var copy = new Bitmap(original);
+                original.Dispose();
+                return copy;
+            }
+            catch
+            {
+                original.Dispose();
+                throw;
+            }
+        }
     }
 }
