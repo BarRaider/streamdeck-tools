@@ -33,6 +33,9 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 
 # Change Log
 
+### Version 6.4
+- Support for Stream Deck Plus XL, Galleon 100 SD
+
 ### Version 6.3
 - Support for new Stream Deck types
 
