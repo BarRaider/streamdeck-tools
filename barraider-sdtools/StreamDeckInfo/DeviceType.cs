@@ -35,7 +35,7 @@ namespace BarRaider.SdTools
         CorsairGKeys = 4,
 
         /// <summary>
-        /// Pedal
+        /// Stream Deck Pedal
         /// </summary>
         StreamDeckPedal = 5,
 
@@ -50,13 +50,33 @@ namespace BarRaider.SdTools
         StreamDeckPlus = 7,
 
         /// <summary>
-        /// SCUF Controller.
+        /// SCUF Controller
         /// </summary>
         SCUFController = 8,
 
         /// <summary>
-        /// Stream Deck Neo.
+        /// Stream Deck Neo
         /// </summary>
-        StreamDeckNeo = 9
+        StreamDeckNeo = 9,
+
+        /// <summary>
+        /// Stream Deck Studio
+        /// </summary>
+        StreamDeckStudio = 10,
+        
+        /// <summary>
+        /// Virtual Stream Deck
+        /// </summary>
+        VirtualStreamDeck = 11,
+
+        /// <summary>
+        /// Corsair Galleon (100 SD)
+        /// </summary>
+        CorsairGalleon = 12,
+        
+        /// <summary>
+        /// Stream Deck Plus XL model
+        /// </summary>
+        StreamDeckPlusXL = 13
     }
 }
