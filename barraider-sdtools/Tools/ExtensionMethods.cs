@@ -232,39 +232,44 @@ namespace BarRaider.SdTools
                     return;
                 }
 
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                Color color = titleParameters.TitleColor;
-                graphics.PageUnit = GraphicsUnit.Pixel;
-                float ratio = graphics.DpiY / imageWidth;
-                SizeF stringSize = graphics.MeasureString(text, font);
-                float textWidth = stringSize.Width * (1 - ratio);
-                float textHeight = stringSize.Height * (1 - ratio);
-                int stringWidth = 0;
-                if (textWidth < imageWidth)
+                using (Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel))
                 {
-                    stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
-                }
+                    Color color = titleParameters.TitleColor;
+                    graphics.PageUnit = GraphicsUnit.Pixel;
+                    float ratio = graphics.DpiY / imageWidth;
+                    SizeF stringSize = graphics.MeasureString(text, font);
+                    float textWidth = stringSize.Width * (1 - ratio);
+                    float textHeight = stringSize.Height * (1 - ratio);
+                    int stringWidth = 0;
+                    if (textWidth < imageWidth)
+                    {
+                        stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
+                    }
 
-                int stringHeight = pixelsAlignment; // Top
-                if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
-                {
-                    stringHeight = (imageHeight / 2) - pixelsAlignment;
-                }
-                else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
-                {
-                    stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
-                }
+                    int stringHeight = pixelsAlignment; // Top
+                    if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
+                    {
+                        stringHeight = (imageHeight / 2) - pixelsAlignment;
+                    }
+                    else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
+                    {
+                        stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
+                    }
 
-                Pen stroke = new Pen(strokeColor, strokeThickness);
-                GraphicsPath gpath = new GraphicsPath();
-                gpath.AddString(text,
-                                    font.FontFamily,
-                                    (int)font.Style,
-                                    graphics.DpiY * font.SizeInPoints / imageWidth,
-                                    new Point(stringWidth, stringHeight),
-                                    new StringFormat());
-                graphics.DrawPath(stroke, gpath);
-                graphics.FillPath(new SolidBrush(color), gpath);
+                    using (Pen stroke = new Pen(strokeColor, strokeThickness))
+                    using (GraphicsPath gpath = new GraphicsPath())
+                    using (SolidBrush fillBrush = new SolidBrush(color))
+                    {
+                        gpath.AddString(text,
+                                            font.FontFamily,
+                                            (int)font.Style,
+                                            graphics.DpiY * font.SizeInPoints / imageWidth,
+                                            new Point(stringWidth, stringHeight),
+                                            new StringFormat());
+                        graphics.DrawPath(stroke, gpath);
+                        graphics.FillPath(fillBrush, gpath);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -318,33 +323,35 @@ namespace BarRaider.SdTools
                 }
 
                 int padding = leftPaddingPixels + rightPaddingPixels;
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                StringBuilder finalString = new StringBuilder();
-                StringBuilder currentLine = new StringBuilder();
-                SizeF currentLineSize;
-
-                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                using (Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel))
                 {
-                    using (Graphics graphics = Graphics.FromImage(img))
+                    StringBuilder finalString = new StringBuilder();
+                    StringBuilder currentLine = new StringBuilder();
+                    SizeF currentLineSize;
+
+                    using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
                     {
-                        for (int idx = 0; idx < str.Length; idx++)
+                        using (Graphics graphics = Graphics.FromImage(img))
                         {
-                            currentLine.Append(str[idx]);
-                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
-                            if (currentLineSize.Width <= img.Width - padding)
+                            for (int idx = 0; idx < str.Length; idx++)
                             {
-                                finalString.Append(str[idx]);
-                            }
-                            else // Overflow
-                            {
-                                finalString.Append("\n" + str[idx]);
-                                currentLine = new StringBuilder(str[idx].ToString());
+                                currentLine.Append(str[idx]);
+                                currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
+                                if (currentLineSize.Width <= img.Width - padding)
+                                {
+                                    finalString.Append(str[idx]);
+                                }
+                                else // Overflow
+                                {
+                                    finalString.Append("\n" + str[idx]);
+                                    currentLine = new StringBuilder(str[idx].ToString());
+                                }
                             }
                         }
                     }
-                }
 
-                return finalString.ToString();
+                    return finalString.ToString();
+                }
             }
             catch (Exception ex)
             {

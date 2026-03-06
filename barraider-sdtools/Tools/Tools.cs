@@ -245,7 +245,6 @@ namespace BarRaider.SdTools
             try
             {
                 Bitmap bitmap = new Bitmap(width, height);
-                var brush = new SolidBrush(Color.Black);
 
                 graphics = Graphics.FromImage(bitmap);
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -253,8 +252,10 @@ namespace BarRaider.SdTools
                 graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-                //Fill background black
-                graphics.FillRectangle(brush, 0, 0, width, height);
+                using (var brush = new SolidBrush(Color.Black))
+                {
+                    graphics.FillRectangle(brush, 0, 0, width, height);
+                }
                 return bitmap;
             }
             catch (Exception ex)
@@ -276,7 +277,11 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string FilenameFromPayload(Newtonsoft.Json.Linq.JToken payload)
         {
-            return FilenameFromString((string)payload);
+            if (payload == null || payload.Type == JTokenType.Null || payload.Type == JTokenType.Undefined)
+            {
+                return null;
+            }
+            return FilenameFromString(payload.ToString());
         }
 
         private static string FilenameFromString(string filenameWithFakepath)
@@ -442,7 +447,15 @@ namespace BarRaider.SdTools
                         }
                         else
                         {
-                            info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+                            try
+                            {
+                                info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Instance.LogMessage(TracingLevel.ERROR, $"AutoPopulateSettings: Failed to convert property '{prop.Key}' value '{prop.Value}' to type {info.PropertyType.Name}: {ex.Message}");
+                                continue;
+                            }
                         }
                         totalPopulated++;
                     }
@@ -520,7 +533,14 @@ namespace BarRaider.SdTools
         {
             List<PluginActionId> actions = new List<PluginActionId>();
 
-            var pluginTypes = Assembly.GetEntryAssembly().GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly == null)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, "AutoLoadPluginActions: Assembly.GetEntryAssembly() returned null");
+                return actions.ToArray();
+            }
+
+            var pluginTypes = entryAssembly.GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
             pluginTypes.ForEach(typ =>
             {
                 if (typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() is PluginActionIdAttribute attr)

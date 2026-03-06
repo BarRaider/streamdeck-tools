@@ -11,8 +11,6 @@ using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Communication;
 using BarRaider.SdTools.Communication.SDEvents;
 using System.Collections.Generic;
-using NLog.Layouts;
-
 namespace BarRaider.SdTools
 {
     /// <summary>
@@ -23,6 +21,9 @@ namespace BarRaider.SdTools
         #region Private Members
 
         private string previousImageHash = null;
+        private readonly object imageHashLock = new object();
+        private const int MAX_TITLE_RETRY_ATTEMPTS = 5;
+        private int titleRetryCount = 0;
 
         [JsonIgnore]
         private readonly string actionId;
@@ -142,6 +143,10 @@ namespace BarRaider.SdTools
         /// </summary>
         public void Dispose()
         {
+            if (StreamDeckConnection == null)
+            {
+                return;
+            }
             StreamDeckConnection.OnSendToPlugin -= Connection_OnSendToPlugin;
             StreamDeckConnection.OnTitleParametersDidChange -= Connection_OnTitleParametersDidChange;
             StreamDeckConnection.OnApplicationDidTerminate -= Connection_OnApplicationDidTerminate;
@@ -239,9 +244,17 @@ namespace BarRaider.SdTools
         public async Task SetImageAsync(string base64Image, int? state = null, bool forceSendToStreamdeck = false)
         {
             string hash = Tools.StringToSHA512(base64Image);
-            if (forceSendToStreamdeck || hash != previousImageHash)
+            bool shouldSend;
+            lock (imageHashLock)
             {
-                previousImageHash = hash;
+                shouldSend = forceSendToStreamdeck || hash != previousImageHash;
+                if (shouldSend)
+                {
+                    previousImageHash = hash;
+                }
+            }
+            if (shouldSend)
+            {
                 await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
             }
         }
@@ -258,9 +271,17 @@ namespace BarRaider.SdTools
         {
             string base64Image = Tools.ImageToBase64(image, true);
             string hash = Tools.StringToSHA512(base64Image);
-            if (forceSendToStreamdeck || hash != previousImageHash)
+            bool shouldSend;
+            lock (imageHashLock)
             {
-                previousImageHash = hash;
+                shouldSend = forceSendToStreamdeck || hash != previousImageHash;
+                if (shouldSend)
+                {
+                    previousImageHash = hash;
+                }
+            }
+            if (shouldSend)
+            {
                 await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
             }
         }
@@ -283,9 +304,17 @@ namespace BarRaider.SdTools
 
             string base64Image = "data:image/png;base64," + Convert.ToBase64String(pngImageBytes);
             string hash = Tools.StringToSHA512(base64Image);
-            if (forceSendToStreamdeck || hash != previousImageHash)
+            bool shouldSend;
+            lock (imageHashLock)
             {
-                previousImageHash = hash;
+                shouldSend = forceSendToStreamdeck || hash != previousImageHash;
+                if (shouldSend)
+                {
+                    previousImageHash = hash;
+                }
+            }
+            if (shouldSend)
+            {
                 await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
             }
         }
@@ -500,11 +529,11 @@ namespace BarRaider.SdTools
         {
             if (e.Event.Context == ContextId)
             {
-                // Special case to take into account that TitleParameters arrives right after an OnWillAppear
                 if (OnTitleParametersDidChange == null)
                 {
-                    if (sender != this)
+                    if (titleRetryCount < MAX_TITLE_RETRY_ATTEMPTS)
                     {
+                        titleRetryCount++;
                         Task.Run(async () =>
                         {
                             await Task.Delay(1000);
@@ -514,6 +543,7 @@ namespace BarRaider.SdTools
                     return;
                 }
 
+                titleRetryCount = 0;
                 var payload = e.Event.Payload;
                 var newPayload = new TitleParametersPayload(payload.Settings, payload.Coordinates, payload.State, payload.Title, payload.TitleParameters);
                 OnTitleParametersDidChange?.Invoke(this, new SDEventReceivedEventArgs<TitleParametersDidChange>(new TitleParametersDidChange(e.Event.Action, e.Event.Context, e.Event.Device, newPayload)));

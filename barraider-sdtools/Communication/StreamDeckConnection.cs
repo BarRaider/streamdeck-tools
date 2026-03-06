@@ -174,7 +174,7 @@ namespace BarRaider.SdTools.Communication
             {
                 Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} SDTools SendAsync Exception: {ex}");
             }
-            return null;
+            return Task.CompletedTask;
         }
 
         #region Requests
@@ -240,6 +240,10 @@ namespace BarRaider.SdTools.Communication
         }
         internal Task OpenUrlAsync(string uri)
         {
+            if (string.IsNullOrEmpty(uri))
+            {
+                throw new ArgumentNullException(nameof(uri));
+            }
             return OpenUrlAsync(new Uri(uri));
         }
 
@@ -436,6 +440,7 @@ namespace BarRaider.SdTools.Communication
                 }
 
                 OnDisconnected?.Invoke(this, EventArgs.Empty);
+                cancelTokenSource.Dispose();
             }
         }
 
