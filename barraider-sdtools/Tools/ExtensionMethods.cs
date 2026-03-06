@@ -42,6 +42,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Color which is not cross-platform. Use SKColor directly instead.")]
         public static string ToHex(this Color color)
         {
             return string.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
@@ -52,6 +53,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="brush"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Brush which is not cross-platform. Use SKPaint.Color directly instead.")]
         public static string ToHex(this Brush brush)
         {
             if (brush is SolidBrush solidBrush)
@@ -85,6 +87,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SKBitmap.ToPngByteArray() from SkiaExtensionMethods instead.")]
         public static byte[] ToPngByteArray(this Image image)
         {
             return ImageCodecProvider.Instance.EncodeToPngBytes(image);
@@ -96,6 +99,7 @@ namespace BarRaider.SdTools
         /// <param name="image"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SKBitmap.ToBase64() from SkiaExtensionMethods instead.")]
         public static string ToBase64(this Image image, bool addHeaderPrefix)
         {
             return Tools.ImageToBase64(image, addHeaderPrefix);
@@ -110,6 +114,7 @@ namespace BarRaider.SdTools
         /// <param name="brush"></param>
         /// <param name="position"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.DrawAndMeasureString() from SkiaExtensionMethods instead.")]
         public static float DrawAndMeasureString(this Graphics graphics, string text, Font font, Brush brush, PointF position)
         {
             SizeF stringSize = graphics.MeasureString(text, font);
@@ -129,6 +134,7 @@ namespace BarRaider.SdTools
         /// <param name="minIndentation"></param>
         /// 
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.GetTextCenter() from SkiaExtensionMethods instead.")]
         public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, out bool textFitsImage, int minIndentation = 0)
         {
             SizeF stringSize = graphics.MeasureString(text, font);
@@ -152,6 +158,7 @@ namespace BarRaider.SdTools
         /// <param name="minIndentation"></param>
         /// 
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.GetTextCenter() from SkiaExtensionMethods instead.")]
         public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, int minIndentation = 0)
         {
             return graphics.GetTextCenter(text, imageWidth, font, out _, minIndentation);
@@ -166,6 +173,7 @@ namespace BarRaider.SdTools
         /// <param name="font"></param>
         /// /// <param name="minimalFontSize"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.GetFontSizeWhereTextFitsImage() from SkiaExtensionMethods instead.")]
         public static float GetFontSizeWhereTextFitsImage(this Graphics graphics, string text, int imageWidth, Font font, int minimalFontSize = 6)
         {
             bool textFitsImage;
@@ -196,6 +204,7 @@ namespace BarRaider.SdTools
         /// <param name="imageWidth"></param>
         /// <param name="text"></param>
         /// <param name="pixelsAlignment"></param>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.AddTextPath() from SkiaExtensionMethods instead.")]
         public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
         {
             AddTextPath(graphics, titleParameters, imageHeight, imageWidth, text, Color.Black, 1, pixelsAlignment);
@@ -212,6 +221,7 @@ namespace BarRaider.SdTools
         /// <param name="strokeColor"></param>
         /// <param name="strokeThickness"></param>
         /// <param name="pixelsAlignment"></param>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.AddTextPath() from SkiaExtensionMethods instead.")]
         public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, Color strokeColor, float strokeThickness, int pixelsAlignment = 15)
         {
             try
@@ -297,6 +307,7 @@ namespace BarRaider.SdTools
         /// <param name="rightPaddingPixels"></param>
         /// <param name="imageWidthPixels"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use the SkiaExtensionMethods.SplitToFitKey() overload with SKFont instead.")]
         public static string SplitToFitKey(this string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
         {
             try
