@@ -2675,6 +2675,22 @@
             <param name="addHeaderPrefix"></param>
             <returns></returns>
         </member>
+        <member name="M:BarRaider.SdTools.Tools.LoadImage(System.String)">
+            <summary>
+            Loads an image from a file path. Returns an independent copy that does not lock the file.
+            Replaces direct usage of Image.FromFile which holds a file lock.
+            </summary>
+            <param name="filePath"></param>
+            <returns>An Image, or null if the path is null/empty or the file does not exist.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.LoadImage(System.IO.Stream)">
+            <summary>
+            Loads an image from a stream. Returns an independent copy; the caller may close the stream after this returns.
+            Replaces direct usage of Image.FromStream which requires the stream to remain open.
+            </summary>
+            <param name="stream"></param>
+            <returns>An Image, or null if the stream is null.</returns>
+        </member>
         <member name="M:BarRaider.SdTools.Tools.ImageToBase64(System.Drawing.Image,System.Boolean)">
             <summary>
             Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
@@ -2714,6 +2730,18 @@
             <param name="streamDeckType"></param>
             <param name="graphics"></param>
             <returns></returns>
+        </member>
+        <member name="M:BarRaider.SdTools.Tools.CreateFont(System.String,System.Single,System.Drawing.FontStyle)">
+            <summary>
+            Creates a Font from a family name, size in points, and optional style.
+            Prefer this over calling new Font(...) directly, as this helper will be
+            adapted to alternative backends in a future release.
+            The caller is responsible for disposing the returned Font.
+            </summary>
+            <param name="familyName">Font family name (e.g. "Arial", "Verdana").</param>
+            <param name="sizeInPoints">Font size in points.</param>
+            <param name="style">Font style flags. Defaults to Regular.</param>
+            <returns>A new Font instance. The caller must dispose it when done.</returns>
         </member>
         <member name="M:BarRaider.SdTools.Tools.GenerateGenericKeyImage(System.Drawing.Graphics@)">
             <summary>

@@ -53,6 +53,33 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Loads an image from a file path. Returns an independent copy that does not lock the file.
+        /// Replaces direct usage of Image.FromFile which holds a file lock.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>An Image, or null if the path is null/empty or the file does not exist.</returns>
+        public static Image LoadImage(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                return null;
+            }
+
+            return ImageCodecProvider.Instance.DecodeFromFile(filePath);
+        }
+
+        /// <summary>
+        /// Loads an image from a stream. Returns an independent copy; the caller may close the stream after this returns.
+        /// Replaces direct usage of Image.FromStream which requires the stream to remain open.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns>An Image, or null if the stream is null.</returns>
+        public static Image LoadImage(Stream stream)
+        {
+            return ImageCodecProvider.Instance.DecodeFromStream(stream);
+        }
+
+        /// <summary>
         /// Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
         /// </summary>
         /// <param name="image"></param>
@@ -171,6 +198,21 @@ namespace BarRaider.SdTools
             int width = GetKeyDefaultWidth(streamDeckType);
 
             return GenerateKeyImage(height, width, out graphics);
+        }
+
+        /// <summary>
+        /// Creates a Font from a family name, size in points, and optional style.
+        /// Prefer this over calling new Font(...) directly, as this helper will be
+        /// adapted to alternative backends in a future release.
+        /// The caller is responsible for disposing the returned Font.
+        /// </summary>
+        /// <param name="familyName">Font family name (e.g. "Arial", "Verdana").</param>
+        /// <param name="sizeInPoints">Font size in points.</param>
+        /// <param name="style">Font style flags. Defaults to Regular.</param>
+        /// <returns>A new Font instance. The caller must dispose it when done.</returns>
+        public static Font CreateFont(string familyName, float sizeInPoints, FontStyle style = FontStyle.Regular)
+        {
+            return new Font(familyName, sizeInPoints, style, GraphicsUnit.Point);
         }
 
         /// <summary>
