@@ -74,3 +74,13 @@ Issues discovered during migration quality gates that were **not introduced by t
 - **File**: `barraider-sdtools/Tools/Tools.cs` (lines ~340-355)
 - **Description**: `sha512.ComputeHash(null)` would throw `ArgumentNullException`. The exception is caught and logged, but a null guard would be cleaner.
 - **Impact**: Low; callers generally pass non-null, and the catch block handles it.
+
+### `ExtensionMethods.AddTextPath` leaks `Pen`, `GraphicsPath`, and `SolidBrush`
+- **File**: `barraider-sdtools/Tools/ExtensionMethods.cs` (lines ~248-256)
+- **Description**: `Pen`, `GraphicsPath`, and `SolidBrush` are created but never disposed. All three implement `IDisposable`.
+- **Impact**: GDI+ handle leak on repeated calls.
+
+### `ExtensionMethods.SplitToFitKey` leaks `Font`
+- **File**: `barraider-sdtools/Tools/ExtensionMethods.cs` (line ~311)
+- **Description**: `Font font = new Font(...)` is never disposed. `Font` implements `IDisposable`.
+- **Impact**: Minor GDI+ handle leak.
