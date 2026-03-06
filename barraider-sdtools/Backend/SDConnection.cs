@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -252,6 +253,7 @@ namespace BarRaider.SdTools
         /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SetImageAsync(SKBitmap, ...) or SetImageAsync(byte[], ...) instead.")]
         public async Task SetImageAsync(Image image, int? state = null, bool forceSendToStreamdeck = false)
         {
             string base64Image = Tools.ImageToBase64(image, true);
@@ -286,6 +288,26 @@ namespace BarRaider.SdTools
                 previousImageHash = hash;
                 await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
             }
+        }
+
+        /// <summary>
+        /// Sets an image on the StreamDeck key from an SKBitmap (cross-platform, SkiaSharp).
+        /// The bitmap is PNG-encoded and sent as base64.
+        /// </summary>
+        /// <param name="image">SkiaSharp bitmap to display on the key</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+        /// <returns></returns>
+        public async Task SetImageAsync(SKBitmap image, int? state = null, bool forceSendToStreamdeck = false)
+        {
+            if (image == null)
+            {
+                await SetDefaultImageAsync();
+                return;
+            }
+
+            byte[] pngBytes = image.ToPngByteArray();
+            await SetImageAsync(pngBytes, state, forceSendToStreamdeck);
         }
 
         /// <summary>
