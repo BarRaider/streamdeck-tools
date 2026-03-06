@@ -218,25 +218,6 @@ namespace BarRaider.SdTools
             return null;
         }
 
-        /// <summary>
-        /// Deprecated! Use AddTextPath on the Graphics extension method instead.
-        /// Adds a text path to an existing Graphics object. Uses TitleParser to emulate the Text settings in the Property Inspector
-        /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="titleParameters"></param>
-        /// <param name="imageHeight"></param>
-        /// <param name="imageWidth"></param>
-        /// <param name="text"></param>
-        /// <param name="pixelsAlignment"></param>
-        [Obsolete("Use graphics.AddTextPath() extension method instead")]
-        public static void AddTextPathToGraphics(Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
-        {
-            if (graphics != null)
-            {
-                graphics.AddTextPath(titleParameters, imageHeight, imageWidth, text, pixelsAlignment);
-            }
-        }
-
         #endregion
 
         #region Filename Related
@@ -310,21 +291,6 @@ namespace BarRaider.SdTools
                 sizeCounter++;
             }
             return String.Format(format[sizeCounter], numberInBytes);
-        }
-
-        /// <summary>
-        /// OBSOLETE - Use String.SplitToFitKey() from SdTools.ExtensionMethods
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="titleParameters"></param>
-        /// <param name="leftPaddingPixels"></param>
-        /// <param name="rightPaddingPixels"></param>
-        /// <param name="imageWidthPixels"></param>
-        /// <returns></returns>
-        [Obsolete("Use String.SplitToFitKey(), now part of the SdTools.ExtensionMethods")]
-        public static string SplitStringToFit(string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
-        {
-            return str.SplitToFitKey(titleParameters, leftPaddingPixels, rightPaddingPixels, imageWidthPixels);
         }
 
         #endregion

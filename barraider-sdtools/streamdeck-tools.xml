@@ -2063,7 +2063,7 @@
         </member>
         <member name="F:BarRaider.SdTools.DeviceType.StreamDeckPedal">
             <summary>
-            Pedal
+            Stream Deck Pedal
             </summary>
         </member>
         <member name="F:BarRaider.SdTools.DeviceType.CorsairCueSDK">
@@ -2078,12 +2078,32 @@
         </member>
         <member name="F:BarRaider.SdTools.DeviceType.SCUFController">
             <summary>
-            SCUF Controller.
+            SCUF Controller
             </summary>
         </member>
         <member name="F:BarRaider.SdTools.DeviceType.StreamDeckNeo">
             <summary>
-            Stream Deck Neo.
+            Stream Deck Neo
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckStudio">
+            <summary>
+            Stream Deck Studio
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.DeviceType.VirtualStreamDeck">
+            <summary>
+            Virtual Stream Deck
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.DeviceType.CorsairGalleon">
+            <summary>
+            Corsair Galleon (100 SD)
+            </summary>
+        </member>
+        <member name="F:BarRaider.SdTools.DeviceType.StreamDeckPlusXL">
+            <summary>
+            Stream Deck Plus XL model
             </summary>
         </member>
         <member name="T:BarRaider.SdTools.StreamDeckApplicationInfo">
@@ -2691,18 +2711,6 @@
             <param name="graphics"></param>
             <returns></returns>
         </member>
-        <member name="M:BarRaider.SdTools.Tools.AddTextPathToGraphics(System.Drawing.Graphics,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.String,System.Int32)">
-            <summary>
-            Deprecated! Use AddTextPath on the Graphics extension method instead.
-            Adds a text path to an existing Graphics object. Uses TitleParser to emulate the Text settings in the Property Inspector
-            </summary>
-            <param name="graphics"></param>
-            <param name="titleParameters"></param>
-            <param name="imageHeight"></param>
-            <param name="imageWidth"></param>
-            <param name="text"></param>
-            <param name="pixelsAlignment"></param>
-        </member>
         <member name="M:BarRaider.SdTools.Tools.FilenameFromPayload(Newtonsoft.Json.Linq.JToken)">
             <summary>
             Extracts the actual filename from a file payload received from the Property Inspector
@@ -2720,17 +2728,6 @@
         <member name="M:BarRaider.SdTools.Tools.FormatBytes(System.Double)">
             <param name="numberInBytes">Size in bytes</param>
             <returns>Formatted human-readable string (ex. "2 MB")</returns>
-        </member>
-        <member name="M:BarRaider.SdTools.Tools.SplitStringToFit(System.String,BarRaider.SdTools.Wrappers.TitleParameters,System.Int32,System.Int32,System.Int32)">
-            <summary>
-            OBSOLETE - Use String.SplitToFitKey() from SdTools.ExtensionMethods
-            </summary>
-            <param name="str"></param>
-            <param name="titleParameters"></param>
-            <param name="leftPaddingPixels"></param>
-            <param name="rightPaddingPixels"></param>
-            <param name="imageWidthPixels"></param>
-            <returns></returns>
         </member>
         <member name="M:BarRaider.SdTools.Tools.ImageToSHA512(System.Drawing.Image)">
             <summary>
