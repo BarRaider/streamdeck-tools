@@ -76,8 +76,10 @@ namespace BarRaider.SdTools
             double ratioY = (double)newHeight / originalHeight;
             double ratio = Math.Min(ratioX, ratioY);
 
-            int posX = (int)((newWidth - (originalWidth * ratio)) / 2);
-            int posY = (int)((newHeight - (originalHeight * ratio)) / 2);
+            float scaledWidth = (float)(originalWidth * ratio);
+            float scaledHeight = (float)(originalHeight * ratio);
+            int posX = (int)((newWidth - scaledWidth) / 2);
+            int posY = (int)((newHeight - scaledHeight) / 2);
 
             var result = new SKBitmap(newWidth, newHeight);
             try
@@ -86,7 +88,7 @@ namespace BarRaider.SdTools
                 using (var paint = new SKPaint { IsAntialias = true })
                 {
                     canvas.Clear(SKColors.Black);
-                    var destRect = SKRect.Create(posX, posY, newWidth, newHeight);
+                    var destRect = SKRect.Create(posX, posY, scaledWidth, scaledHeight);
                     canvas.DrawBitmap(original, destRect, paint);
                 }
             }
