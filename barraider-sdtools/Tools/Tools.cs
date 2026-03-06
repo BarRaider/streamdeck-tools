@@ -1,11 +1,11 @@
-﻿using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
@@ -65,15 +65,15 @@ namespace BarRaider.SdTools
                 return null;
             }
 
-            using (MemoryStream m = new MemoryStream())
+            byte[] imageBytes = ImageCodecProvider.Instance.EncodeToPngBytes(image);
+            if (imageBytes == null)
             {
-                image.Save(m, ImageFormat.Png);
-                byte[] imageBytes = m.ToArray();
-
-                // Convert byte[] to Base64 String
-                string base64String = Convert.ToBase64String(imageBytes);
-                return addHeaderPrefix ? HEADER_PREFIX + base64String : base64String;
+                return null;
             }
+
+            // Convert byte[] to Base64 String
+            string base64String = Convert.ToBase64String(imageBytes);
+            return addHeaderPrefix ? HEADER_PREFIX + base64String : base64String;
         }
 
         /// <summary>
@@ -91,16 +91,13 @@ namespace BarRaider.SdTools
                 }
 
                 // Remove header
-                if (base64String.Substring(0, HEADER_PREFIX.Length) == HEADER_PREFIX)
+                if (base64String.StartsWith(HEADER_PREFIX, StringComparison.Ordinal))
                 {
                     base64String = base64String.Substring(HEADER_PREFIX.Length);
                 }
 
                 byte[] imageBytes = Convert.FromBase64String(base64String);
-                using (MemoryStream m = new MemoryStream(imageBytes))
-                {
-                    return Image.FromStream(m);
-                }
+                return ImageCodecProvider.Instance.DecodeFromBytes(imageBytes);
             }
             catch (Exception ex)
             {
@@ -311,11 +308,8 @@ namespace BarRaider.SdTools
 
             try
             {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    image.Save(ms, ImageFormat.Png);
-                    return BytesToSHA512(ms.ToArray());
-                }
+                byte[] imageBytes = ImageCodecProvider.Instance.EncodeToPngBytes(image);
+                return imageBytes == null ? null : BytesToSHA512(imageBytes);
             }
             catch (Exception ex)
             {
@@ -345,6 +339,11 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string BytesToSHA512(byte[] byteStream)
         {
+            if (byteStream == null)
+            {
+                return null;
+            }
+
             try
             {
                 using (SHA512 sha512 = SHA512.Create())

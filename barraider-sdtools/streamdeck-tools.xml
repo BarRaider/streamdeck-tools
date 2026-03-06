@@ -1625,6 +1625,19 @@
             <param name="device"></param>
             <param name="payload"></param>
         </member>
+        <member name="T:BarRaider.SdTools.Internal.IImageCodec">
+            <summary>
+            Internal image codec abstraction used by compatibility adapters.
+            </summary>
+        </member>
+        <member name="T:BarRaider.SdTools.Internal.SystemDrawingImageCodec">
+            <summary>
+            Compatibility image codec implementation backed by System.Drawing.
+            Image.FromStream requires the backing stream to remain open for the
+            lifetime of the Image, so DecodeFromBytes copies pixel data into a
+            new Bitmap and disposes the intermediate resources.
+            </summary>
+        </member>
         <member name="T:BarRaider.SdTools.Payloads.AppearancePayload">
             <summary>
             Payload for Apperance settings
