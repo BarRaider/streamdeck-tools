@@ -332,3 +332,6 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+# Internal migration planning docs (not shipped with the library)
+docs/
