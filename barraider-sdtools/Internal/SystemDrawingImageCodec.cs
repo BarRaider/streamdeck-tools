@@ -1,3 +1,5 @@
+using BarRaider.SdTools.Wrappers;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -43,8 +45,9 @@ namespace BarRaider.SdTools.Internal
                 memoryStream.Dispose();
                 return copy;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"SystemDrawingImageCodec.DecodeFromBytes failed: {ex}");
                 original?.Dispose();
                 memoryStream.Dispose();
                 throw;
