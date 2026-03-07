@@ -7,10 +7,13 @@
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 ** Samples of plugins using this framework: [Samples][1]
 
-### Version 3.2 is out!
-- Created new `ISDConnection` interface which is now implemented by SDConnection and used by PluginAction.
-- GlobalSettingsManager now has a short delay before calling GetGlobalSettings(), to reduce spamming the Stream Deck SDK.
-- Updated dependencies to latest version
+### Version 7.0 (Beta)
+- **Cross-platform support** -- plugins can now run on Windows and macOS
+- **SkiaSharp graphics** -- new cross-platform drawing APIs (`SkiaTools`, `SkiaGraphicsTools`, `SkiaExtensionMethods`)
+- **.NET 10 support** -- targets `netstandard2.0`, `net48`, `net8.0`, `net10.0`
+- All System.Drawing APIs marked `[Obsolete]` with pointers to SkiaSharp replacements (still works on Windows)
+
+**Upgrading from v6.x?** See the [Migration Guide](https://github.com/BarRaider/streamdeck-tools/blob/master/MigrateTo7.0.md) for step-by-step instructions and code recipes.
 
 ## Features
 - Sample plugin now included in this project on Github
