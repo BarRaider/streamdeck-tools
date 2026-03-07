@@ -17,10 +17,8 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageIconUrl></PackageIconUrl>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <FileVersion>7.0.0.0</FileVersion>
-    <Version>7.0.0-beta.2</Version>
-    <PackageReleaseNotes>7.0.0-beta.2 - Replace net9.0 (STS, EOL May 2026) with net10.0 (LTS). Simplify csproj. Targets: netstandard2.0/net48/net8.0/net10.0.
-7.0.0-beta.1 - Major migration: netstandard2.0/net48/net8.0 multi-targeting, SkiaSharp cross-platform graphics, System.Drawing APIs marked [Obsolete] with SkiaSharp replacements.
-NOTE: This is a prerelease. See docs/MIGRATION.md for upgrade guidance.</PackageReleaseNotes>
+    <Version>7.0.0-beta.3</Version>
+    <PackageReleaseNotes>7.0.0-beta.3 - Major migration: netstandard2.0/net48/net8.0/net10.0 (LTS) multi-targeting, SkiaSharp cross-platform graphics, System.Drawing APIs marked [Obsolete] with SkiaSharp replacements. See migration instructions in the Github Readme.</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>
