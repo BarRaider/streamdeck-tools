@@ -40,7 +40,7 @@ Update-Package StreamDeck-Tools
 Or set the version manually in your `.csproj`:
 
 ```xml
-<PackageReference Include="StreamDeck-Tools" Version="7.0.0-beta.2" />
+<PackageReference Include="StreamDeck-Tools" Version="7.0.0-beta.3" />
 ```
 
 Build your project. Everything should compile. You'll see `[Obsolete]` warnings on System.Drawing methods -- these point you to the SkiaSharp replacements.
@@ -245,10 +245,6 @@ dotnet publish -c Release -r osx-x64
 ```
 
 Assemble both outputs into your `.sdPlugin` folder with `win-x64/` and `osx-x64/` subdirectories, alongside shared assets (manifest, images, Property Inspector).
-
-### Known Gotcha: System.Management and Trimming
-
-`System.Management` (WMI) does not work in trimmed .NET 10 builds due to COM interop incompatibility. If your plugin or any dependency uses WMI, replace those calls with alternatives (e.g., Windows Registry reads). This only affects trimmed self-contained builds.
 
 ## Deprecation Timeline
 
