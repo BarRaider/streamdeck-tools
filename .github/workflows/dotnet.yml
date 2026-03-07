@@ -1,7 +1,7 @@
 # Build and validate StreamDeck-Tools across all supported TFMs and platforms.
 # netstandard2.0 builds on all platforms with any .NET SDK.
 # net48 is Windows-only (requires .NET Framework targeting pack).
-# net8.0 and net9.0 build on Windows, macOS, and Linux.
+# net8.0 and net10.0 build on Windows, macOS, and Linux.
 
 name: .NET
 
@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-windows:
-    name: Windows (netstandard2.0 + net48 + net8.0 + net9.0)
+    name: Windows (netstandard2.0 + net48 + net8.0 + net10.0)
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-          9.0.x
+          10.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -31,7 +31,7 @@ jobs:
       run: dotnet test --no-build --configuration Release --verbosity normal
 
   build-macos:
-    name: macOS (netstandard2.0 + net8.0 + net9.0)
+    name: macOS (netstandard2.0 + net8.0 + net10.0)
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
@@ -40,16 +40,16 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-          9.0.x
+          10.0.x
     - name: Build netstandard2.0
       run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework netstandard2.0
     - name: Build net8.0
       run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net8.0
-    - name: Build net9.0
-      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net9.0
+    - name: Build net10.0
+      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net10.0
 
   build-linux:
-    name: Linux (netstandard2.0 + net8.0 + net9.0)
+    name: Linux (netstandard2.0 + net8.0 + net10.0)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -58,10 +58,10 @@ jobs:
       with:
         dotnet-version: |
           8.0.x
-          9.0.x
+          10.0.x
     - name: Build netstandard2.0
       run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework netstandard2.0
     - name: Build net8.0
       run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net8.0
-    - name: Build net9.0
-      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net9.0
+    - name: Build net10.0
+      run: dotnet build barraider-sdtools/barraider-sdtools.csproj --configuration Release --framework net10.0
