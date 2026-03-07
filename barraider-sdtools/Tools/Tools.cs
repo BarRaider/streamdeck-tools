@@ -516,7 +516,12 @@ namespace BarRaider.SdTools
         {
             try
             {
-                return System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                string fileName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                if (fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                {
+                    fileName = fileName.Substring(0, fileName.Length - 4);
+                }
+                return fileName;
             }
             catch (Exception ex)
             {
