@@ -2,6 +2,9 @@
 using BarRaider.SdTools.Payloads;
 using CommandLine;
 using System;
+#if NET8_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+#endif
 
 namespace BarRaider.SdTools
 {
@@ -45,6 +48,9 @@ namespace BarRaider.SdTools
         /// <param name="args"></param>
         /// <param name="supportedActionIds"></param>
         /// /// <param name="updateHandler"></param>
+#if NET8_0_OR_GREATER
+        [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties, typeof(StreamDeckOptions))]
+#endif
         private static void Run(string[] args, PluginActionId[] supportedActionIds, IUpdateHandler updateHandler)
         {
             Logger.Instance.LogMessage(TracingLevel.INFO, $"Plugin [{Tools.GetExeName()}] Loading - {supportedActionIds.Length} Actions Found");
