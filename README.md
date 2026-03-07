@@ -2,7 +2,7 @@
 
 #### C# library that wraps all the communication with the Stream Deck App, allowing you to focus on actually writing the Plugin's logic.
 
-[![Build Status](https://github.com/BarRaider/streamdeck-tools/actions/workflows/dotnet.yml/badge.svg)](https://github.com/BarRaider/streamdeck-tools/actions/workflows/dotnet.yml)  [![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
+[![Build Status](https://github.com/BarRaider/streamdeck-tools/actions/workflows/dotnetcore.yml/badge.svg)](https://github.com/BarRaider/streamdeck-tools/actions/workflows/dotnetcore.yml)  [![NuGet](https://img.shields.io/nuget/v/streamdeck-tools.svg?style=flat)](https://www.nuget.org/packages/streamdeck-tools)
 
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 
@@ -33,12 +33,10 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 
 # Change Log
 
-### Version 7.0 (prerelease)
-- Multi-target support: .NET Standard 2.0, .NET Framework 4.8, .NET 8.0, .NET 10.0
-- SkiaSharp cross-platform graphics (replaces System.Drawing on non-Windows)
-- System.Drawing APIs marked `[Obsolete]` with SkiaSharp replacements
+### Version 6.4
+- Support for Stream Deck Plus XL, Galleon 100 SD
 
-### Version 6.3.1
+### Version 6.3
 - Support for new Stream Deck types
 
 ### Version 6.2
