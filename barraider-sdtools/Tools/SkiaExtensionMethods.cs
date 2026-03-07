@@ -42,20 +42,36 @@ namespace BarRaider.SdTools
         #region SKCanvas Extensions
 
         /// <summary>
-        /// Draws a string on an SKCanvas and returns the ending Y position.
+        /// Draws a line of text treating the Y coordinate as the top of the text box
+        /// (matching System.Drawing.Graphics.DrawString behavior) and returns the Y
+        /// position for the next line, based on the font's recommended line spacing.
         /// </summary>
         /// <param name="canvas">The canvas to draw on.</param>
         /// <param name="text">The text to draw.</param>
         /// <param name="font">The font for text rendering.</param>
         /// <param name="paint">The paint for color/style.</param>
-        /// <param name="position">The position to draw at (X, Y baseline).</param>
-        /// <returns>The Y position below the drawn text.</returns>
+        /// <param name="position">The position to draw at (X = left edge, Y = top of text).</param>
+        /// <returns>The Y coordinate for the top of the next line.</returns>
+        public static float DrawTextLine(this SKCanvas canvas, string text, SKFont font, SKPaint paint, SKPoint position)
+        {
+            float baseline = position.Y + Math.Abs(font.Metrics.Ascent);
+            canvas.DrawText(text, position.X, baseline, font, paint);
+            return position.Y + font.Spacing;
+        }
+
+        /// <summary>
+        /// Draws a string on an SKCanvas and returns the Y position for the next line.
+        /// Equivalent to <see cref="DrawTextLine"/>. Position Y is the top of the text, not the baseline.
+        /// </summary>
+        /// <param name="canvas">The canvas to draw on.</param>
+        /// <param name="text">The text to draw.</param>
+        /// <param name="font">The font for text rendering.</param>
+        /// <param name="paint">The paint for color/style.</param>
+        /// <param name="position">The position to draw at (X = left edge, Y = top of text).</param>
+        /// <returns>The Y coordinate for the top of the next line.</returns>
         public static float DrawAndMeasureString(this SKCanvas canvas, string text, SKFont font, SKPaint paint, SKPoint position)
         {
-            SKRect bounds = new SKRect();
-            font.MeasureText(text, out bounds, paint);
-            canvas.DrawText(text, position.X, position.Y, font, paint);
-            return position.Y + bounds.Height;
+            return canvas.DrawTextLine(text, font, paint, position);
         }
 
         /// <summary>

@@ -2722,16 +2722,30 @@
             <param name="addHeaderPrefix">Whether to prepend the data URI header.</param>
             <returns>Base64-encoded PNG string.</returns>
         </member>
-        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.DrawAndMeasureString(SkiaSharp.SKCanvas,System.String,SkiaSharp.SKFont,SkiaSharp.SKPaint,SkiaSharp.SKPoint)">
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.DrawTextLine(SkiaSharp.SKCanvas,System.String,SkiaSharp.SKFont,SkiaSharp.SKPaint,SkiaSharp.SKPoint)">
             <summary>
-            Draws a string on an SKCanvas and returns the ending Y position.
+            Draws a line of text treating the Y coordinate as the top of the text box
+            (matching System.Drawing.Graphics.DrawString behavior) and returns the Y
+            position for the next line, based on the font's recommended line spacing.
             </summary>
             <param name="canvas">The canvas to draw on.</param>
             <param name="text">The text to draw.</param>
             <param name="font">The font for text rendering.</param>
             <param name="paint">The paint for color/style.</param>
-            <param name="position">The position to draw at (X, Y baseline).</param>
-            <returns>The Y position below the drawn text.</returns>
+            <param name="position">The position to draw at (X = left edge, Y = top of text).</param>
+            <returns>The Y coordinate for the top of the next line.</returns>
+        </member>
+        <member name="M:BarRaider.SdTools.SkiaExtensionMethods.DrawAndMeasureString(SkiaSharp.SKCanvas,System.String,SkiaSharp.SKFont,SkiaSharp.SKPaint,SkiaSharp.SKPoint)">
+            <summary>
+            Draws a string on an SKCanvas and returns the Y position for the next line.
+            Equivalent to <see cref="M:BarRaider.SdTools.SkiaExtensionMethods.DrawTextLine(SkiaSharp.SKCanvas,System.String,SkiaSharp.SKFont,SkiaSharp.SKPaint,SkiaSharp.SKPoint)"/>. Position Y is the top of the text, not the baseline.
+            </summary>
+            <param name="canvas">The canvas to draw on.</param>
+            <param name="text">The text to draw.</param>
+            <param name="font">The font for text rendering.</param>
+            <param name="paint">The paint for color/style.</param>
+            <param name="position">The position to draw at (X = left edge, Y = top of text).</param>
+            <returns>The Y coordinate for the top of the next line.</returns>
         </member>
         <member name="M:BarRaider.SdTools.SkiaExtensionMethods.GetTextCenter(SkiaSharp.SKCanvas,System.String,System.Int32,SkiaSharp.SKFont,System.Boolean@,System.Int32)">
             <summary>
@@ -3225,9 +3239,15 @@
             Font Size Scaled to Image
             </summary>
         </member>
+        <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontFamilyName">
+            <summary>
+            Font family name as a plain string. Cross-platform replacement for FontFamily.
+            </summary>
+        </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontFamily">
             <summary>
-            Font Family
+            Font Family. Windows-only; throws PlatformNotSupportedException on macOS/Linux.
+            Use <see cref="P:BarRaider.SdTools.Wrappers.TitleParameters.FontFamilyName"/> or <see cref="P:BarRaider.SdTools.Wrappers.TitleParameters.TitleTypeface"/> for cross-platform code.
             </summary>
         </member>
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.FontStyle">
@@ -3254,7 +3274,7 @@
         <member name="P:BarRaider.SdTools.Wrappers.TitleParameters.TitleTypeface">
             <summary>
             Font as an SKTypeface for cross-platform SkiaSharp rendering.
-            Computed and cached from the existing FontFamily property.
+            Computed and cached from <see cref="P:BarRaider.SdTools.Wrappers.TitleParameters.FontFamilyName"/>.
             The returned typeface is owned by this TitleParameters instance.
             </summary>
         </member>

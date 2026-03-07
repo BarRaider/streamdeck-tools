@@ -17,8 +17,8 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageIconUrl></PackageIconUrl>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <FileVersion>7.0.0.0</FileVersion>
-    <Version>7.0.0-beta.3</Version>
-    <PackageReleaseNotes>7.0.0-beta.3 - Major migration: netstandard2.0/net48/net8.0/net10.0 (LTS) multi-targeting, SkiaSharp cross-platform graphics, System.Drawing APIs marked [Obsolete] with SkiaSharp replacements. See migration instructions in the Github Readme.</PackageReleaseNotes>
+    <Version>7.0.0-beta.4</Version>
+    <PackageReleaseNotes>7.0.0-beta.4 - Fix DrawAndMeasureString Y-positioning to match System.Drawing semantics (Y = top of text, not baseline). Add DrawTextLine as canonical replacement with correct line spacing via font.Spacing.</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>
