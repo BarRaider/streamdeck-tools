@@ -176,28 +176,41 @@ namespace BarRaider.SdTools
                     return;
                 }
 
+                if (string.IsNullOrEmpty(text))
+                {
+                    return;
+                }
+
                 float fontSize = (float)titleParameters.FontSizeInPixelsScaledToDefaultImage;
+                // Match System.Drawing's GraphicsPath.AddString scaling: emSize = DpiY * SizeInPoints / imageWidth
+                // which simplifies to fontSize * 72 / imageWidth (since SizeInPoints = fontSize * 72 / DpiY).
+                float scaledFontSize = fontSize * 72.0f / imageWidth;
                 var typeface = titleParameters.TitleTypeface;
                 var color = titleParameters.TitleSKColor;
 
-                using (var font = new SKFont(typeface, fontSize))
+                using (var font = new SKFont(typeface, scaledFontSize))
                 {
-                    float textWidth = font.MeasureText(text);
+                    // SKCanvas.DrawText uses the text baseline for Y, while the old
+                    // GraphicsPath.AddString used the top-left corner.  Shift Y down
+                    // by the ascent so the visual position matches the old behavior.
+                    float ascent = -font.Metrics.Ascent;
 
-                    int stringWidth = 0;
-                    if (textWidth < imageWidth)
-                    {
-                        stringWidth = (int)(Math.Abs(imageWidth - textWidth) / 2) - pixelsAlignment;
-                    }
+                    string[] lines = text.Split('\n');
+                    float lineSpacing = font.Spacing;
+                    float totalTextHeight = ascent + font.Metrics.Descent + (lines.Length - 1) * lineSpacing;
 
-                    int stringHeight = pixelsAlignment;
-                    if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
+                    float startY;
+                    if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
                     {
-                        stringHeight = (imageHeight / 2) - pixelsAlignment;
+                        startY = imageHeight - pixelsAlignment - totalTextHeight + ascent;
                     }
-                    else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
+                    else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
                     {
-                        stringHeight = (int)(Math.Abs(imageHeight - fontSize) - pixelsAlignment);
+                        startY = (imageHeight - totalTextHeight) / 2f + ascent;
+                    }
+                    else
+                    {
+                        startY = pixelsAlignment + ascent;
                     }
 
                     using (var strokePaint = new SKPaint
@@ -207,10 +220,6 @@ namespace BarRaider.SdTools
                         StrokeWidth = strokeThickness,
                         IsAntialias = true
                     })
-                    {
-                        canvas.DrawText(text, stringWidth, stringHeight, font, strokePaint);
-                    }
-
                     using (var fillPaint = new SKPaint
                     {
                         Color = color,
@@ -218,7 +227,20 @@ namespace BarRaider.SdTools
                         IsAntialias = true
                     })
                     {
-                        canvas.DrawText(text, stringWidth, stringHeight, font, fillPaint);
+                        float y = startY;
+                        foreach (string line in lines)
+                        {
+                            float textWidth = font.MeasureText(line);
+                            float stringWidth = 0;
+                            if (textWidth < imageWidth)
+                            {
+                                stringWidth = (imageWidth - textWidth) / 2f;
+                            }
+
+                            canvas.DrawText(line, stringWidth, y, font, strokePaint);
+                            canvas.DrawText(line, stringWidth, y, font, fillPaint);
+                            y += lineSpacing;
+                        }
                     }
                 }
             }
