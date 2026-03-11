@@ -26,6 +26,10 @@ namespace BarRaider.SdTools
         private const int CLASSIC_KEY_DEFAULT_WIDTH = 72;
         private const int PLUS_KEY_DEFAULT_HEIGHT = 144;
         private const int PLUS_KEY_DEFAULT_WIDTH = 144;
+        private const int PLUS_XL_KEY_DEFAULT_HEIGHT = 144;
+        private const int PLUS_XL_KEY_DEFAULT_WIDTH = 144;
+        private const int NEO_KEY_DEFAULT_HEIGHT = 96;
+        private const int NEO_KEY_DEFAULT_WIDTH = 96;
         private const int XL_KEY_DEFAULT_HEIGHT = 96;
         private const int XL_KEY_DEFAULT_WIDTH = 96;
         private const int GENERIC_KEY_IMAGE_SIZE = 144;
@@ -151,12 +155,15 @@ namespace BarRaider.SdTools
                 case DeviceType.StreamDeckClassic:
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
-                case DeviceType.StreamDeckNeo:
                     return CLASSIC_KEY_DEFAULT_HEIGHT;
+                case DeviceType.StreamDeckNeo:
+                    return NEO_KEY_DEFAULT_HEIGHT;
                 case DeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_HEIGHT;
                 case DeviceType.StreamDeckPlus:
                     return PLUS_KEY_DEFAULT_HEIGHT;
+                case DeviceType.StreamDeckPlusXL:
+                    return PLUS_XL_KEY_DEFAULT_HEIGHT;
                 default:
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
                     break;
@@ -177,12 +184,15 @@ namespace BarRaider.SdTools
                 case DeviceType.StreamDeckClassic:
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
-                case DeviceType.StreamDeckNeo:
                     return CLASSIC_KEY_DEFAULT_WIDTH;
+                case DeviceType.StreamDeckNeo:
+                    return NEO_KEY_DEFAULT_WIDTH;
                 case DeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_WIDTH;
                 case DeviceType.StreamDeckPlus:
                     return PLUS_KEY_DEFAULT_WIDTH;
+                case DeviceType.StreamDeckPlusXL:
+                    return PLUS_XL_KEY_DEFAULT_WIDTH;
                 default:
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
                     break;
