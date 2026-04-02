@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net48;net8.0;net10.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>BarRaider</Authors>
     <Product>Stream Deck Tools by BarRaider</Product>
@@ -15,41 +15,27 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageTags>StreamDeck Elgato Library Plugin Stream Deck Toolkit</PackageTags>
     <PackageId>StreamDeck-Tools</PackageId>
     <PackageIconUrl></PackageIconUrl>
-    <AssemblyVersion>6.4</AssemblyVersion>
-    <FileVersion>6.4</FileVersion>
-    <Version>6.4</Version>
-    <PackageReleaseNotes>6.4 - Support for newest Stream Deck devices
-NOTE: Final version with .netstandard support. Moving to .NET 8/9 in next versions!</PackageReleaseNotes>
+    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <FileVersion>7.0.0.0</FileVersion>
+    <Version>7.0.0</Version>
+    <PackageReleaseNotes>7.0.0 - Cross-platform SkiaSharp API surface (SkiaTools, SkiaGraphicsTools, SkiaExtensionMethods). Target frameworks: netstandard2.0, net48, net8.0, net10.0. All System.Drawing APIs marked [Obsolete] with migration guidance. New SetImageAsync(SKBitmap) and SetImageAsync(byte[]) overloads. DrawTextLine extension for SKCanvas. TitleParameters cross-platform properties (FontFamilyName, TitleSKColor, TitleTypeface). See MIGRATION.md for the full migration guide.</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
+  <PropertyGroup>
     <NoWarn>1701;1702;CA1416</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|x64'">
-    <DocumentationFile />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>streamdeck-tools.xml</DocumentationFile>
-    <NoWarn>1701;1702;CA1416</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|x64'">
-    <DocumentationFile>streamdeck-tools.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
-    <NoWarn>1701;1702;CA1416</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
-    <NoWarn>1701;1702;CA1416</NoWarn>
+    <DocumentationFile Condition="'$(Configuration)' == 'Release'">streamdeck-tools.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="6.1.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.2" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' != 'net48'">
     <PackageReference Include="System.Drawing.Common" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +50,7 @@ NOTE: Final version with .netstandard support. Moving to .NET 8/9 in next versio
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-	<None Include="README.md" Pack="true" PackagePath="\">
+	<None Include="..\README.md" Pack="true" PackagePath="\">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
   </ItemGroup>

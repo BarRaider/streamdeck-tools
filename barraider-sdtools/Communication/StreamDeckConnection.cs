@@ -1,13 +1,10 @@
-﻿using BarRaider.SdTools.Communication.Messages;
+using BarRaider.SdTools.Communication.Messages;
 using BarRaider.SdTools.Communication.SDEvents;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -177,7 +174,7 @@ namespace BarRaider.SdTools.Communication
             {
                 Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} SDTools SendAsync Exception: {ex}");
             }
-            return null;
+            return Task.CompletedTask;
         }
 
         #region Requests
@@ -190,27 +187,6 @@ namespace BarRaider.SdTools.Communication
         internal Task LogMessageAsync(string message)
         {
             return SendAsync(new LogMessage(message));
-        }
-
-        internal Task SetImageAsync(Image image, string context, SDKTarget target, int? state)
-        {
-            try
-            {
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    image.Save(memoryStream, ImageFormat.Png);
-                    byte[] imageBytes = memoryStream.ToArray();
-
-                    // Convert byte[] to Base64 String
-                    string base64String = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
-                    return SetImageAsync(base64String, context, target, state);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"{this.GetType()} SetImageAsync Exception: {ex}");
-            }
-            return null;
         }
 
         internal Task SetImageAsync(string base64Image, string context, SDKTarget target, int? state)
@@ -264,6 +240,10 @@ namespace BarRaider.SdTools.Communication
         }
         internal Task OpenUrlAsync(string uri)
         {
+            if (string.IsNullOrEmpty(uri))
+            {
+                throw new ArgumentNullException(nameof(uri));
+            }
             return OpenUrlAsync(new Uri(uri));
         }
 
@@ -460,6 +440,7 @@ namespace BarRaider.SdTools.Communication
                 }
 
                 OnDisconnected?.Invoke(this, EventArgs.Empty);
+                cancelTokenSource.Dispose();
             }
         }
 

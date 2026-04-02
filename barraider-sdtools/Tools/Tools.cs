@@ -1,11 +1,11 @@
-﻿using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
@@ -26,6 +26,10 @@ namespace BarRaider.SdTools
         private const int CLASSIC_KEY_DEFAULT_WIDTH = 72;
         private const int PLUS_KEY_DEFAULT_HEIGHT = 144;
         private const int PLUS_KEY_DEFAULT_WIDTH = 144;
+        private const int PLUS_XL_KEY_DEFAULT_HEIGHT = 144;
+        private const int PLUS_XL_KEY_DEFAULT_WIDTH = 144;
+        private const int NEO_KEY_DEFAULT_HEIGHT = 96;
+        private const int NEO_KEY_DEFAULT_WIDTH = 96;
         private const int XL_KEY_DEFAULT_HEIGHT = 96;
         private const int XL_KEY_DEFAULT_WIDTH = 96;
         private const int GENERIC_KEY_IMAGE_SIZE = 144;
@@ -39,6 +43,7 @@ namespace BarRaider.SdTools
         /// <param name="fileName"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing which is not cross-platform. Use SkiaTools.FileToBase64() instead.")]
         public static string FileToBase64(string fileName, bool addHeaderPrefix)
         {
             if (!File.Exists(fileName))
@@ -46,10 +51,39 @@ namespace BarRaider.SdTools
                 return null;
             }
 
-            using (Image image = Image.FromFile(fileName))
+            using (Image image = ImageCodecProvider.Instance.DecodeFromFile(fileName))
             {
                 return ImageToBase64(image, addHeaderPrefix);
             }
+        }
+
+        /// <summary>
+        /// Loads an image from a file path. Returns an independent copy that does not lock the file.
+        /// Replaces direct usage of Image.FromFile which holds a file lock.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>An Image, or null if the path is null/empty or the file does not exist.</returns>
+        [Obsolete("Returns System.Drawing.Image which is not cross-platform. Use SkiaTools.LoadImage() instead.")]
+        public static Image LoadImage(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                return null;
+            }
+
+            return ImageCodecProvider.Instance.DecodeFromFile(filePath);
+        }
+
+        /// <summary>
+        /// Loads an image from a stream. Returns an independent copy; the caller may close the stream after this returns.
+        /// Replaces direct usage of Image.FromStream which requires the stream to remain open.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns>An Image, or null if the stream is null.</returns>
+        [Obsolete("Returns System.Drawing.Image which is not cross-platform. Use SkiaTools.LoadImage() instead.")]
+        public static Image LoadImage(Stream stream)
+        {
+            return ImageCodecProvider.Instance.DecodeFromStream(stream);
         }
 
         /// <summary>
@@ -58,6 +92,7 @@ namespace BarRaider.SdTools
         /// <param name="image"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SkiaTools.ImageToBase64(SKBitmap, bool) instead.")]
         public static string ImageToBase64(Image image, bool addHeaderPrefix)
         {
             if (image == null)
@@ -65,15 +100,15 @@ namespace BarRaider.SdTools
                 return null;
             }
 
-            using (MemoryStream m = new MemoryStream())
+            byte[] imageBytes = ImageCodecProvider.Instance.EncodeToPngBytes(image);
+            if (imageBytes == null)
             {
-                image.Save(m, ImageFormat.Png);
-                byte[] imageBytes = m.ToArray();
-
-                // Convert byte[] to Base64 String
-                string base64String = Convert.ToBase64String(imageBytes);
-                return addHeaderPrefix ? HEADER_PREFIX + base64String : base64String;
+                return null;
             }
+
+            // Convert byte[] to Base64 String
+            string base64String = Convert.ToBase64String(imageBytes);
+            return addHeaderPrefix ? HEADER_PREFIX + base64String : base64String;
         }
 
         /// <summary>
@@ -81,6 +116,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="base64String"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing.Image which is not cross-platform. Use SkiaTools.Base64StringToImage() instead.")]
         public static Image Base64StringToImage(string base64String)
         {
             try
@@ -91,16 +127,13 @@ namespace BarRaider.SdTools
                 }
 
                 // Remove header
-                if (base64String.Substring(0, HEADER_PREFIX.Length) == HEADER_PREFIX)
+                if (base64String.StartsWith(HEADER_PREFIX, StringComparison.Ordinal))
                 {
                     base64String = base64String.Substring(HEADER_PREFIX.Length);
                 }
 
                 byte[] imageBytes = Convert.FromBase64String(base64String);
-                using (MemoryStream m = new MemoryStream(imageBytes))
-                {
-                    return Image.FromStream(m);
-                }
+                return ImageCodecProvider.Instance.DecodeFromBytes(imageBytes);
             }
             catch (Exception ex)
             {
@@ -122,12 +155,15 @@ namespace BarRaider.SdTools
                 case DeviceType.StreamDeckClassic:
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
-                case DeviceType.StreamDeckNeo:
                     return CLASSIC_KEY_DEFAULT_HEIGHT;
+                case DeviceType.StreamDeckNeo:
+                    return NEO_KEY_DEFAULT_HEIGHT;
                 case DeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_HEIGHT;
                 case DeviceType.StreamDeckPlus:
                     return PLUS_KEY_DEFAULT_HEIGHT;
+                case DeviceType.StreamDeckPlusXL:
+                    return PLUS_XL_KEY_DEFAULT_HEIGHT;
                 default:
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
                     break;
@@ -148,12 +184,15 @@ namespace BarRaider.SdTools
                 case DeviceType.StreamDeckClassic:
                 case DeviceType.StreamDeckMini:
                 case DeviceType.StreamDeckMobile:
-                case DeviceType.StreamDeckNeo:
                     return CLASSIC_KEY_DEFAULT_WIDTH;
+                case DeviceType.StreamDeckNeo:
+                    return NEO_KEY_DEFAULT_WIDTH;
                 case DeviceType.StreamDeckXL:
                     return XL_KEY_DEFAULT_WIDTH;
                 case DeviceType.StreamDeckPlus:
                     return PLUS_KEY_DEFAULT_WIDTH;
+                case DeviceType.StreamDeckPlusXL:
+                    return PLUS_XL_KEY_DEFAULT_WIDTH;
                 default:
                     Logger.Instance.LogMessage(TracingLevel.ERROR, $"SDTools GetKeyDefaultHeight Error: Invalid StreamDeckDeviceType: {streamDeckType}");
                     break;
@@ -168,6 +207,7 @@ namespace BarRaider.SdTools
         /// <param name="streamDeckType"></param>
         /// <param name="graphics"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing types which are not cross-platform. Use SkiaTools.GenerateKeyImage() instead.")]
         public static Bitmap GenerateKeyImage(DeviceType streamDeckType, out Graphics graphics)
         {
             int height = GetKeyDefaultHeight(streamDeckType);
@@ -177,10 +217,27 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Creates a Font from a family name, size in points, and optional style.
+        /// Prefer this over calling new Font(...) directly, as this helper will be
+        /// adapted to alternative backends in a future release.
+        /// The caller is responsible for disposing the returned Font.
+        /// </summary>
+        /// <param name="familyName">Font family name (e.g. "Arial", "Verdana").</param>
+        /// <param name="sizeInPoints">Font size in points.</param>
+        /// <param name="style">Font style flags. Defaults to Regular.</param>
+        /// <returns>A new Font instance. The caller must dispose it when done.</returns>
+        [Obsolete("Returns System.Drawing.Font which is not cross-platform. Use SkiaTools.CreateFont() instead.")]
+        public static Font CreateFont(string familyName, float sizeInPoints, FontStyle style = FontStyle.Regular)
+        {
+            return new Font(familyName, sizeInPoints, style, GraphicsUnit.Point);
+        }
+
+        /// <summary>
         /// Creates a key image that fits all Stream Decks
         /// </summary>
         /// <param name="graphics"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing types which are not cross-platform. Use SkiaTools.GenerateGenericKeyImage() instead.")]
         public static Bitmap GenerateGenericKeyImage(out Graphics graphics)
         {
             return GenerateKeyImage(GENERIC_KEY_IMAGE_SIZE, GENERIC_KEY_IMAGE_SIZE, out graphics);
@@ -198,7 +255,6 @@ namespace BarRaider.SdTools
             try
             {
                 Bitmap bitmap = new Bitmap(width, height);
-                var brush = new SolidBrush(Color.Black);
 
                 graphics = Graphics.FromImage(bitmap);
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -206,8 +262,10 @@ namespace BarRaider.SdTools
                 graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-                //Fill background black
-                graphics.FillRectangle(brush, 0, 0, width, height);
+                using (var brush = new SolidBrush(Color.Black))
+                {
+                    graphics.FillRectangle(brush, 0, 0, width, height);
+                }
                 return bitmap;
             }
             catch (Exception ex)
@@ -229,7 +287,11 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string FilenameFromPayload(Newtonsoft.Json.Linq.JToken payload)
         {
-            return FilenameFromString((string)payload);
+            if (payload == null || payload.Type == JTokenType.Null || payload.Type == JTokenType.Undefined)
+            {
+                return null;
+            }
+            return FilenameFromString(payload.ToString());
         }
 
         private static string FilenameFromString(string filenameWithFakepath)
@@ -302,6 +364,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SkiaTools.ImageToSHA512(SKBitmap) instead.")]
         public static string ImageToSHA512(Image image)
         {
             if (image == null)
@@ -311,11 +374,8 @@ namespace BarRaider.SdTools
 
             try
             {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    image.Save(ms, ImageFormat.Png);
-                    return BytesToSHA512(ms.ToArray());
-                }
+                byte[] imageBytes = ImageCodecProvider.Instance.EncodeToPngBytes(image);
+                return imageBytes == null ? null : BytesToSHA512(imageBytes);
             }
             catch (Exception ex)
             {
@@ -345,6 +405,11 @@ namespace BarRaider.SdTools
         /// <returns></returns>
         public static string BytesToSHA512(byte[] byteStream)
         {
+            if (byteStream == null)
+            {
+                return null;
+            }
+
             try
             {
                 using (SHA512 sha512 = SHA512.Create())
@@ -392,7 +457,15 @@ namespace BarRaider.SdTools
                         }
                         else
                         {
-                            info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+                            try
+                            {
+                                info.SetValue(toSettings, Convert.ChangeType(prop.Value, info.PropertyType));
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Instance.LogMessage(TracingLevel.ERROR, $"AutoPopulateSettings: Failed to convert property '{prop.Key}' value '{prop.Value}' to type {info.PropertyType.Name}: {ex.Message}");
+                                continue;
+                            }
                         }
                         totalPopulated++;
                     }
@@ -453,7 +526,12 @@ namespace BarRaider.SdTools
         {
             try
             {
-                return System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                string fileName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                if (fileName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                {
+                    fileName = fileName.Substring(0, fileName.Length - 4);
+                }
+                return fileName;
             }
             catch (Exception ex)
             {
@@ -470,7 +548,14 @@ namespace BarRaider.SdTools
         {
             List<PluginActionId> actions = new List<PluginActionId>();
 
-            var pluginTypes = Assembly.GetEntryAssembly().GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly == null)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, "AutoLoadPluginActions: Assembly.GetEntryAssembly() returned null");
+                return actions.ToArray();
+            }
+
+            var pluginTypes = entryAssembly.GetTypes().Where(typ => typ.IsClass && typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).Length > 0).ToList();
             pluginTypes.ForEach(typ =>
             {
                 if (typ.GetCustomAttributes(typeof(PluginActionIdAttribute), true).First() is PluginActionIdAttribute attr)

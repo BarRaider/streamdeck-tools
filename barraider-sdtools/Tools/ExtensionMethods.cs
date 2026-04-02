@@ -1,4 +1,5 @@
-﻿using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Internal;
+using BarRaider.SdTools.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,6 +42,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Color which is not cross-platform. Use SKColor directly instead.")]
         public static string ToHex(this Color color)
         {
             return string.Format("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
@@ -51,6 +53,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="brush"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Brush which is not cross-platform. Use SKPaint.Color directly instead.")]
         public static string ToHex(this Brush brush)
         {
             if (brush is SolidBrush solidBrush)
@@ -65,10 +68,11 @@ namespace BarRaider.SdTools
         #region Image/Graphics
 
         /// <summary>
-        /// Converts an Image into a Byte Array
+        /// Converts an Image into a BMP Byte Array.
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
+        [Obsolete("ToByteArray encodes as BMP which will not be supported in future versions. Use ToPngByteArray instead.")]
         public static byte[] ToByteArray(this Image image)
         {
             using (var ms = new MemoryStream())
@@ -79,11 +83,23 @@ namespace BarRaider.SdTools
         }
 
         /// <summary>
+        /// Converts an Image into a PNG Byte Array using the internal codec abstraction.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SKBitmap.ToPngByteArray() from SkiaExtensionMethods instead.")]
+        public static byte[] ToPngByteArray(this Image image)
+        {
+            return ImageCodecProvider.Instance.EncodeToPngBytes(image);
+        }
+
+        /// <summary>
         /// Convert a in-memory image object to Base64 format. Set the addHeaderPrefix to true, if this is sent to the SendImageAsync function
         /// </summary>
         /// <param name="image"></param>
         /// <param name="addHeaderPrefix"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SKBitmap.ToBase64() from SkiaExtensionMethods instead.")]
         public static string ToBase64(this Image image, bool addHeaderPrefix)
         {
             return Tools.ImageToBase64(image, addHeaderPrefix);
@@ -98,6 +114,7 @@ namespace BarRaider.SdTools
         /// <param name="brush"></param>
         /// <param name="position"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.DrawAndMeasureString() from SkiaExtensionMethods instead.")]
         public static float DrawAndMeasureString(this Graphics graphics, string text, Font font, Brush brush, PointF position)
         {
             SizeF stringSize = graphics.MeasureString(text, font);
@@ -117,6 +134,7 @@ namespace BarRaider.SdTools
         /// <param name="minIndentation"></param>
         /// 
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.GetTextCenter() from SkiaExtensionMethods instead.")]
         public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, out bool textFitsImage, int minIndentation = 0)
         {
             SizeF stringSize = graphics.MeasureString(text, font);
@@ -140,6 +158,7 @@ namespace BarRaider.SdTools
         /// <param name="minIndentation"></param>
         /// 
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.GetTextCenter() from SkiaExtensionMethods instead.")]
         public static float GetTextCenter(this Graphics graphics, string text, int imageWidth, Font font, int minIndentation = 0)
         {
             return graphics.GetTextCenter(text, imageWidth, font, out _, minIndentation);
@@ -154,6 +173,7 @@ namespace BarRaider.SdTools
         /// <param name="font"></param>
         /// /// <param name="minimalFontSize"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.GetFontSizeWhereTextFitsImage() from SkiaExtensionMethods instead.")]
         public static float GetFontSizeWhereTextFitsImage(this Graphics graphics, string text, int imageWidth, Font font, int minimalFontSize = 6)
         {
             bool textFitsImage;
@@ -184,6 +204,7 @@ namespace BarRaider.SdTools
         /// <param name="imageWidth"></param>
         /// <param name="text"></param>
         /// <param name="pixelsAlignment"></param>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.AddTextPath() from SkiaExtensionMethods instead.")]
         public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, int pixelsAlignment = 15)
         {
             AddTextPath(graphics, titleParameters, imageHeight, imageWidth, text, Color.Black, 1, pixelsAlignment);
@@ -200,6 +221,7 @@ namespace BarRaider.SdTools
         /// <param name="strokeColor"></param>
         /// <param name="strokeThickness"></param>
         /// <param name="pixelsAlignment"></param>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SKCanvas.AddTextPath() from SkiaExtensionMethods instead.")]
         public static void AddTextPath(this Graphics graphics, TitleParameters titleParameters, int imageHeight, int imageWidth, string text, Color strokeColor, float strokeThickness, int pixelsAlignment = 15)
         {
             try
@@ -210,39 +232,44 @@ namespace BarRaider.SdTools
                     return;
                 }
 
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                Color color = titleParameters.TitleColor;
-                graphics.PageUnit = GraphicsUnit.Pixel;
-                float ratio = graphics.DpiY / imageWidth;
-                SizeF stringSize = graphics.MeasureString(text, font);
-                float textWidth = stringSize.Width * (1 - ratio);
-                float textHeight = stringSize.Height * (1 - ratio);
-                int stringWidth = 0;
-                if (textWidth < imageWidth)
+                using (Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPixelsScaledToDefaultImage, titleParameters.FontStyle, GraphicsUnit.Pixel))
                 {
-                    stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
-                }
+                    Color color = titleParameters.TitleColor;
+                    graphics.PageUnit = GraphicsUnit.Pixel;
+                    float ratio = graphics.DpiY / imageWidth;
+                    SizeF stringSize = graphics.MeasureString(text, font);
+                    float textWidth = stringSize.Width * (1 - ratio);
+                    float textHeight = stringSize.Height * (1 - ratio);
+                    int stringWidth = 0;
+                    if (textWidth < imageWidth)
+                    {
+                        stringWidth = (int)(Math.Abs((imageWidth - textWidth)) / 2) - pixelsAlignment;
+                    }
 
-                int stringHeight = pixelsAlignment; // Top
-                if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
-                {
-                    stringHeight = (imageHeight / 2) - pixelsAlignment;
-                }
-                else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
-                {
-                    stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
-                }
+                    int stringHeight = pixelsAlignment; // Top
+                    if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Middle)
+                    {
+                        stringHeight = (imageHeight / 2) - pixelsAlignment;
+                    }
+                    else if (titleParameters.VerticalAlignment == TitleVerticalAlignment.Bottom)
+                    {
+                        stringHeight = (int)(Math.Abs((imageHeight - textHeight)) - pixelsAlignment);
+                    }
 
-                Pen stroke = new Pen(strokeColor, strokeThickness);
-                GraphicsPath gpath = new GraphicsPath();
-                gpath.AddString(text,
-                                    font.FontFamily,
-                                    (int)font.Style,
-                                    graphics.DpiY * font.SizeInPoints / imageWidth,
-                                    new Point(stringWidth, stringHeight),
-                                    new StringFormat());
-                graphics.DrawPath(stroke, gpath);
-                graphics.FillPath(new SolidBrush(color), gpath);
+                    using (Pen stroke = new Pen(strokeColor, strokeThickness))
+                    using (GraphicsPath gpath = new GraphicsPath())
+                    using (SolidBrush fillBrush = new SolidBrush(color))
+                    {
+                        gpath.AddString(text,
+                                            font.FontFamily,
+                                            (int)font.Style,
+                                            graphics.DpiY * font.SizeInPoints / imageWidth,
+                                            new Point(stringWidth, stringHeight),
+                                            new StringFormat());
+                        graphics.DrawPath(stroke, gpath);
+                        graphics.FillPath(fillBrush, gpath);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -285,6 +312,7 @@ namespace BarRaider.SdTools
         /// <param name="rightPaddingPixels"></param>
         /// <param name="imageWidthPixels"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use the SkiaExtensionMethods.SplitToFitKey() overload with SKFont instead.")]
         public static string SplitToFitKey(this string str, TitleParameters titleParameters, int leftPaddingPixels = 3, int rightPaddingPixels = 3, int imageWidthPixels = 72)
         {
             try
@@ -295,33 +323,35 @@ namespace BarRaider.SdTools
                 }
 
                 int padding = leftPaddingPixels + rightPaddingPixels;
-                Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel);
-                StringBuilder finalString = new StringBuilder();
-                StringBuilder currentLine = new StringBuilder();
-                SizeF currentLineSize;
-
-                using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
+                using (Font font = new Font(titleParameters.FontFamily, (float)titleParameters.FontSizeInPoints, titleParameters.FontStyle, GraphicsUnit.Pixel))
                 {
-                    using (Graphics graphics = Graphics.FromImage(img))
+                    StringBuilder finalString = new StringBuilder();
+                    StringBuilder currentLine = new StringBuilder();
+                    SizeF currentLineSize;
+
+                    using (Bitmap img = new Bitmap(imageWidthPixels, imageWidthPixels))
                     {
-                        for (int idx = 0; idx < str.Length; idx++)
+                        using (Graphics graphics = Graphics.FromImage(img))
                         {
-                            currentLine.Append(str[idx]);
-                            currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
-                            if (currentLineSize.Width <= img.Width - padding)
+                            for (int idx = 0; idx < str.Length; idx++)
                             {
-                                finalString.Append(str[idx]);
-                            }
-                            else // Overflow
-                            {
-                                finalString.Append("\n" + str[idx]);
-                                currentLine = new StringBuilder(str[idx].ToString());
+                                currentLine.Append(str[idx]);
+                                currentLineSize = graphics.MeasureString(currentLine.ToString(), font);
+                                if (currentLineSize.Width <= img.Width - padding)
+                                {
+                                    finalString.Append(str[idx]);
+                                }
+                                else // Overflow
+                                {
+                                    finalString.Append("\n" + str[idx]);
+                                    currentLine = new StringBuilder(str[idx].ToString());
+                                }
                             }
                         }
                     }
-                }
 
-                return finalString.ToString();
+                    return finalString.ToString();
+                }
             }
             catch (Exception ex)
             {

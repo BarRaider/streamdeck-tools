@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace BarRaider.SdTools.Wrappers
@@ -63,10 +65,38 @@ namespace BarRaider.SdTools.Wrappers
         public double FontSizeInPixelsScaledToDefaultImage => Math.Round(FontSizeInPixels * DEFAULT_IMAGE_SIZE_FONT_SCALE);
 
         /// <summary>
-        /// Font Family
+        /// Font family name as a plain string. Cross-platform replacement for FontFamily.
         /// </summary>
-        [JsonProperty("fontFamily")]
-        public FontFamily FontFamily { get; private set; } = new FontFamily(DEFAULT_FONT_FAMILY_NAME);
+        [JsonIgnore]
+        public string FontFamilyName { get; private set; } = DEFAULT_FONT_FAMILY_NAME;
+
+        private FontFamily cachedFontFamily;
+
+        /// <summary>
+        /// Font Family. Windows-only; throws PlatformNotSupportedException on macOS/Linux.
+        /// Use <see cref="FontFamilyName"/> or <see cref="TitleTypeface"/> for cross-platform code.
+        /// </summary>
+        [Obsolete("Use FontFamilyName (string) or TitleTypeface (SKTypeface) for cross-platform code.")]
+        [JsonIgnore]
+        public FontFamily FontFamily
+        {
+            get
+            {
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    throw new PlatformNotSupportedException(
+                        "FontFamily requires GDI+ which is not available on this platform. " +
+                        "Use FontFamilyName (string) or TitleTypeface (SKTypeface) instead.");
+
+                if (cachedFontFamily == null)
+                    cachedFontFamily = new FontFamily(FontFamilyName);
+                return cachedFontFamily;
+            }
+            private set
+            {
+                cachedFontFamily = value;
+                FontFamilyName = value?.Name ?? DEFAULT_FONT_FAMILY_NAME;
+            }
+        }
 
         /// <summary>
         /// Font Style
@@ -85,6 +115,50 @@ namespace BarRaider.SdTools.Wrappers
         /// </summary>
         [JsonProperty("titleAlignment")]
         public TitleVerticalAlignment VerticalAlignment { get; private set; }
+
+        /// <summary>
+        /// Title color as an SKColor for cross-platform SkiaSharp rendering.
+        /// Computed from the existing TitleColor property.
+        /// </summary>
+        [JsonIgnore]
+        public SKColor TitleSKColor => new SKColor(TitleColor.R, TitleColor.G, TitleColor.B, TitleColor.A);
+
+        [JsonIgnore]
+        private SKTypeface cachedTypeface;
+
+        /// <summary>
+        /// Font as an SKTypeface for cross-platform SkiaSharp rendering.
+        /// Computed and cached from <see cref="FontFamilyName"/>.
+        /// The returned typeface is owned by this TitleParameters instance.
+        /// </summary>
+        [JsonIgnore]
+        public SKTypeface TitleTypeface
+        {
+            get
+            {
+                if (cachedTypeface == null)
+                {
+                    string familyName = FontFamilyName ?? DEFAULT_FONT_FAMILY_NAME;
+                    cachedTypeface = SKTypeface.FromFamilyName(familyName, FontStyleToSKFontStyle());
+                }
+                return cachedTypeface;
+            }
+        }
+
+        /// <summary>
+        /// Converts the System.Drawing FontStyle to an equivalent SKFontStyle.
+        /// </summary>
+        /// <returns>The corresponding SKFontStyle.</returns>
+        public SKFontStyle FontStyleToSKFontStyle()
+        {
+            bool bold = (FontStyle & System.Drawing.FontStyle.Bold) != 0;
+            bool italic = (FontStyle & System.Drawing.FontStyle.Italic) != 0;
+
+            var weight = bold ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal;
+            var slant = italic ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright;
+
+            return new SKFontStyle(weight, SKFontStyleWidth.Normal, slant);
+        }
 
         /// <summary>
         /// Constructor
@@ -127,15 +201,19 @@ namespace BarRaider.SdTools.Wrappers
             {
                 ShowTitle = showTitle;
 
-                // Color
                 if (!String.IsNullOrEmpty(titleColor))
                 {
-                    TitleColor = ColorTranslator.FromHtml(titleColor);
+                    if (SKColor.TryParse(titleColor, out SKColor skColor))
+                    {
+                        TitleColor = Color.FromArgb(skColor.Alpha, skColor.Red, skColor.Green, skColor.Blue);
+                    }
                 }
 
                 if (!String.IsNullOrEmpty(fontFamily))
                 {
-                    FontFamily = new FontFamily(fontFamily);
+                    FontFamilyName = fontFamily;
+                    cachedFontFamily = null;
+                    cachedTypeface = null;
                 }
 
                 FontSizeInPoints = fontSize;

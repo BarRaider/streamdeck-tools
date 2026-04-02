@@ -1,13 +1,10 @@
-﻿using BarRaider.SdTools;
+using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SamplePlugin
@@ -109,28 +106,21 @@ namespace SamplePlugin
         public async override void KeyPressed(KeyPayload payload)
         {
             Logger.Instance.LogMessage(TracingLevel.INFO, "Key Pressed");
-            TitleParameters tp = new TitleParameters(new FontFamily("Arial"), FontStyle.Bold, 20, Color.White, true, TitleVerticalAlignment.Middle);
-            using (Image image = Tools.GenerateGenericKeyImage(out Graphics graphics))
+            using (SKBitmap image = SkiaTools.GenerateGenericKeyImage(out SKCanvas canvas))
             {
-                graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
-                graphics.AddTextPath(tp, image.Height, image.Width, "Test");
-                graphics.Dispose();
-
+                canvas.Clear(SKColors.DarkBlue);
+                using var font = SkiaTools.CreateFont("Arial", 18, SKFontStyle.Bold);
+                using var paint = new SKPaint { Color = SKColors.White, IsAntialias = true };
+                float x = canvas.GetTextCenter("Pressed!", image.Width, font);
+                canvas.DrawTextLine("Pressed!", font, paint, new SKPoint(x, image.Height / 2f - 10));
+                canvas.Dispose();
                 await Connection.SetImageAsync(image);
             }
         }
 
-        public async override void KeyReleased(KeyPayload payload) 
+        public async override void KeyReleased(KeyPayload payload)
         {
-            TitleParameters tp = new TitleParameters(new FontFamily("Arial"), FontStyle.Bold, 20, Color.White, true, TitleVerticalAlignment.Middle);
-            using (Image image = Tools.GenerateGenericKeyImage(out Graphics graphics))
-            {
-                graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
-                graphics.AddTextPath(tp, image.Height, image.Width, "Test", Color.Black, 7);
-                graphics.Dispose();
-
-                await Connection.SetImageAsync(image);
-            }
+            await Connection.SetDefaultImageAsync();
         }
 
         public override void OnTick() { }

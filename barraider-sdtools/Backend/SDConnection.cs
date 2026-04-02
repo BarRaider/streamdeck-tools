@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 using System;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -10,8 +11,6 @@ using BarRaider.SdTools.Payloads;
 using BarRaider.SdTools.Communication;
 using BarRaider.SdTools.Communication.SDEvents;
 using System.Collections.Generic;
-using NLog.Layouts;
-
 namespace BarRaider.SdTools
 {
     /// <summary>
@@ -22,6 +21,9 @@ namespace BarRaider.SdTools
         #region Private Members
 
         private string previousImageHash = null;
+        private readonly object imageHashLock = new object();
+        private const int MAX_TITLE_RETRY_ATTEMPTS = 5;
+        private int titleRetryCount = 0;
 
         [JsonIgnore]
         private readonly string actionId;
@@ -141,6 +143,10 @@ namespace BarRaider.SdTools
         /// </summary>
         public void Dispose()
         {
+            if (StreamDeckConnection == null)
+            {
+                return;
+            }
             StreamDeckConnection.OnSendToPlugin -= Connection_OnSendToPlugin;
             StreamDeckConnection.OnTitleParametersDidChange -= Connection_OnTitleParametersDidChange;
             StreamDeckConnection.OnApplicationDidTerminate -= Connection_OnApplicationDidTerminate;
@@ -238,9 +244,17 @@ namespace BarRaider.SdTools
         public async Task SetImageAsync(string base64Image, int? state = null, bool forceSendToStreamdeck = false)
         {
             string hash = Tools.StringToSHA512(base64Image);
-            if (forceSendToStreamdeck || hash != previousImageHash)
+            bool shouldSend;
+            lock (imageHashLock)
             {
-                previousImageHash = hash;
+                shouldSend = forceSendToStreamdeck || hash != previousImageHash;
+                if (shouldSend)
+                {
+                    previousImageHash = hash;
+                }
+            }
+            if (shouldSend)
+            {
                 await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
             }
         }
@@ -252,14 +266,77 @@ namespace BarRaider.SdTools
         /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
         /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing.Image which is not cross-platform. Use SetImageAsync(SKBitmap, ...) or SetImageAsync(byte[], ...) instead.")]
         public async Task SetImageAsync(Image image, int? state = null, bool forceSendToStreamdeck = false)
         {
-            string hash = Tools.ImageToSHA512(image);
-            if (forceSendToStreamdeck || hash != previousImageHash)
+            string base64Image = Tools.ImageToBase64(image, true);
+            string hash = Tools.StringToSHA512(base64Image);
+            bool shouldSend;
+            lock (imageHashLock)
             {
-                previousImageHash = hash;
-                await StreamDeckConnection.SetImageAsync(image, ContextId, SDKTarget.HardwareAndSoftware, state);
+                shouldSend = forceSendToStreamdeck || hash != previousImageHash;
+                if (shouldSend)
+                {
+                    previousImageHash = hash;
+                }
             }
+            if (shouldSend)
+            {
+                await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
+            }
+        }
+
+        /// <summary>
+        /// Sets an image on the StreamDeck key from raw PNG bytes.
+        /// Prefer this over the Image overload to avoid System.Drawing dependencies.
+        /// </summary>
+        /// <param name="pngImageBytes">PNG-encoded image bytes</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+        /// <returns></returns>
+        public async Task SetImageAsync(byte[] pngImageBytes, int? state = null, bool forceSendToStreamdeck = false)
+        {
+            if (pngImageBytes == null)
+            {
+                await SetDefaultImageAsync();
+                return;
+            }
+
+            string base64Image = "data:image/png;base64," + Convert.ToBase64String(pngImageBytes);
+            string hash = Tools.StringToSHA512(base64Image);
+            bool shouldSend;
+            lock (imageHashLock)
+            {
+                shouldSend = forceSendToStreamdeck || hash != previousImageHash;
+                if (shouldSend)
+                {
+                    previousImageHash = hash;
+                }
+            }
+            if (shouldSend)
+            {
+                await StreamDeckConnection.SetImageAsync(base64Image, ContextId, SDKTarget.HardwareAndSoftware, state);
+            }
+        }
+
+        /// <summary>
+        /// Sets an image on the StreamDeck key from an SKBitmap (cross-platform, SkiaSharp).
+        /// The bitmap is PNG-encoded and sent as base64.
+        /// </summary>
+        /// <param name="image">SkiaSharp bitmap to display on the key</param>
+        /// <param name="state">A 0-based integer value representing the state of an action with multiple states. This is an optional parameter. If not specified, the title is set to all states.</param>
+        /// <param name="forceSendToStreamdeck">Should image be sent even if it is identical to the one sent previously. Default is false</param>
+        /// <returns></returns>
+        public async Task SetImageAsync(SKBitmap image, int? state = null, bool forceSendToStreamdeck = false)
+        {
+            if (image == null)
+            {
+                await SetDefaultImageAsync();
+                return;
+            }
+
+            byte[] pngBytes = image.ToPngByteArray();
+            await SetImageAsync(pngBytes, state, forceSendToStreamdeck);
         }
 
         /// <summary>
@@ -452,11 +529,11 @@ namespace BarRaider.SdTools
         {
             if (e.Event.Context == ContextId)
             {
-                // Special case to take into account that TitleParameters arrives right after an OnWillAppear
                 if (OnTitleParametersDidChange == null)
                 {
-                    if (sender != this)
+                    if (titleRetryCount < MAX_TITLE_RETRY_ATTEMPTS)
                     {
+                        titleRetryCount++;
                         Task.Run(async () =>
                         {
                             await Task.Delay(1000);
@@ -466,6 +543,7 @@ namespace BarRaider.SdTools
                     return;
                 }
 
+                titleRetryCount = 0;
                 var payload = e.Event.Payload;
                 var newPayload = new TitleParametersPayload(payload.Settings, payload.Coordinates, payload.State, payload.Title, payload.TitleParameters);
                 OnTitleParametersDidChange?.Invoke(this, new SDEventReceivedEventArgs<TitleParametersDidChange>(new TitleParametersDidChange(e.Event.Action, e.Event.Context, e.Event.Device, newPayload)));

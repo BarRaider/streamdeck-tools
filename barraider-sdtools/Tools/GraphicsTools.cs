@@ -1,4 +1,4 @@
-﻿using BarRaider.SdTools.Wrappers;
+using BarRaider.SdTools.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,6 +18,7 @@ namespace BarRaider.SdTools
         /// </summary>
         /// <param name="hexColor"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing.Color which is not cross-platform. Use SkiaGraphicsTools.ColorFromHex() instead.")]
         public static Color ColorFromHex(string hexColor)
         {
             return System.Drawing.ColorTranslator.FromHtml(hexColor);
@@ -30,6 +31,7 @@ namespace BarRaider.SdTools
         /// <param name="currentShade"></param>
         /// <param name="totalAmountOfShades"></param>
         /// <returns></returns>
+        [Obsolete("Returns System.Drawing.Color which is not cross-platform. Use SkiaGraphicsTools.GenerateColorShades() instead.")]
         public static Color GenerateColorShades(string initialColor, int currentShade, int totalAmountOfShades)
         {
             Color color = ColorFromHex(initialColor);
@@ -61,6 +63,7 @@ namespace BarRaider.SdTools
         /// <param name="newWidth"></param>
         /// <param name="newHeight"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SkiaGraphicsTools.ResizeImage() instead.")]
         public static Image ResizeImage(Image original, int newWidth, int newHeight)
         {
             if (original == null)
@@ -109,6 +112,7 @@ namespace BarRaider.SdTools
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SkiaGraphicsTools.ExtractRectangle() instead.")]
         public static Bitmap ExtractRectangle(Image image, int startX, int startY, int width, int height)
         {
             Rectangle rec = new Rectangle(startX, startY, width, height);
@@ -124,6 +128,7 @@ namespace BarRaider.SdTools
         /// <param name="image"></param>
         /// <param name="opacity"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SkiaGraphicsTools.CreateOpacityImage() instead.")]
         public static Image CreateOpacityImage(Image image, float opacity)
         {
             try
@@ -173,6 +178,7 @@ namespace BarRaider.SdTools
         /// <param name="expandToNextImage"></param>
         /// <param name="keyDrawStartingPosition"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SkiaGraphicsTools.DrawMultiLinedText() instead.")]
         public static Image[] DrawMultiLinedText(string text, int currentTextPosition, int lettersPerLine, int numberOfLines, Font font, Color backgroundColor, Color textColor, bool expandToNextImage, PointF keyDrawStartingPosition)
         {
             float currentWidth = keyDrawStartingPosition.X;
@@ -228,6 +234,7 @@ namespace BarRaider.SdTools
         /// <param name="rightPaddingPixels"></param>
         /// <param name="imageWidthPixels"></param>
         /// <returns></returns>
+        [Obsolete("Uses System.Drawing types which are not cross-platform. Use SkiaGraphicsTools.WrapStringToFitImage() instead.")]
         public static string WrapStringToFitImage(string str, TitleParameters titleParameters, int leftPaddingPixels = 5, int rightPaddingPixels = 5, int imageWidthPixels = 72)
         {
             try
