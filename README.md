@@ -12,12 +12,12 @@
 - All `System.Drawing`-based APIs marked `[Obsolete]` with migration guidance.
 - New `SetImageAsync(SKBitmap)` and `SetImageAsync(byte[])` overloads on `ISDConnection`.
 - New `DrawTextLine` extension method on `SKCanvas` with Y-as-top semantics (matching `System.Drawing.Graphics.DrawString`).
-- **Breaking change (macOS):** `TitleParameters.FontFamily` throws `PlatformNotSupportedException` on non-Windows. Use `TitleParameters.FontFamilyName` (string) or `TitleParameters.TitleTypeface` (SKTypeface) instead.
+- **Breaking change (macOS):** `TitleParameters.FontFamily` throws `PlatformNotSupportedException` on non-Windows. Use `TitleParameters.FontFamilyName` (string) or `TitleParameters.TitleTypeface` (SKTypeface) instead. On Windows, `FontFamily` still works but produces an `[Obsolete]` compiler warning.
 - New `TitleParameters.FontFamilyName`, `TitleSKColor`, `TitleTypeface`, `FontStyleToSKFontStyle()` for cross-platform rendering.
 - `PluginBase` is now `[Obsolete]` -- use `KeypadBase`, `EncoderBase`, or `KeyAndEncoderBase`.
 
 ## Migration Guide:
-- See [MIGRATION.md](MIGRATION.md) for the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
+- See **[Migration Guide](MigrateTo7.0.md)**: or the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
 
 # Stream Deck+ Support  
 Instead of `PluginBase`, Derive from either `KeypadBase` (if you don't support dials), `EncoderBase` (for only dials), `KeyAndEncoderBase` (for both keys and dials)
