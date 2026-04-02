@@ -17,7 +17,7 @@
 - `PluginBase` is now `[Obsolete]` -- use `KeypadBase`, `EncoderBase`, or `KeyAndEncoderBase`.
 
 ## Migration Guide:
-- See **[Migration Guide](MigrateTo7.0.md)**: or the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
+- See **[Migration Guide](MigrateTo7.0.md)**: for the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
 
 # Stream Deck+ Support  
 Instead of `PluginBase`, Derive from either `KeypadBase` (if you don't support dials), `EncoderBase` (for only dials), `KeyAndEncoderBase` (for both keys and dials)
@@ -57,7 +57,7 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 - `PluginBase` is now `[Obsolete]` -- use `KeypadBase`, `EncoderBase`, or `KeyAndEncoderBase`.
 
 ## Migration Guide:
-- See **[Migration Guide](MigrateTo7.0.md)**: or the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
+- See **[Migration Guide](MigrateTo7.0.md)**: for the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
 
 ### Version 6.4
 - Support for Stream Deck Plus XL, Galleon 100 SD
