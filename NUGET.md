@@ -50,7 +50,7 @@ public class MyAction : KeypadBase
 
 ## Migrating from v6.x
 
-See the full [Migration Guide](https://github.com/BarRaider/streamdeck-tools/blob/master/MIGRATION.md) for type mapping tables, code recipes, and step-by-step instructions.
+See the full [Migration Guide](https://github.com/BarRaider/streamdeck-tools/blob/master/MigrateTo7.0.md) for type mapping tables, code recipes, and step-by-step instructions.
 
 ## Resources
 
