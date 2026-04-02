@@ -17,8 +17,8 @@ Feel free to contact me for more information: https://barraider.com</Description
     <PackageIconUrl></PackageIconUrl>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <FileVersion>7.0.0.0</FileVersion>
-    <Version>7.0.0-beta.4</Version>
-    <PackageReleaseNotes>7.0.0-beta.4 - Fix DrawAndMeasureString Y-positioning to match System.Drawing semantics (Y = top of text, not baseline). Add DrawTextLine as canonical replacement with correct line spacing via font.Spacing.</PackageReleaseNotes>
+    <Version>7.0.0</Version>
+    <PackageReleaseNotes>7.0.0 - Cross-platform SkiaSharp API surface (SkiaTools, SkiaGraphicsTools, SkiaExtensionMethods). Target frameworks: netstandard2.0, net48, net8.0, net10.0. All System.Drawing APIs marked [Obsolete] with migration guidance. New SetImageAsync(SKBitmap) and SetImageAsync(byte[]) overloads. DrawTextLine extension for SKCanvas. TitleParameters cross-platform properties (FontFamilyName, TitleSKColor, TitleTypeface). See MIGRATION.md for the full migration guide.</PackageReleaseNotes>
     <RootNamespace>BarRaider.SdTools</RootNamespace>
     <AssemblyName>StreamDeckTools</AssemblyName>
     <PackageIcon>BRLogo_460.png</PackageIcon>
@@ -50,7 +50,7 @@ Feel free to contact me for more information: https://barraider.com</Description
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-	<None Include="README.md" Pack="true" PackagePath="\">
+	<None Include="..\README.md" Pack="true" PackagePath="\">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
   </ItemGroup>

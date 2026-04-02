@@ -6,15 +6,18 @@
 
 **Author's website and contact information:** [https://barraider.com](https://barraider.com)  
 
-# Version 7.0 now in Beta!
-- **Cross-platform support** -- plugins can now run on Windows and macOS
-- **SkiaSharp graphics** -- new `SkiaTools`, `SkiaGraphicsTools`, and `SkiaExtensionMethods` classes provide cross-platform drawing APIs
-- **New `SetImageAsync` overloads** -- accept `SKBitmap` or `byte[]` (PNG) in addition to base64 strings
-- **SkiaSharp properties on `TitleParameters`** -- `TitleSKColor`, `TitleTypeface`, `FontStyleToSKFontStyle()`
-- **.NET 10 target** added (`netstandard2.0`, `net48`, `net8.0`, `net10.0`)
-- All System.Drawing APIs marked `[Obsolete]` with pointers to SkiaSharp replacements (still fully functional on Windows)
+# Introducing Stream Deck Tools Version 7.0
+- **Cross-platform support**: New SkiaSharp-based API surface (`SkiaTools`, `SkiaGraphicsTools`, `SkiaExtensionMethods`) for Windows + macOS.
+- **Target frameworks**: netstandard2.0, net48, net8.0, net10.0.
+- All `System.Drawing`-based APIs marked `[Obsolete]` with migration guidance.
+- New `SetImageAsync(SKBitmap)` and `SetImageAsync(byte[])` overloads on `ISDConnection`.
+- New `DrawTextLine` extension method on `SKCanvas` with Y-as-top semantics (matching `System.Drawing.Graphics.DrawString`).
+- **Breaking change (macOS):** `TitleParameters.FontFamily` throws `PlatformNotSupportedException` on non-Windows. Use `TitleParameters.FontFamilyName` (string) or `TitleParameters.TitleTypeface` (SKTypeface) instead.
+- New `TitleParameters.FontFamilyName`, `TitleSKColor`, `TitleTypeface`, `FontStyleToSKFontStyle()` for cross-platform rendering.
+- `PluginBase` is now `[Obsolete]` -- use `KeypadBase`, `EncoderBase`, or `KeyAndEncoderBase`.
 
-**Migration guide:** See [MigrateTo7.0.md](MigrateTo7.0.md) for step-by-step upgrade instructions, type mapping tables, and code recipes. This file is also designed to work with AI coding assistants (Cursor, Copilot, etc.) -- point your AI at it and ask it to migrate your plugin.
+## Migration Guide:
+- See [MIGRATION.md](MIGRATION.md) for the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
 
 # Stream Deck+ Support  
 Instead of `PluginBase`, Derive from either `KeypadBase` (if you don't support dials), `EncoderBase` (for only dials), `KeyAndEncoderBase` (for both keys and dials)
@@ -43,15 +46,16 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 
 # Change Log
 
-### Version 7.0 (Beta)
+### Version 7.0
 - **Cross-platform support**: New SkiaSharp-based API surface (`SkiaTools`, `SkiaGraphicsTools`, `SkiaExtensionMethods`) for Windows + macOS.
 - **Target frameworks**: netstandard2.0, net48, net8.0, net10.0.
 - All `System.Drawing`-based APIs marked `[Obsolete]` with migration guidance.
 - New `SetImageAsync(SKBitmap)` and `SetImageAsync(byte[])` overloads on `ISDConnection`.
 - New `DrawTextLine` extension method on `SKCanvas` with Y-as-top semantics (matching `System.Drawing.Graphics.DrawString`).
-- **Breaking change (macOS):** `TitleParameters.FontFamily` now throws `PlatformNotSupportedException` on non-Windows. Use `TitleParameters.FontFamilyName` (string) or `TitleParameters.TitleTypeface` (SKTypeface) instead. On Windows, `FontFamily` still works but produces an `[Obsolete]` compiler warning.
-- New `TitleParameters.FontFamilyName` property: cross-platform string replacement for `FontFamily.Name`.
-- `TitleParameters.TitleSKColor`, `TitleParameters.TitleTypeface`, `TitleParameters.FontStyleToSKFontStyle()` added for cross-platform rendering.
+- **Breaking change (macOS):** `TitleParameters.FontFamily` throws `PlatformNotSupportedException` on non-Windows. Use `TitleParameters.FontFamilyName` (string) or `TitleParameters.TitleTypeface` (SKTypeface) instead. On Windows, `FontFamily` still works but produces an `[Obsolete]` compiler warning.
+- New `TitleParameters.FontFamilyName`, `TitleSKColor`, `TitleTypeface`, `FontStyleToSKFontStyle()` for cross-platform rendering.
+- `PluginBase` is now `[Obsolete]` -- use `KeypadBase`, `EncoderBase`, or `KeyAndEncoderBase`.
+- **[Migration Guide](MIGRATION.md)**: Full guide with type mapping tables, code recipes, and migration tiers.
 
 ### Version 6.4
 - Support for Stream Deck Plus XL, Galleon 100 SD
