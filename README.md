@@ -55,7 +55,9 @@ Introducing our new [wiki](https://github.com/BarRaider/streamdeck-tools/wiki) p
 - **Breaking change (macOS):** `TitleParameters.FontFamily` throws `PlatformNotSupportedException` on non-Windows. Use `TitleParameters.FontFamilyName` (string) or `TitleParameters.TitleTypeface` (SKTypeface) instead. On Windows, `FontFamily` still works but produces an `[Obsolete]` compiler warning.
 - New `TitleParameters.FontFamilyName`, `TitleSKColor`, `TitleTypeface`, `FontStyleToSKFontStyle()` for cross-platform rendering.
 - `PluginBase` is now `[Obsolete]` -- use `KeypadBase`, `EncoderBase`, or `KeyAndEncoderBase`.
-- **[Migration Guide](MigrateTo7.0.md)**: Full guide with type mapping tables, code recipes, and migration tiers.
+
+## Migration Guide:
+- See **[Migration Guide](MigrateTo7.0.md)**: or the full migration guide with code recipes and API mapping tables. (**Pro-Tip:** Use this file to let Cursor/Claude do the migration for you).
 
 ### Version 6.4
 - Support for Stream Deck Plus XL, Galleon 100 SD
